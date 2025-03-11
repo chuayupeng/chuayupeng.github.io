@@ -33,16 +33,18 @@ const Navbar = () => {
     { path: '/about', label: 'About' },
   ];
 
-  // Base styles that change based on page and scroll state
+  // Base styles with improved contrast
   const navbarBg = scrolled
-    ? 'bg-white/80 dark:bg-cyber-blue/80 backdrop-blur-md shadow-md'
+    ? 'bg-white/90 dark:bg-cyber-blue/95 backdrop-blur-md shadow-md'
     : isHomePage
     ? 'bg-transparent'
-    : 'bg-cyber-blue/20 backdrop-blur-sm';
+    : 'bg-cyber-blue/75 dark:bg-cyber-blue/90 backdrop-blur-md'; // Higher opacity for better contrast
 
   const textColorClass = scrolled
     ? 'text-cyber-blue dark:text-cyber-light-slate'
-    : 'text-cyber-light-slate';
+    : isHomePage
+    ? 'text-cyber-light-slate'
+    : 'text-white'; // White text on dark background for non-home pages
 
   return (
     <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${navbarBg}`}>
