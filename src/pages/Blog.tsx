@@ -1,20 +1,47 @@
 
-import { useState } from 'react';
-import { blogData } from '@/data/blogData';
+import { useState, useEffect } from 'react';
 import BlogCard from '@/components/BlogCard';
 import FilterButtons from '@/components/FilterButtons';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
+import { getMarkdownPosts, MarkdownPost } from '@/utils/markdown';
+import { blogData } from '@/data/blogData';
 
 const Blog = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [posts, setPosts] = useState<MarkdownPost[]>([]);
+  const [loading, setLoading] = useState(true);
   
-  const categories = Array.from(new Set(blogData.map(post => post.category)));
+  useEffect(() => {
+    async function loadPosts() {
+      try {
+        // First try to load posts from markdown files
+        const markdownPosts = await getMarkdownPosts();
+        
+        // If there are markdown posts, use them, otherwise fall back to blogData
+        if (markdownPosts && markdownPosts.length > 0) {
+          setPosts(markdownPosts);
+        } else {
+          console.log('No markdown posts found, using fallback data');
+          setPosts(blogData);
+        }
+      } catch (error) {
+        console.error('Failed to load markdown posts:', error);
+        setPosts(blogData);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    loadPosts();
+  }, []);
   
-  const filteredPosts = blogData
+  const categories = Array.from(new Set(posts.map(post => post.category)));
+  
+  const filteredPosts = posts
     .filter(post => 
       (activeFilter === 'all' || post.category === activeFilter) &&
       (searchQuery === '' || 
@@ -56,7 +83,11 @@ const Blog = () => {
           />
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-            {filteredPosts.length > 0 ? (
+            {loading ? (
+              <div className="col-span-3 text-center py-12">
+                <p className="text-muted-foreground">Loading posts...</p>
+              </div>
+            ) : filteredPosts.length > 0 ? (
               filteredPosts.map(post => (
                 <BlogCard key={post.id} post={post} />
               ))

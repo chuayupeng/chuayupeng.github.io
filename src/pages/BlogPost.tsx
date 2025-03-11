@@ -1,19 +1,86 @@
 
 import { useParams, Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { blogData } from '@/data/blogData';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar, Tag, User } from 'lucide-react';
+import { getMarkdownPosts, MarkdownPost } from '@/utils/markdown';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  const post = blogData.find(post => post.slug === slug);
+  const [post, setPost] = useState<MarkdownPost | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<MarkdownPost[]>([]);
+  const [loading, setLoading] = useState(true);
   
-  // Find related posts (same category, excluding current post)
-  const relatedPosts = blogData
-    .filter(item => item.category === post?.category && item.id !== post?.id)
-    .slice(0, 3);
+  useEffect(() => {
+    async function loadPost() {
+      try {
+        setLoading(true);
+        // First try to load posts from markdown files
+        const markdownPosts = await getMarkdownPosts();
+        
+        let foundPost: MarkdownPost | undefined;
+        let postCollection: MarkdownPost[];
+        
+        // If there are markdown posts, use them, otherwise fall back to blogData
+        if (markdownPosts && markdownPosts.length > 0) {
+          postCollection = markdownPosts;
+        } else {
+          console.log('No markdown posts found, using fallback data');
+          postCollection = blogData;
+        }
+        
+        foundPost = postCollection.find(p => p.slug === slug);
+        
+        if (foundPost) {
+          setPost(foundPost);
+          
+          // Find related posts (same category, excluding current post)
+          const related = postCollection
+            .filter(item => item.category === foundPost?.category && item.id !== foundPost?.id)
+            .slice(0, 3);
+            
+          setRelatedPosts(related);
+        }
+      } catch (error) {
+        console.error('Failed to load blog post:', error);
+        
+        // Fallback to blogData
+        const fallbackPost = blogData.find(p => p.slug === slug);
+        if (fallbackPost) {
+          setPost(fallbackPost);
+          
+          const relatedFallback = blogData
+            .filter(item => item.category === fallbackPost?.category && item.id !== fallbackPost?.id)
+            .slice(0, 3);
+            
+          setRelatedPosts(relatedFallback);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    loadPost();
+  }, [slug]);
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        
+        <main className="flex-grow pt-24 pb-16 flex items-center justify-center">
+          <div className="text-center">
+            <p className="text-muted-foreground">Loading post...</p>
+          </div>
+        </main>
+        
+        <Footer />
+      </div>
+    );
+  }
   
   if (!post) {
     return (

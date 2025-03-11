@@ -35,12 +35,12 @@ const Navbar = () => {
   // Determine text color based on whether the navbar is scrolled
   const textColorClass = scrolled 
     ? 'text-cyber-blue dark:text-cyber-light-slate' 
-    : 'text-white';
+    : 'text-cyber-navy dark:text-cyber-light-slate'; // Changed from 'text-white' to 'text-cyber-navy'
 
   return (
     <header 
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/80 dark:bg-cyber-blue/80 backdrop-blur-md shadow-md' : 'bg-transparent'
+        scrolled ? 'bg-white/80 dark:bg-cyber-blue/80 backdrop-blur-md shadow-md' : 'bg-gray-100/70 dark:bg-cyber-blue/30 backdrop-blur-sm'
       }`}
     >
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
