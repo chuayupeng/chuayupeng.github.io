@@ -6,6 +6,7 @@ import { componentTagger } from "lovable-tagger";
 import fs from 'fs';
 import type { ViteDevServer } from 'vite';
 import type { Connect } from 'vite';
+import type { IncomingMessage, ServerResponse } from 'http';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -25,7 +26,7 @@ export default defineConfig(({ mode }) => ({
     {
       name: 'markdown-posts',
       configureServer(server: ViteDevServer) {
-        server.middlewares.use((req: Connect.IncomingMessage, res: Connect.ServerResponse<Connect.IncomingMessage>, next: Connect.NextFunction) => {
+        server.middlewares.use((req: Connect.IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
           if (req.url?.startsWith('/src/content/')) {
             try {
               const filePath = path.join(process.cwd(), req.url);
