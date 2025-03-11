@@ -6,7 +6,7 @@ import { componentTagger } from "lovable-tagger";
 import fs from 'fs';
 import type { ViteDevServer } from 'vite';
 import type { Connect } from 'vite';
-import type { IncomingMessage, ServerResponse } from 'http';
+import type { ServerResponse } from 'http';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
