@@ -1,4 +1,3 @@
-
 ---
 title: "Effective Teaching Methods for Technical Subjects"
 excerpt: "Strategies for making complex technical concepts accessible and engaging for students of all levels."

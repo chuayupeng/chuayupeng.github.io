@@ -41,7 +41,7 @@ export const getMarkdownPosts = async (): Promise<MarkdownPost[]> => {
       const slug = filePath.split('/').pop()?.replace(/\.md$/, '') || '';
       
       // Parse frontmatter and content
-      console.log(content)
+      console.log(content.substring(0, 10));
       const { data, content: markdownContent } = matter(content as string);
 
       
