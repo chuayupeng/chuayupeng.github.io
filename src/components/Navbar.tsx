@@ -8,6 +8,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const isHomePage = location.pathname === '/';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,17 +33,19 @@ const Navbar = () => {
     { path: '/about', label: 'About' },
   ];
 
-  // Determine text color based on whether the navbar is scrolled
-  const textColorClass = scrolled 
-    ? 'text-cyber-blue dark:text-cyber-light-slate' 
-    : 'text-white';
+  // Base styles that change based on page and scroll state
+  const navbarBg = scrolled
+    ? 'bg-white/80 dark:bg-cyber-blue/80 backdrop-blur-md shadow-md'
+    : isHomePage
+    ? 'bg-transparent'
+    : 'bg-cyber-blue/20 backdrop-blur-sm';
+
+  const textColorClass = scrolled
+    ? 'text-cyber-blue dark:text-cyber-light-slate'
+    : 'text-cyber-light-slate';
 
   return (
-    <header 
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/80 dark:bg-cyber-blue/80 backdrop-blur-md shadow-md' : 'bg-transparent'
-      }`}
-    >
+    <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${navbarBg}`}>
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2" onClick={closeMenu}>
           <Shield className="h-8 w-8 text-cyber-cyan" />
