@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => ({
     {
       name: 'markdown-posts',
       configureServer(server: ViteDevServer) {
-        server.middlewares.use((req: Connect.IncomingMessage, res: Connect.ServerResponse, next: Connect.NextFunction) => {
+        server.middlewares.use((req: Connect.IncomingMessage, res: Connect.ServerResponse<Connect.IncomingMessage>, next: Connect.NextFunction) => {
           if (req.url?.startsWith('/src/content/')) {
             try {
               const filePath = path.join(process.cwd(), req.url);
