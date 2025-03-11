@@ -1,7 +1,6 @@
 
 import matter from 'gray-matter';
 import MarkdownIt from 'markdown-it';
-import { blogData } from '@/data/blogData';
 
 const md = new MarkdownIt({
   html: true,
@@ -28,7 +27,7 @@ export const getMarkdownPosts = async (): Promise<MarkdownPost[]> => {
     
     if (Object.keys(markdownFiles).length === 0) {
       console.warn('No markdown files found in content/blog directory');
-      return blogData;
+      return [];
     }
     
     const posts = Object.entries(markdownFiles).map(([filePath, content], index) => {
@@ -58,7 +57,7 @@ export const getMarkdownPosts = async (): Promise<MarkdownPost[]> => {
     return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   } catch (error) {
     console.error('Error processing markdown files:', error);
-    // Fallback to blogData if there's an error
-    return blogData;
+    // Return empty array instead of falling back to blogData
+    return [];
   }
 };

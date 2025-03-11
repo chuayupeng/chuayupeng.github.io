@@ -1,7 +1,5 @@
-
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { blogData } from '@/data/blogData';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
@@ -18,46 +16,28 @@ const BlogPost = () => {
     async function loadPost() {
       try {
         setLoading(true);
-        // First try to load posts from markdown files
         const markdownPosts = await getMarkdownPosts();
         
-        let foundPost: MarkdownPost | undefined;
-        let postCollection: MarkdownPost[];
-        
-        // If there are markdown posts, use them, otherwise fall back to blogData
-        if (markdownPosts && markdownPosts.length > 0) {
-          postCollection = markdownPosts;
-        } else {
-          console.log('No markdown posts found, using fallback data');
-          postCollection = blogData;
-        }
-        
-        foundPost = postCollection.find(p => p.slug === slug);
+        const foundPost = markdownPosts.find(p => p.slug === slug);
         
         if (foundPost) {
           setPost(foundPost);
           
           // Find related posts (same category, excluding current post)
-          const related = postCollection
+          const related = markdownPosts
             .filter(item => item.category === foundPost?.category && item.id !== foundPost?.id)
             .slice(0, 3);
             
           setRelatedPosts(related);
+        } else {
+          // No post found with matching slug
+          setPost(null);
+          setRelatedPosts([]);
         }
       } catch (error) {
         console.error('Failed to load blog post:', error);
-        
-        // Fallback to blogData
-        const fallbackPost = blogData.find(p => p.slug === slug);
-        if (fallbackPost) {
-          setPost(fallbackPost);
-          
-          const relatedFallback = blogData
-            .filter(item => item.category === fallbackPost?.category && item.id !== fallbackPost?.id)
-            .slice(0, 3);
-            
-          setRelatedPosts(relatedFallback);
-        }
+        setPost(null);
+        setRelatedPosts([]);
       } finally {
         setLoading(false);
       }

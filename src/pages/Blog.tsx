@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import BlogCard from '@/components/BlogCard';
 import FilterButtons from '@/components/FilterButtons';
@@ -7,7 +6,6 @@ import Footer from '@/components/Footer';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 import { getMarkdownPosts, MarkdownPost } from '@/utils/markdown';
-import { blogData } from '@/data/blogData';
 
 const Blog = () => {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -18,19 +16,11 @@ const Blog = () => {
   useEffect(() => {
     async function loadPosts() {
       try {
-        // First try to load posts from markdown files
         const markdownPosts = await getMarkdownPosts();
-        
-        // If there are markdown posts, use them, otherwise fall back to blogData
-        if (markdownPosts && markdownPosts.length > 0) {
-          setPosts(markdownPosts);
-        } else {
-          console.log('No markdown posts found, using fallback data');
-          setPosts(blogData);
-        }
+        setPosts(markdownPosts);
       } catch (error) {
         console.error('Failed to load markdown posts:', error);
-        setPosts(blogData);
+        setPosts([]);
       } finally {
         setLoading(false);
       }
