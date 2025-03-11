@@ -2,10 +2,11 @@
 import React from 'react';
 import { 
   Shield, Utensils, GraduationCap, BarChart, Rocket, 
-  BookOpen, Coffee, Lock, ChefHat, Users, LucideIcon
+  BookOpen, Coffee, Lock, ChefHat, Users, Zap, LucideIcon
 } from 'lucide-react';
 import { TimelineItemType } from '@/data/timelineData';
 import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface TimelineItemProps {
   item: TimelineItemType;
@@ -39,33 +40,75 @@ const getCategoryColor = (category: TimelineItemType['category']) => {
   }
 };
 
+// Calculate "rarity" based on timeline item id
+const getItemRarity = (id: number) => {
+  if (id <= 3) return { label: 'Legendary', class: 'text-amber-400 border-amber-400/30 bg-amber-400/10' };
+  if (id <= 5) return { label: 'Epic', class: 'text-purple-400 border-purple-400/30 bg-purple-400/10' };
+  if (id <= 7) return { label: 'Rare', class: 'text-blue-400 border-blue-400/30 bg-blue-400/10' };
+  return { label: 'Common', class: 'text-gray-400 border-gray-400/30 bg-gray-400/10' };
+};
+
 const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
   const IconComponent = iconMap[item.icon] || Shield;
   const categoryColor = getCategoryColor(item.category);
-
+  const rarity = getItemRarity(item.id);
+  const xpValue = 150 - (item.id * 5); // Higher XP for earlier achievements
+  
   return (
-    <div className="timeline-item relative animate-fade-in w-full md:w-[45%] mb-12">
-      {/* Removed the timeline-dot to prevent blocking the title */}
-      
-      <Card className="overflow-hidden border-l-4" style={{ borderLeftColor: `var(--${categoryColor.replace('bg-', '')})` }}>
-        <CardContent className="p-5">
-          <div className="flex items-start gap-4">
-            <div className={`p-2 rounded-full ${categoryColor} text-white shrink-0`}>
-              <IconComponent size={20} />
-            </div>
-            
-            <div>
-              <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1">
-                <h3 className="font-bold text-lg">{item.title}</h3>
-                <span className="text-sm text-muted-foreground">{item.date}</span>
+    <div className="timeline-item relative animate-fade-in w-full md:w-[45%] mb-12 hover:-translate-y-1 transition-transform">
+      <Card className="overflow-hidden border shadow-md hover:shadow-lg transition-shadow bg-card/90 backdrop-blur-sm">
+        <CardContent className="p-0">
+          {/* Top banner with pattern */}
+          <div 
+            className={`h-3 w-full ${categoryColor} opacity-80`}
+            style={{
+              backgroundImage: 'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23ffffff" fill-opacity="0.2" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="1"/%3E%3Ccircle cx="13" cy="13" r="1"/%3E%3C/g%3E%3C/svg%3E")',
+              backgroundSize: '12px 12px',
+            }}
+          />
+          
+          <div className="p-5">
+            <div className="flex items-start gap-4">
+              <div className={cn(
+                "p-3 rounded-lg text-white shrink-0 relative",
+                categoryColor
+              )}>
+                <IconComponent size={20} />
+                {/* Decorative elements for the icon */}
+                <div className="absolute inset-0 rounded-lg border border-white/20"></div>
+                <div className="absolute -inset-0.5 rounded-lg bg-white opacity-0 hover:opacity-20 transition-opacity"></div>
               </div>
               
-              <p className="text-sm text-muted-foreground">{item.description}</p>
-              
-              <div className="mt-2">
-                <span className={`inline-block px-2 py-1 text-xs font-medium rounded-full ${categoryColor} bg-opacity-20 text-${categoryColor.split('-')[1]}-700`}>
-                  {item.category.charAt(0).toUpperCase() + item.category.slice(1)}
-                </span>
+              <div className="flex-1">
+                <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-lg">{item.title}</h3>
+                    <span className={cn(
+                      "text-xs px-2 py-0.5 rounded-full border",
+                      rarity.class
+                    )}>
+                      {rarity.label}
+                    </span>
+                  </div>
+                  <span className="text-sm text-muted-foreground">{item.date}</span>
+                </div>
+                
+                <p className="text-sm text-muted-foreground mb-3">{item.description}</p>
+                
+                <div className="flex flex-wrap items-center justify-between">
+                  <span className={cn(
+                    "inline-block px-3 py-1 text-xs font-medium rounded-full text-white",
+                    categoryColor
+                  )}>
+                    {item.category.charAt(0).toUpperCase() + item.category.slice(1)}
+                  </span>
+                  
+                  {/* XP indicator */}
+                  <div className="flex items-center gap-1 text-xs font-medium text-cyan-500">
+                    <Zap size={12} />
+                    <span>+{xpValue} XP</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

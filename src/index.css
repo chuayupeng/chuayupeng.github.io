@@ -74,6 +74,7 @@
 
   body {
     @apply bg-background text-foreground font-sans;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
   }
 
   .gradient-text {
@@ -88,9 +89,75 @@
     @apply mr-auto;
   }
   
-  /* Removed the timeline-dot class to prevent blocking titles */
-  
+  /* Timeline vertical line */
   .timeline-line {
     @apply absolute h-full w-0.5 bg-gradient-to-b from-cyber-cyan to-blue-400 left-1/2 -translate-x-1/2 -z-10;
+    box-shadow: 0 0 15px rgba(100, 255, 218, 0.5);
+  }
+
+  /* RPG Card styling */
+  .rpg-card {
+    @apply relative border rounded-lg overflow-hidden transition-all duration-300;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  .rpg-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+  }
+  
+  .rpg-border {
+    @apply relative;
+  }
+  
+  .rpg-border::before {
+    content: '';
+    @apply absolute inset-0 border-2 border-primary/30 rounded-lg opacity-0 transition-opacity;
+    box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+  }
+  
+  .rpg-border:hover::before {
+    @apply opacity-100;
+  }
+  
+  /* RPG progress bars */
+  .rpg-progress {
+    @apply h-2 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 relative overflow-hidden;
+  }
+  
+  .rpg-progress::after {
+    content: '';
+    @apply absolute inset-0 bg-white opacity-30;
+    animation: progress-shine 2s ease-in-out infinite;
+  }
+  
+  @keyframes progress-shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  /* New animation for floating elements */
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-float {
+    animation: float 5s ease-in-out infinite;
+  }
+  
+  @keyframes pulse-glow {
+    0%, 100% { 
+      opacity: 0.7;
+      box-shadow: 0 0 5px rgba(100, 255, 218, 0.3);
+    }
+    50% { 
+      opacity: 1;
+      box-shadow: 0 0 15px rgba(100, 255, 218, 0.7);
+    }
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 }
