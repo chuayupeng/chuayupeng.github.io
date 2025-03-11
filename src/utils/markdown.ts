@@ -22,9 +22,43 @@ export interface MarkdownPost {
 }
 
 export const getMarkdownPosts = async (): Promise<MarkdownPost[]> => {
-  // For now, return the static blog data
-  // In a real application, this would fetch from an API endpoint
-  // that processes markdown files server-side
-  return blogData;
+  try {
+    // Use Vite's import.meta.glob to import all markdown files
+    const markdownFiles = import.meta.glob('/content/blog/*.md', { eager: true, as: 'raw' });
+    
+    if (Object.keys(markdownFiles).length === 0) {
+      console.warn('No markdown files found in content/blog directory');
+      return blogData;
+    }
+    
+    const posts = Object.entries(markdownFiles).map(([filePath, content], index) => {
+      // Extract slug from file path
+      const slug = filePath.split('/').pop()?.replace(/\.md$/, '') || '';
+      
+      // Parse frontmatter and content
+      const { data, content: markdownContent } = matter(content as string);
+      
+      return {
+        id: index + 1,
+        title: data.title || 'Untitled Post',
+        excerpt: data.excerpt || '',
+        content: md.render(markdownContent),
+        date: data.date ? new Date(data.date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }) : new Date().toLocaleDateString(),
+        category: data.category || 'cybersecurity',
+        author: data.author || 'Unknown Author',
+        image: data.image || 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31',
+        slug
+      } as MarkdownPost;
+    });
+    
+    return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  } catch (error) {
+    console.error('Error processing markdown files:', error);
+    // Fallback to blogData if there's an error
+    return blogData;
+  }
 };
-
