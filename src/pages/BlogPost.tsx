@@ -1,58 +1,20 @@
 
 import { useParams, Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { blogData } from '@/data/blogData';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar, Tag, User } from 'lucide-react';
-import { getPostBySlug, getAllPosts } from '@/utils/blogUtils';
-import { BlogPostType } from '@/types/blog';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [post, setPost] = useState<BlogPostType | null>(null);
-  const [relatedPosts, setRelatedPosts] = useState<BlogPostType[]>([]);
-  const [loading, setLoading] = useState(true);
+  const post = blogData.find(post => post.slug === slug);
   
-  useEffect(() => {
-    const fetchPost = async () => {
-      setLoading(true);
-      try {
-        if (slug) {
-          const postData = await getPostBySlug(slug);
-          setPost(postData);
-          
-          // Get related posts if we have a post
-          if (postData) {
-            const allPosts = await getAllPosts();
-            const related = allPosts
-              .filter(item => item.category === postData.category && item.id !== postData.id)
-              .slice(0, 3);
-            setRelatedPosts(related);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching blog post:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchPost();
-  }, [slug]);
+  // Find related posts (same category, excluding current post)
+  const relatedPosts = blogData
+    .filter(item => item.category === post?.category && item.id !== post?.id)
+    .slice(0, 3);
   
-  if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow pt-24 pb-16 flex items-center justify-center">
-          <div className="animate-pulse h-96 w-full max-w-4xl bg-card/50 rounded-lg"></div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
   if (!post) {
     return (
       <div className="min-h-screen flex flex-col">
