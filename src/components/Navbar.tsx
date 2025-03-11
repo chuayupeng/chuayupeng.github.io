@@ -41,7 +41,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2" onClick={closeMenu}>
           <Shield className="h-8 w-8 text-cyber-cyan" />
-          <span className="font-bold text-xl">CyberPortfolio</span>
+          <span className="font-bold text-xl text-white">CyberPortfolio</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -50,7 +50,7 @@ const Navbar = () => {
             <Link
               key={item.path}
               to={item.path}
-              className={`relative py-2 text-sm font-medium transition-colors
+              className={`relative py-2 text-sm font-medium transition-colors text-white/90
                 ${location.pathname === item.path 
                   ? 'text-cyber-cyan' 
                   : 'hover:text-cyber-cyan'
@@ -68,7 +68,7 @@ const Navbar = () => {
         </nav>
 
         {/* Mobile Menu Button */}
-        <button className="md:hidden text-foreground" onClick={toggleMenu} aria-label="Toggle menu">
+        <button className="md:hidden text-white" onClick={toggleMenu} aria-label="Toggle menu">
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
