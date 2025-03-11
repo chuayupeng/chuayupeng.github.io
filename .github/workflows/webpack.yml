@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # Change this to your default branch if needed
+      - main
 
 jobs:
   build-and-deploy:
@@ -16,14 +16,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build and export site
-        run: |
-          npm run build
-          npm run export
-        # For Next.js, "npm run export" will generate a static site in the "out" folder.
+      - name: Build site
+        run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out  # This should match your export directory
+          publish_dir: ./build
