@@ -1,3 +1,4 @@
+
 import { useParams, Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
@@ -96,25 +97,25 @@ const BlogPost = () => {
         <div 
           className="w-full h-96 bg-cover bg-center relative"
           style={{ 
-            backgroundImage: `url(${post.image})`,
+            backgroundImage: `url(${post?.image})`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent"></div>
           <div className="container mx-auto px-4 max-w-4xl relative h-full flex flex-col justify-end pb-12">
             <div className="mb-4">
               <span className="px-3 py-1 bg-cyber-cyan text-cyber-blue text-sm font-medium rounded-full">
-                {post.category.charAt(0).toUpperCase() + post.category.slice(1)}
+                {post?.category.charAt(0).toUpperCase() + post?.category.slice(1)}
               </span>
             </div>
-            <h1 className="text-4xl font-bold text-white mb-4">{post.title}</h1>
+            <h1 className="text-4xl font-bold text-white mb-4">{post?.title}</h1>
             <div className="flex flex-wrap items-center text-white/80 gap-4">
               <div className="flex items-center">
                 <Calendar size={16} className="mr-1" />
-                <span className="text-sm">{post.date}</span>
+                <span className="text-sm">{post?.date}</span>
               </div>
               <div className="flex items-center">
                 <User size={16} className="mr-1" />
-                <span className="text-sm">{post.author}</span>
+                <span className="text-sm">{post?.author}</span>
               </div>
             </div>
           </div>
@@ -124,8 +125,8 @@ const BlogPost = () => {
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="bg-white dark:bg-cyber-navy shadow-md rounded-lg -mt-16 relative z-10 p-8 mb-16">
             <div 
-              className="prose dark:prose-invert prose-img:rounded-lg prose-headings:font-bold prose-a:text-cyber-cyan max-w-none"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              className="prose dark:prose-invert max-w-none"
+              dangerouslySetInnerHTML={{ __html: post?.content || '' }}
             />
           </div>
           
@@ -133,10 +134,10 @@ const BlogPost = () => {
           <div className="bg-gray-50 dark:bg-cyber-navy/50 rounded-lg p-6 mb-16">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
               <div className="w-16 h-16 bg-cyber-cyan rounded-full text-center flex items-center justify-center text-2xl font-bold text-cyber-blue">
-                {post.author.charAt(0)}
+                {post?.author.charAt(0)}
               </div>
               <div>
-                <h3 className="font-bold text-lg mb-2">{post.author}</h3>
+                <h3 className="font-bold text-lg mb-2">{post?.author}</h3>
                 <p className="text-muted-foreground text-sm">
                   Expert in cybersecurity and technology with over a decade of industry experience. 
                   Passionate about sharing knowledge and helping others understand complex security concepts.

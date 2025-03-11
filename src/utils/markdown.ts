@@ -1,3 +1,4 @@
+
 import { Buffer } from 'buffer';
 
 // Polyfill Buffer for browsers
@@ -42,7 +43,6 @@ export const getMarkdownPosts = async (): Promise<MarkdownPost[]> => {
       
       // Parse frontmatter and content
       const { data, content: markdownContent } = matter(content as string);
-      console.log(md.render(markdownContent));
       
       return {
         id: index + 1,
@@ -64,7 +64,6 @@ export const getMarkdownPosts = async (): Promise<MarkdownPost[]> => {
     return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   } catch (error) {
     console.error('Error processing markdown files:', error);
-    // Return empty array instead of falling back to blogData
     return [];
   }
 };
