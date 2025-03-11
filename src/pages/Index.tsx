@@ -1,7 +1,9 @@
-
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Shield, Terminal, ChefHat, BookOpen, ArrowRight, Zap, Star, Trophy } from 'lucide-react';
+import { 
+  Shield, Terminal, ChefHat, BookOpen, ArrowRight, Zap, Star, Trophy,
+  ShieldAlert, ShieldCheck, FileSearch, Skull, Monitor, Database
+} from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { blogData } from '@/data/blogData';
@@ -25,6 +27,34 @@ const Index = () => {
     'f&b': timelineData.filter(item => item.category === 'f&b').length * 15,
     entrepreneurship: timelineData.filter(item => item.category === 'entrepreneurship').length * 15,
   };
+
+  // Cybersecurity specializations
+  const cyberSpecializations = [
+    {
+      title: 'Red Team Specialist',
+      description: 'Offensive security expert who simulates attacks to identify vulnerabilities before real threats can exploit them.',
+      icon: Skull,
+      iconClass: 'text-red-500 dark:text-red-400',
+      bgClass: 'bg-red-100 dark:bg-red-900/30',
+      stars: 4
+    },
+    {
+      title: 'Blue Team Defender',
+      description: 'Defensive security specialist who monitors systems, detects intrusions, and responds to security incidents.',
+      icon: ShieldCheck,
+      iconClass: 'text-blue-600 dark:text-blue-400',
+      bgClass: 'bg-blue-100 dark:bg-blue-900/30',
+      stars: 5
+    },
+    {
+      title: 'DFIR Investigator',
+      description: 'Digital Forensics & Incident Response expert who analyzes breaches and recovers evidence of attacks.',
+      icon: FileSearch,
+      iconClass: 'text-purple-600 dark:text-purple-400',
+      bgClass: 'bg-purple-100 dark:bg-purple-900/30',
+      stars: 4
+    }
+  ];
   
   return (
     <div className="min-h-screen flex flex-col">
@@ -144,6 +174,44 @@ const Index = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Cybersecurity Specializations */}
+      <section className="py-20 px-4 bg-gray-50 dark:bg-cyber-navy">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Cybersecurity Specializations</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Advanced skill trees in different branches of security expertise.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {cyberSpecializations.map((spec, index) => (
+              <div key={index} className="rpg-card bg-white dark:bg-cyber-navy p-6">
+                <div className={`w-12 h-12 ${spec.bgClass} rounded-full flex items-center justify-center mb-4 animate-pulse-glow`}>
+                  <spec.icon className={`w-6 h-6 ${spec.iconClass}`} />
+                </div>
+                <h3 className="text-xl font-bold mb-2">{spec.title}</h3>
+                <p className="text-muted-foreground text-sm mb-4">
+                  {spec.description}
+                </p>
+                <div className="flex items-center gap-0.5 mb-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star 
+                      key={i} 
+                      size={12} 
+                      className={i < spec.stars ? "text-yellow-400 fill-yellow-400" : "text-gray-300"} 
+                    />
+                  ))}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {spec.stars === 5 ? 'Legendary' : spec.stars === 4 ? 'Epic' : 'Rare'} Specialization
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

@@ -32,6 +32,11 @@ const Navbar = () => {
     { path: '/about', label: 'About' },
   ];
 
+  // Determine text color based on whether the navbar is scrolled
+  const textColorClass = scrolled 
+    ? 'text-cyber-blue dark:text-cyber-light-slate' 
+    : 'text-white';
+
   return (
     <header 
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
@@ -41,7 +46,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2" onClick={closeMenu}>
           <Shield className="h-8 w-8 text-cyber-cyan" />
-          <span className="font-bold text-xl text-cyber-light-slate">CyberPortfolio</span>
+          <span className={`font-bold text-xl ${textColorClass}`}>CyberPortfolio</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -50,10 +55,10 @@ const Navbar = () => {
             <Link
               key={item.path}
               to={item.path}
-              className={`relative py-2 text-sm font-medium transition-colors text-cyber-slate
+              className={`relative py-2 text-sm font-medium transition-colors
                 ${location.pathname === item.path 
                   ? 'text-cyber-cyan' 
-                  : 'hover:text-cyber-cyan'
+                  : `${textColorClass} hover:text-cyber-cyan`
                 }
                 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-cyber-cyan 
                 after:transition-all after:duration-300 hover:after:w-full
@@ -68,7 +73,7 @@ const Navbar = () => {
         </nav>
 
         {/* Mobile Menu Button */}
-        <button className="md:hidden text-cyber-light-slate" onClick={toggleMenu} aria-label="Toggle menu">
+        <button className={`md:hidden ${textColorClass}`} onClick={toggleMenu} aria-label="Toggle menu">
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
