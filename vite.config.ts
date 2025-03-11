@@ -4,9 +4,6 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import fs from 'fs';
-import type { ViteDevServer } from 'vite';
-import type { Connect } from 'vite';
-import type { ServerResponse } from 'http';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -25,8 +22,8 @@ export default defineConfig(({ mode }) => ({
     // Custom plugin to handle Markdown files for blog posts
     {
       name: 'markdown-posts',
-      configureServer(server: ViteDevServer) {
-        server.middlewares.use((req: Connect.IncomingMessage, res: ServerResponse, next: Connect.NextFunction) => {
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
           if (req.url?.startsWith('/src/content/')) {
             try {
               const filePath = path.join(process.cwd(), req.url);
