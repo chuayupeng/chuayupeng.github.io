@@ -45,7 +45,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
 
   return (
     <div className="timeline-item relative animate-fade-in w-full md:w-[45%] mb-12">
-      <div className="timeline-dot top-6 hidden md:block" />
+      {/* Removed the timeline-dot to prevent blocking the title */}
       
       <Card className="overflow-hidden border-l-4" style={{ borderLeftColor: `var(--${categoryColor.replace('bg-', '')})` }}>
         <CardContent className="p-5">

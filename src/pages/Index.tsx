@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Shield, Terminal, ChefHat, BookOpen, ArrowRight } from 'lucide-react';
@@ -21,10 +20,10 @@ const Index = () => {
         <div className="container mx-auto max-w-6xl">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6 animate-fade-in">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white">
                 Where <span className="gradient-text">Security</span> Meets <span className="gradient-text">Innovation</span>
               </h1>
-              <p className="text-lg text-cyber-slate max-w-lg">
+              <p className="text-lg text-white/80 max-w-lg">
                 Cybersecurity professional with a passion for teaching, F&B innovation, and entrepreneurship.
               </p>
               <div className="flex flex-wrap gap-4 pt-2">

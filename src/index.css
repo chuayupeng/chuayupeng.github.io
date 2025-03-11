@@ -88,9 +88,7 @@
     @apply mr-auto;
   }
   
-  .timeline-dot {
-    @apply absolute w-4 h-4 rounded-full bg-cyber-cyan left-1/2 -translate-x-1/2;
-  }
+  /* Removed the timeline-dot class to prevent blocking titles */
   
   .timeline-line {
     @apply absolute h-full w-0.5 bg-gradient-to-b from-cyber-cyan to-blue-400 left-1/2 -translate-x-1/2 -z-10;
