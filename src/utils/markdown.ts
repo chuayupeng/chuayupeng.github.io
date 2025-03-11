@@ -1,3 +1,9 @@
+import { Buffer } from 'buffer';
+
+// Polyfill Buffer for browsers
+if (typeof window !== 'undefined' && !window.Buffer) {
+  window.Buffer = Buffer;
+}
 
 import matter from 'gray-matter';
 import MarkdownIt from 'markdown-it';
@@ -35,7 +41,9 @@ export const getMarkdownPosts = async (): Promise<MarkdownPost[]> => {
       const slug = filePath.split('/').pop()?.replace(/\.md$/, '') || '';
       
       // Parse frontmatter and content
+      console.log(content)
       const { data, content: markdownContent } = matter(content as string);
+
       
       return {
         id: index + 1,
