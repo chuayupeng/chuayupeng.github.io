@@ -82,7 +82,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
             <span>{post.date}</span>
             <span className="mx-2">•</span>
             <BookOpen size={14} className="mr-1" />
-            <span>{post.readTime} min read</span>
+            <span>{post.id % 10 + 3} min read</span>
           </div>
           
           <h3 className="font-bold text-xl mb-2 line-clamp-2 group-hover:text-primary transition-colors">{post.title}</h3>
