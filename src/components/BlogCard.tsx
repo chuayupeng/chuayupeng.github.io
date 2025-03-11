@@ -2,7 +2,7 @@
 import { Card } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
 import { Calendar, ArrowRight, BookOpen, Star } from 'lucide-react';
-import { BlogPostType } from '@/data/blogData';
+import { BlogPostType } from '@/types/blog';
 import { cn } from '@/lib/utils';
 
 interface BlogCardProps {

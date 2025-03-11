@@ -1,16 +1,6 @@
+import { BlogPostType } from '@/types/blog';
 
-export type BlogPostType = {
-  id: number;
-  title: string;
-  excerpt: string;
-  content: string;
-  date: string;
-  category: "cybersecurity" | "teaching" | "f&b" | "entrepreneurship";
-  author: string;
-  image: string;
-  slug: string;
-};
-
+// This is legacy data that will be used as a fallback if markdown loading fails
 export const blogData: BlogPostType[] = [
   {
     id: 1,
