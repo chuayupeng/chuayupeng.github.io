@@ -15,7 +15,7 @@ import { initialNodes, initialEdges } from './skill-tree/initialElements';
 
 // Define custom node types with proper typing
 const nodeTypes: NodeTypes = {
-  skillNode: SkillNode as any,
+  skillNode: SkillNode,
 };
 
 const SkillTree = () => {

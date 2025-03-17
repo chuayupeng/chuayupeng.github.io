@@ -3,7 +3,7 @@ import { Node, Edge } from '@xyflow/react';
 import { SkillNodeData } from './SkillNode';
 
 // Define nodes with proper typing
-export const initialNodes: Node[] = [
+export const initialNodes: Node<SkillNodeData>[] = [
   {
     id: 'character',
     type: 'skillNode',
