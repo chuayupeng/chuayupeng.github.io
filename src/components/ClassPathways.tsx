@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   ReactFlow,
   Background,
@@ -8,11 +8,13 @@ import {
   useEdgesState,
   Node,
   Edge,
+  MarkerType,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { 
   Shield, BookOpen, ChefHat, Terminal, VenetianMask, Star,
-  Database, Code, BugPlay, Server, FileCode, Network
+  Database, Code, BugPlay, Server, FileCode, Network, 
+  CornerRightDown, ArrowRight
 } from 'lucide-react';
 
 // Define the node data interface
@@ -23,6 +25,7 @@ interface ClassNodeData {
   rarity?: string;
   level?: number;
   experiences?: string[];
+  category?: string;
   [key: string]: any; // Index signature to satisfy Record<string, unknown>
 }
 
@@ -64,6 +67,9 @@ const ClassNode = ({ data }: { data: ClassNodeData }) => {
     case 'Network':
       IconComponent = Network;
       break;
+    case 'ArrowRight':
+      IconComponent = ArrowRight;
+      break;
     default:
       IconComponent = Shield;
   }
@@ -75,20 +81,38 @@ const ClassNode = ({ data }: { data: ClassNodeData }) => {
     data.rarity === 'Rare' ? 3 : 
     data.rarity === 'Uncommon' ? 2 : 1;
   
+  // Get category-specific styling
+  const getCategoryStyles = () => {
+    switch(data.category) {
+      case 'security':
+        return 'border-skill-security/40 from-skill-security/10 to-skill-security/5';
+      case 'teaching':
+        return 'border-skill-teaching/40 from-skill-teaching/10 to-skill-teaching/5';
+      case 'digital':
+        return 'border-skill-digital/40 from-skill-digital/10 to-skill-digital/5';
+      case 'entrepreneur':
+        return 'border-skill-entrepreneur/40 from-skill-entrepreneur/10 to-skill-entrepreneur/5';
+      default:
+        return data.icon === 'VenetianMask' 
+          ? 'border-cyber-cyan/30 from-cyber-navy/40 to-cyber-dark-navy/40'
+          : 'border-gray-200/50 from-white/40 to-white/20 dark:border-gray-700/50 dark:from-cyber-navy/40 dark:to-cyber-dark-navy/30';
+    }
+  };
+  
   return (
-    <div className={`p-3 shadow-md rounded-md max-w-[180px] backdrop-blur-sm ${
-      data.icon === 'VenetianMask' 
-        ? 'bg-gradient-to-br from-cyber-navy/90 to-cyber-dark-navy/90 border border-cyber-cyan/50 text-white' 
-        : 'bg-white/90 dark:bg-cyber-navy/90 border border-gray-200/50 dark:border-gray-700/50'
-    }`}>
+    <div 
+      className={`p-3 shadow-md rounded-md max-w-[180px] backdrop-blur-sm transition-transform 
+      bg-gradient-to-br border ${getCategoryStyles()}`}
+    >
       <div className="flex items-center gap-2 mb-2">
         {IconComponent && (
           <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-            data.icon === 'Shield' ? 'bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400' :
-            data.icon === 'BookOpen' ? 'bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400' :
-            data.icon === 'ChefHat' ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' :
-            data.icon === 'Terminal' ? 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400' :
-            'bg-gray-100 dark:bg-gray-800/60 text-gray-600 dark:text-gray-400'
+            data.category === 'security' ? 'bg-skill-security/20 text-skill-security' :
+            data.category === 'teaching' ? 'bg-skill-teaching/20 text-skill-teaching' :
+            data.category === 'digital' ? 'bg-skill-digital/20 text-skill-digital' :
+            data.category === 'entrepreneur' ? 'bg-skill-entrepreneur/20 text-skill-entrepreneur' :
+            data.icon === 'VenetianMask' ? 'bg-cyber-cyan/20 text-cyber-cyan' :
+            'bg-gray-100/30 dark:bg-gray-800/30 text-gray-600 dark:text-gray-400'
           }`}>
             <IconComponent className="w-4 h-4" />
           </div>
@@ -107,7 +131,7 @@ const ClassNode = ({ data }: { data: ClassNodeData }) => {
               <Star 
                 key={i} 
                 size={12} 
-                className={i < starsCount ? "text-yellow-400 fill-yellow-400" : "text-gray-300 dark:text-gray-600"} 
+                className={i < starsCount ? "text-yellow-400 fill-yellow-400" : "text-gray-300/30 dark:text-gray-600/30"} 
               />
             ))}
           </div>
@@ -152,7 +176,7 @@ const ClassPathways = () => {
         description: 'Security Professional',
         experiences: ['Certified Red Team Operator (CRTO)', 'Offensive Security Web Expert (OSWE)', 'Offensive Security Certified Professional (OSCP)']
       },
-      position: { x: 300, y: 250 },
+      position: { x: 300, y: 300 },
       className: 'main-node'
     },
     
@@ -165,6 +189,7 @@ const ClassPathways = () => {
         icon: 'Shield',
         description: 'Information Security Expert',
         rarity: 'Legendary',
+        category: 'security',
         experiences: [
           'Penetration Testing', 
           'Red Team Operations', 
@@ -183,13 +208,14 @@ const ClassPathways = () => {
         icon: 'BookOpen',
         description: 'Education & Training',
         rarity: 'Epic',
+        category: 'teaching',
         experiences: [
           'BSc Computer Science (Security)',
           'Cybersecurity Advisor for Stealth Gaming',
           'Incident Response Team Training'
         ]
       },
-      position: { x: 300, y: 50 },
+      position: { x: 300, y: 75 },
       className: 'class-node teaching'
     },
     {
@@ -200,6 +226,7 @@ const ClassPathways = () => {
         icon: 'Code',
         description: 'Software Development',
         rarity: 'Rare',
+        category: 'digital',
         experiences: [
           'Full Stack Development', 
           'React/Redux and Laravel',
@@ -208,7 +235,7 @@ const ClassPathways = () => {
         ]
       },
       position: { x: 500, y: 100 },
-      className: 'class-node culinary'
+      className: 'class-node digital'
     },
     {
       id: 'entrepreneurship',
@@ -218,6 +245,7 @@ const ClassPathways = () => {
         icon: 'Terminal',
         description: 'Independent Advisory',
         rarity: 'Epic',
+        category: 'entrepreneur',
         experiences: [
           'ITSEC Asia Security Consultant',
           'Bug Bounty Hunter',
@@ -225,7 +253,7 @@ const ClassPathways = () => {
           'Security Reviews'
         ] 
       },
-      position: { x: 500, y: 350 },
+      position: { x: 500, y: 450 },
       className: 'class-node entrepreneur'
     },
     
@@ -237,6 +265,7 @@ const ClassPathways = () => {
         label: 'Red Team Operator', 
         icon: 'BugPlay',
         description: 'Offensive Security',
+        category: 'security',
         experiences: ['Led red team engagements', 'Phishing simulations', 'Penetration testing', 'CRTO Certification (2021)']
       },
       position: { x: 0, y: 200 },
@@ -249,6 +278,7 @@ const ClassPathways = () => {
         label: 'Product Security', 
         icon: 'Server',
         description: 'ByteDance/TikTok',
+        category: 'security',
         experiences: ['10,000+ security reviews', 'Penetration tests', 'Discovered critical vulnerabilities', 'Red Teaming with Python']
       },
       position: { x: 150, y: 200 },
@@ -261,9 +291,10 @@ const ClassPathways = () => {
         label: 'CSIRT Expert', 
         icon: 'FileCode',
         description: 'Digital & Intelligence',
+        category: 'teaching',
         experiences: ['Incident Response team', 'Malware investigations', 'Attack scenarios', 'Splunk/Arkime/ELK']
       },
-      position: { x: 300, y: 150 },
+      position: { x: 300, y: 175 },
       className: 'subclass-node teaching'
     },
     {
@@ -273,10 +304,11 @@ const ClassPathways = () => {
         label: 'Security Tooling', 
         icon: 'Database',
         description: 'Personal Projects',
+        category: 'digital',
         experiences: ['CTF Team Leader (0x1EA7BEEF)', 'Freki XSS detector', 'DNS Tunneling Detection', 'CVSSv3 Classifier']
       },
       position: { x: 450, y: 200 },
-      className: 'subclass-node culinary'
+      className: 'subclass-node digital'
     },
     {
       id: 'entrepreneur-1',
@@ -285,38 +317,124 @@ const ClassPathways = () => {
         label: 'Security Engineer', 
         icon: 'Network',
         description: 'Defence Science Tech',
+        category: 'entrepreneur',
         experiences: ['VAPT services', 'System hardening', 'Compliance checks', 'Security assessment']
       },
-      position: { x: 600, y: 250 },
+      position: { x: 600, y: 350 },
       className: 'subclass-node entrepreneur'
     },
   ];
 
-  // Define the edges between nodes
+  // Define the edges between nodes with more consistent and sleek styling
   const initialEdges: Edge[] = [
-    // Main connections to primary classes
-    { id: 'e-main-security', source: 'main', target: 'security', animated: true, className: 'primary-edge security', style: { stroke: '#3b82f6', strokeWidth: 2 } },
-    { id: 'e-main-teaching', source: 'main', target: 'teaching', animated: true, className: 'primary-edge teaching', style: { stroke: '#22c55e', strokeWidth: 2 } },
-    { id: 'e-main-digital', source: 'main', target: 'digital', animated: true, className: 'primary-edge culinary', style: { stroke: '#f59e0b', strokeWidth: 2 } },
-    { id: 'e-main-entrepreneur', source: 'main', target: 'entrepreneurship', animated: true, className: 'primary-edge entrepreneur', style: { stroke: '#a855f7', strokeWidth: 2 } },
+    // Main connections to primary classes - animated, thicker, with arrow markers
+    { 
+      id: 'e-main-security', 
+      source: 'main', 
+      target: 'security', 
+      animated: true,
+      style: { stroke: 'rgba(59, 130, 246, 0.7)', strokeWidth: 3 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(59, 130, 246, 0.9)' }
+    },
+    { 
+      id: 'e-main-teaching', 
+      source: 'main', 
+      target: 'teaching', 
+      animated: true,
+      style: { stroke: 'rgba(34, 197, 94, 0.7)', strokeWidth: 3 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(34, 197, 94, 0.9)' }
+    },
+    { 
+      id: 'e-main-digital', 
+      source: 'main', 
+      target: 'digital', 
+      animated: true,
+      style: { stroke: 'rgba(245, 158, 11, 0.7)', strokeWidth: 3 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(245, 158, 11, 0.9)' }
+    },
+    { 
+      id: 'e-main-entrepreneur', 
+      source: 'main', 
+      target: 'entrepreneurship', 
+      animated: true,
+      style: { stroke: 'rgba(168, 85, 247, 0.7)', strokeWidth: 3 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(168, 85, 247, 0.9)' }
+    },
     
-    // Subclass connections
-    { id: 'e-security-1', source: 'security', target: 'security-1', className: 'subclass-edge security', style: { stroke: '#3b82f6', strokeWidth: 1.5 } },
-    { id: 'e-security-2', source: 'security', target: 'security-2', className: 'subclass-edge security', style: { stroke: '#3b82f6', strokeWidth: 1.5 } },
-    { id: 'e-teaching-1', source: 'teaching', target: 'teaching-1', className: 'subclass-edge teaching', style: { stroke: '#22c55e', strokeWidth: 1.5 } },
-    { id: 'e-digital-1', source: 'digital', target: 'digital-1', className: 'subclass-edge culinary', style: { stroke: '#f59e0b', strokeWidth: 1.5 } },
-    { id: 'e-entrepreneur-1', source: 'entrepreneurship', target: 'entrepreneur-1', className: 'subclass-edge entrepreneur', style: { stroke: '#a855f7', strokeWidth: 1.5 } },
+    // Subclass connections with consistent styling
+    { 
+      id: 'e-security-1', 
+      source: 'security', 
+      target: 'security-1',
+      style: { stroke: 'rgba(59, 130, 246, 0.5)', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(59, 130, 246, 0.7)' }
+    },
+    { 
+      id: 'e-security-2', 
+      source: 'security', 
+      target: 'security-2',
+      style: { stroke: 'rgba(59, 130, 246, 0.5)', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(59, 130, 246, 0.7)' }
+    },
+    { 
+      id: 'e-teaching-1', 
+      source: 'teaching', 
+      target: 'teaching-1',
+      style: { stroke: 'rgba(34, 197, 94, 0.5)', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(34, 197, 94, 0.7)' }
+    },
+    { 
+      id: 'e-digital-1', 
+      source: 'digital', 
+      target: 'digital-1',
+      style: { stroke: 'rgba(245, 158, 11, 0.5)', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(245, 158, 11, 0.7)' }
+    },
+    { 
+      id: 'e-entrepreneur-1', 
+      source: 'entrepreneurship', 
+      target: 'entrepreneur-1',
+      style: { stroke: 'rgba(168, 85, 247, 0.5)', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(168, 85, 247, 0.7)' }
+    },
     
-    // Cross-skill connections
-    { id: 'e-cross-1', source: 'security-2', target: 'teaching-1', style: { stroke: 'rgba(148, 163, 184, 0.6)', strokeDasharray: '5,5', strokeWidth: 1.5 }, className: 'cross-edge' },
-    { id: 'e-cross-2', source: 'digital-1', target: 'entrepreneur-1', style: { stroke: 'rgba(148, 163, 184, 0.6)', strokeDasharray: '5,5', strokeWidth: 1.5 }, className: 'cross-edge' },
+    // Cross-skill connections with a dashed line for interdisciplinary skills
+    { 
+      id: 'e-cross-1', 
+      source: 'security-2', 
+      target: 'teaching-1', 
+      style: { stroke: 'rgba(148, 163, 184, 0.6)', strokeDasharray: '5,5', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.8)' }
+    },
+    { 
+      id: 'e-cross-2', 
+      source: 'digital-1', 
+      target: 'entrepreneur-1', 
+      style: { stroke: 'rgba(148, 163, 184, 0.6)', strokeDasharray: '5,5', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.8)' }
+    },
+    // Additional cross-connections to make the tree more cohesive
+    { 
+      id: 'e-cross-3', 
+      source: 'security-1', 
+      target: 'digital-1', 
+      style: { stroke: 'rgba(148, 163, 184, 0.6)', strokeDasharray: '5,5', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.8)' }
+    },
+    { 
+      id: 'e-cross-4', 
+      source: 'teaching-1', 
+      target: 'entrepreneur-1', 
+      style: { stroke: 'rgba(148, 163, 184, 0.6)', strokeDasharray: '5,5', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.8)' }
+    },
   ];
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   
   return (
-    <div className="rpg-card w-full h-[500px] bg-gradient-to-br from-white/60 to-white/20 dark:from-cyber-navy/60 dark:to-cyber-navy/20 backdrop-blur-sm border rounded-md overflow-hidden shadow-lg">
+    <div className="rpg-skill-tree w-full h-[500px] bg-gradient-to-br from-white/40 to-white/10 dark:from-cyber-navy/40 dark:to-cyber-navy/10 backdrop-blur-sm border rounded-md overflow-hidden shadow-lg">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -330,7 +448,7 @@ const ClassPathways = () => {
         className="skill-tree-flow"
         proOptions={{ hideAttribution: true }}
       >
-        <Background color="#ccc" gap={16} />
+        <Background color="#ccc" gap={16} size={1} />
         <Controls />
       </ReactFlow>
     </div>

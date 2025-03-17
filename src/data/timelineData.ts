@@ -11,7 +11,7 @@ export type TimelineItemType = {
 export const timelineData: TimelineItemType[] = [
   {
     id: 1,
-    title: "Information Security Practitioner",
+    title: "Red Team Operator",
     date: "2024 - Present",
     description: "Leading red team engagements, phishing simulations and penetration testing for the firm. Conducted vulnerability research on new attack vectors.",
     category: "cybersecurity",
@@ -19,7 +19,7 @@ export const timelineData: TimelineItemType[] = [
   },
   {
     id: 2,
-    title: "CSIRT Team",
+    title: "CSIRT Expert",
     date: "2023 - Present",
     description: "Incident Response team work, reverse engineering malware, investigations into incidents, and launching full investigations into attack scenarios with Splunk, Arkime and ELK stack.",
     category: "teaching",
