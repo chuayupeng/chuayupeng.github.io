@@ -10,7 +10,7 @@ import {
   NodeTypes,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { SkillNode } from './skill-tree/SkillNode';
+import { SkillNode, SkillNodeData } from './skill-tree/SkillNode';
 import { initialNodes, initialEdges } from './skill-tree/initialElements';
 
 // Define custom node types with proper typing
