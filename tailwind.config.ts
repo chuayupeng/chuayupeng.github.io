@@ -70,6 +70,12 @@ export default {
 					'light-slate': '#ccd6f6',
 					'navy': '#112240',
 					'dark-navy': '#020c1b',
+				},
+				skill: {
+					security: '#3b82f6',
+					teaching: '#22c55e',
+					culinary: '#f59e0b',
+					entrepreneur: '#a855f7',
 				}
 			},
 			borderRadius: {
