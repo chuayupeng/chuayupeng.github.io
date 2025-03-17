@@ -99,9 +99,19 @@ const ClassPathways = () => {
     }
   };
 
+  const getGlowClass = (color) => {
+    switch (color) {
+      case 'blue': return 'skill-line-blue';
+      case 'green': return 'skill-line-green';
+      case 'amber': return 'skill-line-amber';
+      case 'purple': return 'skill-line-purple';
+      default: return 'skill-line-default';
+    }
+  };
+
   return (
-    <div className="rpg-card w-full p-6 bg-white dark:bg-cyber-navy border rounded-lg">
-      <div className="skill-tree">
+    <div className="rpg-card w-full p-6 bg-white dark:bg-cyber-navy border rounded-lg shadow-md">
+      <div className="skill-tree relative">
         {/* Main character node */}
         <div className="main-character-node mb-8 mx-auto text-center">
           <div className="inline-block">
@@ -117,64 +127,71 @@ const ClassPathways = () => {
             </div>
           </div>
 
-          {/* Connecting lines to primary classes */}
-          <div className="flex justify-center mt-2 mb-4">
-            <div className="w-0.5 h-6 bg-gradient-to-b from-cyan-400 to-blue-400"></div>
+          {/* Sleek connecting line to primary classes */}
+          <div className="flex justify-center">
+            <div className="main-connector h-12 w-1 bg-gradient-to-b from-cyan-400 to-blue-400 rounded-full shadow-glow"></div>
           </div>
         </div>
 
-        {/* Primary class nodes */}
-        <div className="primary-classes grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 relative">
-          {/* Connecting horizontal line */}
-          <div className="absolute top-1/2 left-4 right-4 h-0.5 bg-gradient-to-r from-cyan-400 to-blue-400 transform -translate-y-1/2 hidden lg:block"></div>
-
-          {classData.primary.map((primaryClass) => (
-            <div key={primaryClass.id} className="class-branch flex flex-col items-center">
-              {/* Primary class node */}
-              <div className={`class-node rounded-lg p-3 border-2 shadow-md ${getColorClass(primaryClass.color)}`}>
-                <div className="flex items-center gap-2 mb-1">
-                  {primaryClass.icon}
-                  <h4 className="font-bold">{primaryClass.label}</h4>
-                </div>
-                <p className="text-xs text-muted-foreground mb-2">{primaryClass.description}</p>
-                <span className={`text-xs inline-block px-2 py-0.5 rounded-full border ${getRarityClass(primaryClass.rarity)}`}>
-                  {primaryClass.rarity}
-                </span>
-              </div>
-
-              {/* Connecting line */}
-              {primaryClass.subclasses.length > 0 && (
-                <div className="w-0.5 h-5 bg-gray-300 dark:bg-gray-700 my-2"></div>
-              )}
-
-              {/* Subclass nodes */}
-              <div className="subclasses space-y-2">
-                {primaryClass.subclasses.map((subclass) => (
-                  <div key={subclass.id} className="flex items-center gap-2">
-                    <ArrowRight className="h-3 w-3 text-muted-foreground" />
-                    <div className={`subclass-node rounded p-2 border shadow-sm ${getColorClass(primaryClass.color)} opacity-90`}>
-                      <h5 className="font-medium text-sm">{subclass.label}</h5>
-                      <p className="text-xs text-muted-foreground">{subclass.description}</p>
-                    </div>
+        {/* Primary class nodes with enhanced connections */}
+        <div className="primary-classes-container relative">
+          {/* Horizontal connecting line */}
+          <div className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 transform -translate-y-1/2 hidden lg:block rounded-full shadow-glow"></div>
+          
+          <div className="primary-classes grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+            {classData.primary.map((primaryClass, index) => (
+              <div key={primaryClass.id} className="class-branch flex flex-col items-center relative">
+                {/* Vertical connector to horizontal line (only visible on large screens) */}
+                <div className={`absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full h-10 w-1 ${getGlowClass(primaryClass.color)} rounded-full hidden lg:block`}></div>
+                
+                {/* Primary class node */}
+                <div className={`class-node rounded-lg p-3 border-2 shadow-md ${getColorClass(primaryClass.color)}`}>
+                  <div className="flex items-center gap-2 mb-1">
+                    {primaryClass.icon}
+                    <h4 className="font-bold">{primaryClass.label}</h4>
                   </div>
-                ))}
+                  <p className="text-xs text-muted-foreground mb-2">{primaryClass.description}</p>
+                  <span className={`text-xs inline-block px-2 py-0.5 rounded-full border ${getRarityClass(primaryClass.rarity)}`}>
+                    {primaryClass.rarity}
+                  </span>
+                </div>
+
+                {/* Sleek connecting line to subclasses */}
+                {primaryClass.subclasses.length > 0 && (
+                  <div className={`subclass-connector h-8 w-1 ${getGlowClass(primaryClass.color)} rounded-full mt-2`}></div>
+                )}
+
+                {/* Subclass nodes with improved connection lines */}
+                <div className="subclasses space-y-3 w-full max-w-[240px]">
+                  {primaryClass.subclasses.map((subclass) => (
+                    <div key={subclass.id} className="flex items-center gap-2">
+                      <div className={`subclass-arrow w-4 h-4 flex items-center justify-center rounded-full ${getGlowClass(primaryClass.color).replace('skill-line', 'skill-node')}`}>
+                        <ArrowRight className="h-3 w-3 text-white" />
+                      </div>
+                      <div className={`subclass-node rounded p-2 border shadow-sm ${getColorClass(primaryClass.color)} opacity-90 flex-1`}>
+                        <h5 className="font-medium text-sm">{subclass.label}</h5>
+                        <p className="text-xs text-muted-foreground">{subclass.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
-        {/* Cross-skill connections */}
-        <div className="cross-skills bg-muted/20 rounded-lg p-3 border border-dashed">
-          <h4 className="text-sm font-medium mb-2">Cross-Skill Synergies</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {/* Cross-skill connections with improved styling */}
+        <div className="cross-skills bg-muted/20 rounded-lg p-4 border border-dashed">
+          <h4 className="text-sm font-medium mb-3">Cross-Skill Synergies</h4>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-blue-400">Web Security Expert</span>
-              <ArrowRight className="h-3 w-3" />
+              <div className="flex-1 h-0.5 bg-gradient-to-r from-blue-400 to-green-400 rounded-full"></div>
               <span className="text-xs font-medium text-green-400">Technical Instructor</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-amber-400">Food Safety Officer</span>
-              <ArrowRight className="h-3 w-3" />
+              <div className="flex-1 h-0.5 bg-gradient-to-r from-amber-400 to-purple-400 rounded-full"></div>
               <span className="text-xs font-medium text-purple-400">Venture Builder</span>
             </div>
           </div>
