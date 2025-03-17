@@ -2,21 +2,20 @@
 import React from 'react';
 import {
   ReactFlow,
-  MiniMap,
-  Controls,
   Background,
+  Controls,
+  Panel,
   useNodesState,
   useEdgesState,
-  addEdge,
-  Panel,
+  NodeTypes,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { SkillNode } from './skill-tree/SkillNode';
 import { initialNodes, initialEdges } from './skill-tree/initialElements';
 
-// Define custom node types
-const nodeTypes = {
-  skillNode: SkillNode,
+// Define custom node types with proper typing
+const nodeTypes: NodeTypes = {
+  skillNode: SkillNode as any,
 };
 
 const SkillTree = () => {

@@ -101,7 +101,7 @@
   position: absolute;
   height: 30px;
   width: 30px;
-  border-color: theme('colors.cyber-cyan / 0.3');
+  border-color: rgba(34, 211, 238, 0.3);
 }
 
 .rpg-border::before {
@@ -131,6 +131,11 @@
   50% {
     filter: drop-shadow(0 0 5px rgba(34, 211, 238, 0.7)) brightness(1.1);
   }
+}
+
+@keyframes gleam {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 @media (prefers-reduced-motion) {
