@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -74,7 +73,7 @@ export default {
 				skill: {
 					security: '#3b82f6',
 					teaching: '#22c55e',
-					culinary: '#f59e0b',
+					digital: '#f59e0b',
 					entrepreneur: '#a855f7',
 				}
 			},

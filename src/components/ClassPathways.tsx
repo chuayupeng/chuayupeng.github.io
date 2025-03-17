@@ -4,14 +4,16 @@ import {
   ReactFlow,
   Background,
   Controls,
-  MiniMap,
   useNodesState,
   useEdgesState,
   Node,
   Edge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { Shield, BookOpen, ChefHat, Terminal, VenetianMask, Star } from 'lucide-react';
+import { 
+  Shield, BookOpen, ChefHat, Terminal, VenetianMask, Star,
+  Database, Code, BugPlay, Server, FileCode, Network
+} from 'lucide-react';
 
 // Define the node data interface
 interface ClassNodeData {
@@ -44,6 +46,24 @@ const ClassNode = ({ data }: { data: ClassNodeData }) => {
     case 'VenetianMask':
       IconComponent = VenetianMask;
       break;
+    case 'Database':
+      IconComponent = Database;
+      break;
+    case 'Code':
+      IconComponent = Code;
+      break;
+    case 'BugPlay':
+      IconComponent = BugPlay;
+      break;
+    case 'Server':
+      IconComponent = Server;
+      break;
+    case 'FileCode':
+      IconComponent = FileCode;
+      break;
+    case 'Network':
+      IconComponent = Network;
+      break;
     default:
       IconComponent = Shield;
   }
@@ -56,8 +76,10 @@ const ClassNode = ({ data }: { data: ClassNodeData }) => {
     data.rarity === 'Uncommon' ? 2 : 1;
   
   return (
-    <div className={`p-3 min-w-[120px] max-w-[180px] shadow-md rounded-md bg-white dark:bg-cyber-navy border ${
-      data.icon === 'VenetianMask' ? 'border-cyber-cyan' : 'border-gray-200 dark:border-gray-700'
+    <div className={`p-3 shadow-md rounded-md max-w-[180px] backdrop-blur-sm ${
+      data.icon === 'VenetianMask' 
+        ? 'bg-gradient-to-br from-cyber-navy/90 to-cyber-dark-navy/90 border border-cyber-cyan/50 text-white' 
+        : 'bg-white/90 dark:bg-cyber-navy/90 border border-gray-200/50 dark:border-gray-700/50'
     }`}>
       <div className="flex items-center gap-2 mb-2">
         {IconComponent && (
@@ -71,11 +93,11 @@ const ClassNode = ({ data }: { data: ClassNodeData }) => {
             <IconComponent className="w-4 h-4" />
           </div>
         )}
-        <strong className="text-foreground">{data.label}</strong>
+        <strong className="text-foreground dark:text-white">{data.label}</strong>
       </div>
       
       {data.description && (
-        <p className="text-xs text-muted-foreground mb-2">{data.description}</p>
+        <p className="text-xs text-muted-foreground dark:text-gray-300 mb-2">{data.description}</p>
       )}
       
       {data.rarity && (
@@ -89,16 +111,16 @@ const ClassNode = ({ data }: { data: ClassNodeData }) => {
               />
             ))}
           </div>
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs text-muted-foreground dark:text-gray-400">
             {data.rarity}
           </span>
         </div>
       )}
       
       {data.experiences && data.experiences.length > 0 && (
-        <div className="mt-2 pt-2 border-t border-gray-100 dark:border-gray-700">
-          <p className="text-xs font-medium mb-1">Experiences:</p>
-          <ul className="text-xs text-muted-foreground space-y-1">
+        <div className="mt-2 pt-2 border-t border-gray-100/30 dark:border-gray-700/30">
+          <p className="text-xs font-medium mb-1 dark:text-gray-200">Experiences:</p>
+          <ul className="text-xs text-muted-foreground dark:text-gray-400 space-y-1">
             {data.experiences.slice(0, 2).map((exp, i) => (
               <li key={i} className="truncate">{exp}</li>
             ))}
@@ -125,10 +147,10 @@ const ClassPathways = () => {
       id: 'main',
       type: 'classNode',
       data: { 
-        label: 'Character',
+        label: 'Chua Yu Peng',
         icon: 'VenetianMask',
-        description: 'Multi-class adventurer',
-        experiences: ['Web Developer', 'Security Specialist', 'Teacher', 'Food Enthusiast']
+        description: 'Security Professional',
+        experiences: ['Certified Red Team Operator (CRTO)', 'Offensive Security Web Expert (OSWE)', 'Offensive Security Certified Professional (OSCP)']
       },
       position: { x: 300, y: 250 },
       className: 'main-node'
@@ -141,9 +163,14 @@ const ClassPathways = () => {
       data: { 
         label: 'Security Mage', 
         icon: 'Shield',
-        description: 'Masters of defense magic',
+        description: 'Information Security Expert',
         rarity: 'Legendary',
-        experiences: ['OSCP Certification', 'OSWE Certification', 'Web App Penetration Testing', 'Red Team Operations']
+        experiences: [
+          'Penetration Testing', 
+          'Red Team Operations', 
+          'Vulnerability Research',
+          'Cloud Security (Azure)'
+        ]
       },
       position: { x: 100, y: 100 },
       className: 'class-node security'
@@ -154,22 +181,31 @@ const ClassPathways = () => {
       data: { 
         label: 'Knowledge Sage', 
         icon: 'BookOpen',
-        description: 'Wielders of ancient wisdom',
+        description: 'Education & Training',
         rarity: 'Epic',
-        experiences: ['Technical Training', 'Workshop Facilitation', 'Curriculum Development', 'Mentoring']
+        experiences: [
+          'BSc Computer Science (Security)',
+          'Cybersecurity Advisor for Stealth Gaming',
+          'Incident Response Team Training'
+        ]
       },
       position: { x: 300, y: 50 },
       className: 'class-node teaching'
     },
     {
-      id: 'culinary',
+      id: 'digital',
       type: 'classNode',
       data: { 
-        label: 'Culinary Alchemist', 
-        icon: 'ChefHat',
-        description: 'Creates powerful consumables',
+        label: 'Digital Alchemist', 
+        icon: 'Code',
+        description: 'Software Development',
         rarity: 'Rare',
-        experiences: ['Food Safety Certification', 'Restaurant Management', 'Recipe Development', 'Ingredient Sourcing']
+        experiences: [
+          'Full Stack Development', 
+          'React/Redux and Laravel',
+          'Built internal security tools',
+          'SemGrep Integration'
+        ]
       },
       position: { x: 500, y: 100 },
       className: 'class-node culinary'
@@ -178,11 +214,16 @@ const ClassPathways = () => {
       id: 'entrepreneurship',
       type: 'classNode',
       data: { 
-        label: 'Guild Master', 
+        label: 'Security Consultant', 
         icon: 'Terminal',
-        description: 'Leaders who build guilds',
+        description: 'Independent Advisory',
         rarity: 'Epic',
-        experiences: ['Project Management', 'Business Development', 'Team Leadership', 'Strategic Planning'] 
+        experiences: [
+          'ITSEC Asia Security Consultant',
+          'Bug Bounty Hunter',
+          'VAPT Services',
+          'Security Reviews'
+        ] 
       },
       position: { x: 500, y: 350 },
       className: 'class-node entrepreneur'
@@ -193,9 +234,10 @@ const ClassPathways = () => {
       id: 'security-1',
       type: 'classNode',
       data: { 
-        label: 'Penetration Tester', 
-        description: 'Identifies vulnerabilities',
-        experiences: ['Network Testing', 'Web Application Testing', 'Mobile Security']
+        label: 'Red Team Operator', 
+        icon: 'BugPlay',
+        description: 'Offensive Security',
+        experiences: ['Led red team engagements', 'Phishing simulations', 'Penetration testing', 'CRTO Certification (2021)']
       },
       position: { x: 0, y: 200 },
       className: 'subclass-node security'
@@ -204,9 +246,10 @@ const ClassPathways = () => {
       id: 'security-2',
       type: 'classNode',
       data: { 
-        label: 'Web Security Expert', 
-        description: 'Application exploit specialist',
-        experiences: ['Authentication Bypasses', 'XSS Protection', 'SQL Injection Prevention']
+        label: 'Product Security', 
+        icon: 'Server',
+        description: 'ByteDance/TikTok',
+        experiences: ['10,000+ security reviews', 'Penetration tests', 'Discovered critical vulnerabilities', 'Red Teaming with Python']
       },
       position: { x: 150, y: 200 },
       className: 'subclass-node security'
@@ -215,20 +258,22 @@ const ClassPathways = () => {
       id: 'teaching-1',
       type: 'classNode',
       data: { 
-        label: 'Technical Instructor', 
-        description: 'Transfer complex knowledge',
-        experiences: ['Cybersecurity Training', 'Programming Workshops', 'Knowledge Transfer']
+        label: 'CSIRT Expert', 
+        icon: 'FileCode',
+        description: 'Digital & Intelligence',
+        experiences: ['Incident Response team', 'Malware investigations', 'Attack scenarios', 'Splunk/Arkime/ELK']
       },
       position: { x: 300, y: 150 },
       className: 'subclass-node teaching'
     },
     {
-      id: 'culinary-1',
+      id: 'digital-1',
       type: 'classNode',
       data: { 
-        label: 'Food Safety Officer', 
-        description: 'Ensures potion quality',
-        experiences: ['HACCP Implementation', 'Food Safety Culture', 'Compliance Management']
+        label: 'Security Tooling', 
+        icon: 'Database',
+        description: 'Personal Projects',
+        experiences: ['CTF Team Leader (0x1EA7BEEF)', 'Freki XSS detector', 'DNS Tunneling Detection', 'CVSSv3 Classifier']
       },
       position: { x: 450, y: 200 },
       className: 'subclass-node culinary'
@@ -237,9 +282,10 @@ const ClassPathways = () => {
       id: 'entrepreneur-1',
       type: 'classNode',
       data: { 
-        label: 'Venture Builder', 
-        description: 'Creates new guild outposts',
-        experiences: ['Startup Advisory', 'Business Planning', 'Market Analysis']
+        label: 'Security Engineer', 
+        icon: 'Network',
+        description: 'Defence Science Tech',
+        experiences: ['VAPT services', 'System hardening', 'Compliance checks', 'Security assessment']
       },
       position: { x: 600, y: 250 },
       className: 'subclass-node entrepreneur'
@@ -251,26 +297,26 @@ const ClassPathways = () => {
     // Main connections to primary classes
     { id: 'e-main-security', source: 'main', target: 'security', animated: true, className: 'primary-edge security', style: { stroke: '#3b82f6', strokeWidth: 2 } },
     { id: 'e-main-teaching', source: 'main', target: 'teaching', animated: true, className: 'primary-edge teaching', style: { stroke: '#22c55e', strokeWidth: 2 } },
-    { id: 'e-main-culinary', source: 'main', target: 'culinary', animated: true, className: 'primary-edge culinary', style: { stroke: '#f59e0b', strokeWidth: 2 } },
+    { id: 'e-main-digital', source: 'main', target: 'digital', animated: true, className: 'primary-edge culinary', style: { stroke: '#f59e0b', strokeWidth: 2 } },
     { id: 'e-main-entrepreneur', source: 'main', target: 'entrepreneurship', animated: true, className: 'primary-edge entrepreneur', style: { stroke: '#a855f7', strokeWidth: 2 } },
     
     // Subclass connections
     { id: 'e-security-1', source: 'security', target: 'security-1', className: 'subclass-edge security', style: { stroke: '#3b82f6', strokeWidth: 1.5 } },
     { id: 'e-security-2', source: 'security', target: 'security-2', className: 'subclass-edge security', style: { stroke: '#3b82f6', strokeWidth: 1.5 } },
     { id: 'e-teaching-1', source: 'teaching', target: 'teaching-1', className: 'subclass-edge teaching', style: { stroke: '#22c55e', strokeWidth: 1.5 } },
-    { id: 'e-culinary-1', source: 'culinary', target: 'culinary-1', className: 'subclass-edge culinary', style: { stroke: '#f59e0b', strokeWidth: 1.5 } },
+    { id: 'e-digital-1', source: 'digital', target: 'digital-1', className: 'subclass-edge culinary', style: { stroke: '#f59e0b', strokeWidth: 1.5 } },
     { id: 'e-entrepreneur-1', source: 'entrepreneurship', target: 'entrepreneur-1', className: 'subclass-edge entrepreneur', style: { stroke: '#a855f7', strokeWidth: 1.5 } },
     
     // Cross-skill connections
-    { id: 'e-cross-1', source: 'security-2', target: 'teaching-1', style: { stroke: '#94a3b8', strokeDasharray: '5,5', strokeWidth: 1.5 }, className: 'cross-edge' },
-    { id: 'e-cross-2', source: 'culinary-1', target: 'entrepreneur-1', style: { stroke: '#94a3b8', strokeDasharray: '5,5', strokeWidth: 1.5 }, className: 'cross-edge' },
+    { id: 'e-cross-1', source: 'security-2', target: 'teaching-1', style: { stroke: 'rgba(148, 163, 184, 0.6)', strokeDasharray: '5,5', strokeWidth: 1.5 }, className: 'cross-edge' },
+    { id: 'e-cross-2', source: 'digital-1', target: 'entrepreneur-1', style: { stroke: 'rgba(148, 163, 184, 0.6)', strokeDasharray: '5,5', strokeWidth: 1.5 }, className: 'cross-edge' },
   ];
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   
   return (
-    <div className="rpg-card w-full h-[500px] bg-white dark:bg-cyber-navy border rounded-md overflow-hidden">
+    <div className="rpg-card w-full h-[500px] bg-gradient-to-br from-white/60 to-white/20 dark:from-cyber-navy/60 dark:to-cyber-navy/20 backdrop-blur-sm border rounded-md overflow-hidden shadow-lg">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -286,19 +332,6 @@ const ClassPathways = () => {
       >
         <Background color="#ccc" gap={16} />
         <Controls />
-        <MiniMap 
-          nodeStrokeWidth={3}
-          nodeColor={(node) => {
-            switch (node.data?.icon) {
-              case 'Shield': return '#3b82f6';
-              case 'BookOpen': return '#22c55e';
-              case 'ChefHat': return '#f59e0b';
-              case 'Terminal': return '#a855f7';
-              case 'VenetianMask': return '#06b6d4';
-              default: return '#94a3b8';
-            }
-          }}
-        />
       </ReactFlow>
     </div>
   );
