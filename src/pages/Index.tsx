@@ -19,6 +19,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { blogData } from '@/data/blogData';
 import { timelineData } from '@/data/timelineData';
+import ClassPathways from '@/components/ClassPathways';
 
 const Index = () => {
   // Get the 3 most recent blog posts
@@ -261,7 +262,11 @@ const Index = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="mb-12">
+            <ClassPathways />
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-8">
             {/* Cybersecurity Card */}
             <div className="rpg-card bg-white dark:bg-cyber-navy p-6">
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mb-4 animate-pulse-glow">

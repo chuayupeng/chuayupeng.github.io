@@ -232,4 +232,82 @@
   .prose td {
     @apply px-4 py-2 border dark:border-gray-700;
   }
+
+  /* Skill Tree Styling */
+  .skill-tree-flow {
+    @apply bg-gray-50 dark:bg-cyber-navy;
+  }
+  
+  .skill-tree-flow .react-flow__node {
+    @apply border shadow-sm font-medium transition-all;
+    border-radius: 8px;
+    padding: 0;
+  }
+  
+  .skill-tree-flow .react-flow__node.main-node {
+    @apply bg-gradient-to-r from-cyber-cyan to-blue-400 text-cyber-blue font-bold;
+    width: 150px;
+    border-width: 2px;
+    border-color: rgba(100, 255, 218, 0.5);
+    box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+  }
+  
+  .skill-tree-flow .react-flow__node.class-node {
+    @apply bg-white dark:bg-cyber-blue;
+    width: 140px;
+    border-width: 2px;
+  }
+  
+  .skill-tree-flow .react-flow__node.subclass-node {
+    width: 130px;
+    opacity: 0.9;
+  }
+  
+  .skill-tree-flow .react-flow__node.security {
+    @apply border-blue-400 dark:border-blue-500;
+  }
+  
+  .skill-tree-flow .react-flow__node.teaching {
+    @apply border-green-400 dark:border-green-500;
+  }
+  
+  .skill-tree-flow .react-flow__node.culinary {
+    @apply border-amber-400 dark:border-amber-500;
+  }
+  
+  .skill-tree-flow .react-flow__node.entrepreneur {
+    @apply border-purple-400 dark:border-purple-500;
+  }
+  
+  .skill-tree-flow .react-flow__edge-path {
+    @apply stroke-2;
+  }
+  
+  .skill-tree-flow .react-flow__edge.primary-edge.security .react-flow__edge-path {
+    @apply stroke-blue-400;
+  }
+  
+  .skill-tree-flow .react-flow__edge.primary-edge.teaching .react-flow__edge-path {
+    @apply stroke-green-400;
+  }
+  
+  .skill-tree-flow .react-flow__edge.primary-edge.culinary .react-flow__edge-path {
+    @apply stroke-amber-400;
+  }
+  
+  .skill-tree-flow .react-flow__edge.primary-edge.entrepreneur .react-flow__edge-path {
+    @apply stroke-purple-400;
+  }
+  
+  .skill-tree-flow .react-flow__edge.subclass-edge .react-flow__edge-path {
+    @apply stroke-1 opacity-80;
+  }
+  
+  .skill-tree-flow .react-flow__edge.cross-edge .react-flow__edge-path {
+    @apply stroke-gray-400 stroke-1;
+  }
+  
+  .skill-tree-flow .react-flow__minimap {
+    @apply bg-transparent border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden;
+  }
 }
