@@ -1,252 +1,130 @@
 
-import { MarkerType } from '@xyflow/react';
+import { Node, Edge, Position } from '@xyflow/react';
+import { SkillNodeData } from './SkillNode';
 
-// Define the node positions with a clear hierarchy
-const nodeWidth = 180;
-const nodeHeight = 100;
-const xGap = 240;
-const yGap = 150;
-
-// Calculate coordinates for proper spacing
-const centerX = 0;
-const topY = 0;
-const level1Y = topY + yGap;
-const level2Y = level1Y + yGap;
-
-export const initialNodes = [
-  // Main character node
+// Define nodes with proper typing
+export const initialNodes: Node<SkillNodeData>[] = [
   {
-    id: 'main',
+    id: 'character',
     type: 'skillNode',
-    position: { x: centerX - nodeWidth / 2, y: topY },
     data: {
-      label: 'Character Build',
-      icon: 'mask',
-      description: 'Multi-class adventurer',
-      rarity: 'Unique',
-      color: 'cyan',
-      isMain: true,
-      outputs: true
+      label: 'Character',
+      description: 'Your starting point',
+      level: 1,
+      maxLevel: 1,
+      unlocked: true,
+      progress: 100,
+      category: 'character'
     },
-    className: 'animate-pulse-glow'
-  },
-  
-  // Primary class nodes
-  {
-    id: 'security',
-    type: 'skillNode',
-    position: { x: centerX - xGap - nodeWidth / 2, y: level1Y },
-    data: {
-      label: 'Security Mage',
-      icon: 'shield',
-      description: 'Masters of defense magic',
-      rarity: 'Legendary',
-      color: 'blue',
-      inputs: true,
-      outputs: true,
-      outputRight: true
-    }
+    position: { x: 250, y: 0 }
   },
   {
-    id: 'teaching',
+    id: 'warrior',
     type: 'skillNode',
-    position: { x: centerX - nodeWidth / 2, y: level1Y },
     data: {
-      label: 'Knowledge Sage',
-      icon: 'book',
-      description: 'Wielders of ancient wisdom',
-      rarity: 'Epic',
-      color: 'green',
-      inputs: true,
-      outputs: true,
-      outputLeft: true,
-      outputRight: true
-    }
+      label: 'Warrior',
+      description: 'Master of combat',
+      level: 0,
+      maxLevel: 5,
+      unlocked: false,
+      progress: 0,
+      category: 'combat'
+    },
+    position: { x: 50, y: 150 }
   },
   {
-    id: 'culinary',
+    id: 'mage',
     type: 'skillNode',
-    position: { x: centerX + xGap - nodeWidth / 2, y: level1Y },
     data: {
-      label: 'Culinary Alchemist',
-      icon: 'chef',
-      description: 'Creates powerful consumables',
-      rarity: 'Rare',
-      color: 'amber',
-      inputs: true,
-      outputs: true,
-      outputLeft: true
-    }
-  },
-  
-  // Subclass nodes
-  {
-    id: 'security-1',
-    type: 'skillNode',
-    position: { x: centerX - xGap - nodeWidth / 2 - 100, y: level2Y },
-    data: {
-      label: 'Penetration Tester',
-      description: 'Identifies vulnerabilities',
-      color: 'blue',
-      inputs: true
-    }
+      label: 'Mage',
+      description: 'Master of arcane',
+      level: 0,
+      maxLevel: 5,
+      unlocked: false,
+      progress: 0,
+      category: 'magic'
+    },
+    position: { x: 250, y: 150 }
   },
   {
-    id: 'security-2',
+    id: 'rogue',
     type: 'skillNode',
-    position: { x: centerX - xGap - nodeWidth / 2 + 100, y: level2Y },
     data: {
-      label: 'Web Security Expert',
-      description: 'Application exploit specialist',
-      color: 'blue',
-      inputs: true,
-      outputRight: true
-    }
+      label: 'Rogue',
+      description: 'Master of stealth',
+      level: 0,
+      maxLevel: 5,
+      unlocked: false,
+      progress: 0,
+      category: 'stealth'
+    },
+    position: { x: 450, y: 150 }
   },
   {
-    id: 'teaching-1',
+    id: 'berserker',
     type: 'skillNode',
-    position: { x: centerX - nodeWidth / 2, y: level2Y },
     data: {
-      label: 'Technical Instructor',
-      description: 'Transfer complex knowledge',
-      color: 'green',
-      inputs: true,
-      outputLeft: true
-    }
+      label: 'Berserker',
+      description: 'Unleash fury',
+      level: 0,
+      maxLevel: 3,
+      unlocked: false,
+      progress: 0,
+      category: 'combat'
+    },
+    position: { x: 0, y: 300 }
   },
   {
-    id: 'culinary-1',
+    id: 'knight',
     type: 'skillNode',
-    position: { x: centerX + xGap - nodeWidth / 2, y: level2Y },
     data: {
-      label: 'Food Safety Officer',
-      description: 'Ensures potion quality',
-      color: 'amber',
-      inputs: true,
-      outputRight: true
-    }
-  },
-  // Entrepreneurship group
-  {
-    id: 'entrepreneur',
-    type: 'skillNode',
-    position: { x: centerX + xGap*2 - nodeWidth / 2, y: level1Y },
-    data: {
-      label: 'Guild Master',
-      icon: 'terminal',
-      description: 'Leaders who build guilds',
-      rarity: 'Epic',
-      color: 'purple',
-      inputs: true,
-      outputs: true
-    }
+      label: 'Knight',
+      description: 'Defensive specialist',
+      level: 0,
+      maxLevel: 3,
+      unlocked: false,
+      progress: 0,
+      category: 'combat'
+    },
+    position: { x: 150, y: 300 }
   },
   {
-    id: 'entrepreneur-1',
+    id: 'elementalist',
     type: 'skillNode',
-    position: { x: centerX + xGap*2 - nodeWidth / 2, y: level2Y },
     data: {
-      label: 'Venture Builder',
-      description: 'Creates new guild outposts',
-      color: 'purple',
-      inputs: true,
-      outputLeft: true
-    }
+      label: 'Elementalist',
+      description: 'Master of elements',
+      level: 0,
+      maxLevel: 3,
+      unlocked: false,
+      progress: 0,
+      category: 'magic'
+    },
+    position: { x: 300, y: 300 }
   },
+  {
+    id: 'assassin',
+    type: 'skillNode',
+    data: {
+      label: 'Assassin',
+      description: 'Silent killer',
+      level: 0,
+      maxLevel: 3,
+      unlocked: false,
+      progress: 0,
+      category: 'stealth'
+    },
+    position: { x: 450, y: 300 }
+  }
 ];
 
-export const initialEdges = [
-  // Main to primary classes
-  {
-    id: 'main-to-security',
-    source: 'main',
-    target: 'security',
-    type: 'smoothstep',
-    animated: true,
-    style: { stroke: '#38bdf8', strokeWidth: 3 }
-  },
-  {
-    id: 'main-to-teaching',
-    source: 'main',
-    target: 'teaching',
-    type: 'smoothstep',
-    animated: true,
-    style: { stroke: '#4ade80', strokeWidth: 3 }
-  },
-  {
-    id: 'main-to-culinary',
-    source: 'main',
-    target: 'culinary',
-    type: 'smoothstep',
-    animated: true,
-    style: { stroke: '#fbbf24', strokeWidth: 3 }
-  },
-  {
-    id: 'main-to-entrepreneur',
-    source: 'main',
-    target: 'entrepreneur',
-    type: 'smoothstep',
-    animated: true,
-    style: { stroke: '#a78bfa', strokeWidth: 3 }
-  },
-  
-  // Primary to subclasses
-  {
-    id: 'security-to-pentester',
-    source: 'security',
-    target: 'security-1',
-    type: 'smoothstep',
-    style: { stroke: '#38bdf8', strokeWidth: 2 }
-  },
-  {
-    id: 'security-to-websec',
-    source: 'security',
-    target: 'security-2',
-    type: 'smoothstep',
-    style: { stroke: '#38bdf8', strokeWidth: 2 }
-  },
-  {
-    id: 'teaching-to-instructor',
-    source: 'teaching',
-    target: 'teaching-1',
-    type: 'smoothstep',
-    style: { stroke: '#4ade80', strokeWidth: 2 }
-  },
-  {
-    id: 'culinary-to-safety',
-    source: 'culinary',
-    target: 'culinary-1',
-    type: 'smoothstep',
-    style: { stroke: '#fbbf24', strokeWidth: 2 }
-  },
-  {
-    id: 'entrepreneur-to-venture',
-    source: 'entrepreneur',
-    target: 'entrepreneur-1',
-    type: 'smoothstep',
-    style: { stroke: '#a78bfa', strokeWidth: 2 }
-  },
-  
-  // Cross-connections
-  {
-    id: 'websec-to-instructor',
-    source: 'security-2',
-    sourceHandle: 'right',
-    target: 'teaching-1',
-    targetHandle: 'left',
-    type: 'smoothstep',
-    animated: true,
-    style: { stroke: 'url(#blue-to-green)', strokeWidth: 2, strokeDasharray: '5,5' },
-  },
-  {
-    id: 'culinary-to-entrepreneur',
-    source: 'culinary-1',
-    sourceHandle: 'right',
-    target: 'entrepreneur-1',
-    targetHandle: 'left',
-    type: 'smoothstep',
-    animated: true,
-    style: { stroke: 'url(#amber-to-purple)', strokeWidth: 2, strokeDasharray: '5,5' },
-  },
+// Define edges
+export const initialEdges: Edge[] = [
+  { id: 'e-char-warrior', source: 'character', target: 'warrior', animated: true },
+  { id: 'e-char-mage', source: 'character', target: 'mage', animated: true },
+  { id: 'e-char-rogue', source: 'character', target: 'rogue', animated: true },
+  { id: 'e-warrior-berserker', source: 'warrior', target: 'berserker' },
+  { id: 'e-warrior-knight', source: 'warrior', target: 'knight' },
+  { id: 'e-mage-elementalist', source: 'mage', target: 'elementalist' },
+  { id: 'e-rogue-assassin', source: 'rogue', target: 'assassin' }
 ];

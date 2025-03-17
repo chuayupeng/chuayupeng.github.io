@@ -97,6 +97,10 @@ export default {
 				'pulse-light': {
 					'0%, 100%': { opacity: '0.85' },
 					'50%': { opacity: '1' }
+				},
+				'gleam': {
+					'0%': { transform: 'translateX(-100%)' },
+					'100%': { transform: 'translateX(100%)' }
 				}
 			},
 			animation: {
@@ -104,7 +108,8 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.5s ease-out',
 				'fade-in-right': 'fade-in-right 0.5s ease-out',
-				'pulse-light': 'pulse-light 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+				'pulse-light': 'pulse-light 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+				'gleam': 'gleam 2s ease-in-out infinite'
 			}
 		}
 	},

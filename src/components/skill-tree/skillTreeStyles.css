@@ -15,6 +15,40 @@
 .rpg-skill-tree .react-flow__node-skillNode {
   font-size: 12px;
   min-height: 80px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.dark .rpg-skill-tree .react-flow__node-skillNode {
+  background-color: #1e293b;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.rpg-skill-tree .skill-node.unlocked {
+  border-color: #38bdf8;
+}
+
+.rpg-skill-tree .skill-node.locked {
+  opacity: 0.7;
+}
+
+/* Category styling */
+.rpg-skill-tree .skill-node.combat {
+  border-left: 3px solid #ef4444;
+}
+
+.rpg-skill-tree .skill-node.magic {
+  border-left: 3px solid #8b5cf6;
+}
+
+.rpg-skill-tree .skill-node.stealth {
+  border-left: 3px solid #10b981;
+}
+
+.rpg-skill-tree .skill-node.character {
+  border-left: 3px solid #f59e0b;
 }
 
 .rpg-skill-tree .react-flow__handle.skill-handle {
@@ -25,7 +59,9 @@
 }
 
 .rpg-skill-tree .react-flow__edge-path {
-  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.2));
+  stroke: #38bdf8;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 2px rgba(56, 189, 248, 0.5));
 }
 
 .rpg-skill-tree .react-flow__edge.animated .react-flow__edge-path {
