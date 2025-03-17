@@ -22,8 +22,8 @@ export const timelineData: TimelineItemType[] = [
     title: "CSIRT Expert",
     date: "2023 - Present",
     description: "Incident Response team work, reverse engineering malware, investigations into incidents, and launching full investigations into attack scenarios with Splunk, Arkime and ELK stack.",
-    category: "teaching",
-    icon: "GraduationCap"
+    category: "cybersecurity",
+    icon: "Shield"
   },
   {
     id: 3,

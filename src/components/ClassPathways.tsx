@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef, useEffect } from 'react';
 import {
   ReactFlow,
   Background,
@@ -9,6 +9,7 @@ import {
   Node,
   Edge,
   MarkerType,
+  Panel,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { 
@@ -101,7 +102,7 @@ const ClassNode = ({ data }: { data: ClassNodeData }) => {
   
   return (
     <div 
-      className={`p-3 shadow-md rounded-md max-w-[180px] backdrop-blur-sm transition-transform 
+      className={`p-3 shadow-md rounded-md w-[160px] backdrop-blur-sm transition-transform 
       bg-gradient-to-br border ${getCategoryStyles()}`}
     >
       <div className="flex items-center gap-2 mb-2">
@@ -117,7 +118,7 @@ const ClassNode = ({ data }: { data: ClassNodeData }) => {
             <IconComponent className="w-4 h-4" />
           </div>
         )}
-        <strong className="text-foreground dark:text-white">{data.label}</strong>
+        <strong className="text-foreground dark:text-white text-sm">{data.label}</strong>
       </div>
       
       {data.description && (
@@ -164,7 +165,9 @@ const nodeTypes = {
 };
 
 const ClassPathways = () => {
-  // Initial nodes for the skill tree
+  const flowRef = useRef(null);
+  
+  // Completely reorganized layout with precise positioning to avoid overlaps
   const initialNodes: Node<ClassNodeData>[] = [
     // Main character node (center)
     {
@@ -176,11 +179,11 @@ const ClassPathways = () => {
         description: 'Security Professional',
         experiences: ['Certified Red Team Operator (CRTO)', 'Offensive Security Web Expert (OSWE)', 'Offensive Security Certified Professional (OSCP)']
       },
-      position: { x: 300, y: 300 },
+      position: { x: 400, y: 300 },
       className: 'main-node'
     },
     
-    // Primary class specializations
+    // Primary class specializations - positioned in a diamond pattern around main node
     {
       id: 'security',
       type: 'classNode',
@@ -197,7 +200,7 @@ const ClassPathways = () => {
           'Cloud Security (Azure)'
         ]
       },
-      position: { x: 100, y: 100 },
+      position: { x: 200, y: 150 },
       className: 'class-node security'
     },
     {
@@ -215,7 +218,7 @@ const ClassPathways = () => {
           'Incident Response Team Training'
         ]
       },
-      position: { x: 300, y: 75 },
+      position: { x: 400, y: 50 },
       className: 'class-node teaching'
     },
     {
@@ -234,7 +237,7 @@ const ClassPathways = () => {
           'SemGrep Integration'
         ]
       },
-      position: { x: 500, y: 100 },
+      position: { x: 600, y: 150 },
       className: 'class-node digital'
     },
     {
@@ -253,11 +256,11 @@ const ClassPathways = () => {
           'Security Reviews'
         ] 
       },
-      position: { x: 500, y: 450 },
+      position: { x: 400, y: 550 },
       className: 'class-node entrepreneur'
     },
     
-    // Subclasses and specializations
+    // Subclasses and specializations - positioned carefully to avoid overlapping
     {
       id: 'security-1',
       type: 'classNode',
@@ -268,7 +271,7 @@ const ClassPathways = () => {
         category: 'security',
         experiences: ['Led red team engagements', 'Phishing simulations', 'Penetration testing', 'CRTO Certification (2021)']
       },
-      position: { x: 0, y: 200 },
+      position: { x: 50, y: 210 },
       className: 'subclass-node security'
     },
     {
@@ -281,7 +284,7 @@ const ClassPathways = () => {
         category: 'security',
         experiences: ['10,000+ security reviews', 'Penetration tests', 'Discovered critical vulnerabilities', 'Red Teaming with Python']
       },
-      position: { x: 150, y: 200 },
+      position: { x: 190, y: 300 },
       className: 'subclass-node security'
     },
     {
@@ -294,7 +297,7 @@ const ClassPathways = () => {
         category: 'teaching',
         experiences: ['Incident Response team', 'Malware investigations', 'Attack scenarios', 'Splunk/Arkime/ELK']
       },
-      position: { x: 300, y: 175 },
+      position: { x: 310, y: 150 },
       className: 'subclass-node teaching'
     },
     {
@@ -307,7 +310,7 @@ const ClassPathways = () => {
         category: 'digital',
         experiences: ['CTF Team Leader (0x1EA7BEEF)', 'Freki XSS detector', 'DNS Tunneling Detection', 'CVSSv3 Classifier']
       },
-      position: { x: 450, y: 200 },
+      position: { x: 610, y: 300 },
       className: 'subclass-node digital'
     },
     {
@@ -320,7 +323,7 @@ const ClassPathways = () => {
         category: 'entrepreneur',
         experiences: ['VAPT services', 'System hardening', 'Compliance checks', 'Security assessment']
       },
-      position: { x: 600, y: 350 },
+      position: { x: 500, y: 450 },
       className: 'subclass-node entrepreneur'
     },
   ];
@@ -433,9 +436,23 @@ const ClassPathways = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   
+  // Use useEffect to ensure proper positioning on initial load
+  useEffect(() => {
+    // Wait for the flow to be rendered
+    const timer = setTimeout(() => {
+      if (flowRef.current) {
+        const flowInstance = flowRef.current;
+        flowInstance.fitView({ padding: 0.2, includeHiddenNodes: false });
+      }
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
   return (
-    <div className="rpg-skill-tree w-full h-[500px] bg-gradient-to-br from-white/40 to-white/10 dark:from-cyber-navy/40 dark:to-cyber-navy/10 backdrop-blur-sm border rounded-md overflow-hidden shadow-lg">
+    <div className="rpg-skill-tree w-full h-[600px] bg-gradient-to-br from-white/40 to-white/10 dark:from-cyber-navy/40 dark:to-cyber-navy/10 backdrop-blur-sm border rounded-md overflow-hidden shadow-lg">
       <ReactFlow
+        ref={flowRef}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -447,9 +464,34 @@ const ClassPathways = () => {
         maxZoom={1.5}
         className="skill-tree-flow"
         proOptions={{ hideAttribution: true }}
+        nodesDraggable={false}
+        nodesConnectable={false}
+        elementsSelectable={false}
+        zoomOnScroll={false}
+        panOnScroll={true}
       >
         <Background color="#ccc" gap={16} size={1} />
-        <Controls />
+        <Controls showInteractive={false} />
+        <Panel position="top-right" className="bg-white/80 dark:bg-cyber-navy/80 p-2 rounded backdrop-blur-sm text-xs">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 rounded-full bg-skill-security"></div>
+              <span>Security</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 rounded-full bg-skill-teaching"></div>
+              <span>Teaching</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 rounded-full bg-skill-digital"></div>
+              <span>Digital</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 rounded-full bg-skill-entrepreneur"></div>
+              <span>Consulting</span>
+            </div>
+          </div>
+        </Panel>
       </ReactFlow>
     </div>
   );
