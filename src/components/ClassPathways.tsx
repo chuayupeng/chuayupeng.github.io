@@ -15,7 +15,7 @@ import '@xyflow/react/dist/style.css';
 import { 
   Shield, BookOpen, ChefHat, Terminal, VenetianMask, Star,
   Database, Code, BugPlay, Server, FileCode, Network, 
-  CornerRightDown, ArrowRight
+  ArrowRight
 } from 'lucide-react';
 
 // Define the node data interface
@@ -24,55 +24,27 @@ interface ClassNodeData {
   icon?: string;
   description?: string;
   rarity?: string;
-  level?: number;
-  experiences?: string[];
   category?: string;
-  [key: string]: any; // Index signature to satisfy Record<string, unknown>
 }
 
-// Custom node component
+// Custom node component - simplified version with less content
 const ClassNode = ({ data }: { data: ClassNodeData }) => {
   let IconComponent;
   
   switch (data.icon) {
-    case 'Shield':
-      IconComponent = Shield;
-      break;
-    case 'BookOpen':
-      IconComponent = BookOpen;
-      break;
-    case 'ChefHat':
-      IconComponent = ChefHat;
-      break;
-    case 'Terminal':
-      IconComponent = Terminal;
-      break;
-    case 'VenetianMask':
-      IconComponent = VenetianMask;
-      break;
-    case 'Database':
-      IconComponent = Database;
-      break;
-    case 'Code':
-      IconComponent = Code;
-      break;
-    case 'BugPlay':
-      IconComponent = BugPlay;
-      break;
-    case 'Server':
-      IconComponent = Server;
-      break;
-    case 'FileCode':
-      IconComponent = FileCode;
-      break;
-    case 'Network':
-      IconComponent = Network;
-      break;
-    case 'ArrowRight':
-      IconComponent = ArrowRight;
-      break;
-    default:
-      IconComponent = Shield;
+    case 'Shield': IconComponent = Shield; break;
+    case 'BookOpen': IconComponent = BookOpen; break;
+    case 'ChefHat': IconComponent = ChefHat; break;
+    case 'Terminal': IconComponent = Terminal; break;
+    case 'VenetianMask': IconComponent = VenetianMask; break;
+    case 'Database': IconComponent = Database; break;
+    case 'Code': IconComponent = Code; break;
+    case 'BugPlay': IconComponent = BugPlay; break;
+    case 'Server': IconComponent = Server; break;
+    case 'FileCode': IconComponent = FileCode; break;
+    case 'Network': IconComponent = Network; break;
+    case 'ArrowRight': IconComponent = ArrowRight; break;
+    default: IconComponent = Shield;
   }
   
   // Calculate number of stars based on rarity
@@ -102,7 +74,7 @@ const ClassNode = ({ data }: { data: ClassNodeData }) => {
   
   return (
     <div 
-      className={`p-3 shadow-md rounded-md w-[160px] backdrop-blur-sm transition-transform 
+      className={`p-3 shadow-md rounded-md w-[140px] backdrop-blur-sm transition-transform 
       bg-gradient-to-br border ${getCategoryStyles()}`}
     >
       <div className="flex items-center gap-2 mb-2">
@@ -126,33 +98,14 @@ const ClassNode = ({ data }: { data: ClassNodeData }) => {
       )}
       
       {data.rarity && (
-        <div className="flex flex-col space-y-1">
-          <div className="flex items-center gap-0.5">
-            {[...Array(5)].map((_, i) => (
-              <Star 
-                key={i} 
-                size={12} 
-                className={i < starsCount ? "text-yellow-400 fill-yellow-400" : "text-gray-300/30 dark:text-gray-600/30"} 
-              />
-            ))}
-          </div>
-          <span className="text-xs text-muted-foreground dark:text-gray-400">
-            {data.rarity}
-          </span>
-        </div>
-      )}
-      
-      {data.experiences && data.experiences.length > 0 && (
-        <div className="mt-2 pt-2 border-t border-gray-100/30 dark:border-gray-700/30">
-          <p className="text-xs font-medium mb-1 dark:text-gray-200">Experiences:</p>
-          <ul className="text-xs text-muted-foreground dark:text-gray-400 space-y-1">
-            {data.experiences.slice(0, 2).map((exp, i) => (
-              <li key={i} className="truncate">{exp}</li>
-            ))}
-            {data.experiences.length > 2 && (
-              <li className="text-xs italic">+{data.experiences.length - 2} more...</li>
-            )}
-          </ul>
+        <div className="flex gap-0.5">
+          {[...Array(starsCount)].map((_, i) => (
+            <Star 
+              key={i} 
+              size={12} 
+              className="text-yellow-400 fill-yellow-400" 
+            />
+          ))}
         </div>
       )}
     </div>
@@ -167,9 +120,9 @@ const nodeTypes = {
 const ClassPathways = () => {
   const flowRef = useRef(null);
   
-  // Completely reorganized layout with precise positioning to avoid overlaps
+  // Redesigned layout with wider spacing to avoid overlaps
   const initialNodes: Node<ClassNodeData>[] = [
-    // Main character node (center)
+    // Main character node
     {
       id: 'main',
       type: 'classNode',
@@ -177,30 +130,23 @@ const ClassPathways = () => {
         label: 'Chua Yu Peng',
         icon: 'VenetianMask',
         description: 'Security Professional',
-        experiences: ['Certified Red Team Operator (CRTO)', 'Offensive Security Web Expert (OSWE)', 'Offensive Security Certified Professional (OSCP)']
       },
-      position: { x: 400, y: 300 },
+      position: { x: 800, y: 300 },
       className: 'main-node'
     },
     
-    // Primary class specializations - positioned in a diamond pattern around main node
+    // Primary class specializations - positioned in a cross pattern with more space
     {
       id: 'security',
       type: 'classNode',
       data: { 
         label: 'Security Mage', 
         icon: 'Shield',
-        description: 'Information Security Expert',
+        description: 'Information Security',
         rarity: 'Legendary',
         category: 'security',
-        experiences: [
-          'Penetration Testing', 
-          'Red Team Operations', 
-          'Vulnerability Research',
-          'Cloud Security (Azure)'
-        ]
       },
-      position: { x: 200, y: 150 },
+      position: { x: 500, y: 300 },
       className: 'class-node security'
     },
     {
@@ -212,13 +158,8 @@ const ClassPathways = () => {
         description: 'Education & Training',
         rarity: 'Epic',
         category: 'teaching',
-        experiences: [
-          'BSc Computer Science (Security)',
-          'Cybersecurity Advisor for Stealth Gaming',
-          'Incident Response Team Training'
-        ]
       },
-      position: { x: 400, y: 50 },
+      position: { x: 800, y: 100 },
       className: 'class-node teaching'
     },
     {
@@ -230,14 +171,8 @@ const ClassPathways = () => {
         description: 'Software Development',
         rarity: 'Rare',
         category: 'digital',
-        experiences: [
-          'Full Stack Development', 
-          'React/Redux and Laravel',
-          'Built internal security tools',
-          'SemGrep Integration'
-        ]
       },
-      position: { x: 600, y: 150 },
+      position: { x: 1100, y: 300 },
       className: 'class-node digital'
     },
     {
@@ -249,18 +184,12 @@ const ClassPathways = () => {
         description: 'Independent Advisory',
         rarity: 'Epic',
         category: 'entrepreneur',
-        experiences: [
-          'ITSEC Asia Security Consultant',
-          'Bug Bounty Hunter',
-          'VAPT Services',
-          'Security Reviews'
-        ] 
       },
-      position: { x: 400, y: 550 },
+      position: { x: 800, y: 500 },
       className: 'class-node entrepreneur'
     },
     
-    // Subclasses and specializations - positioned carefully to avoid overlapping
+    // Subclasses and specializations - positioned with much more space
     {
       id: 'security-1',
       type: 'classNode',
@@ -269,9 +198,8 @@ const ClassPathways = () => {
         icon: 'BugPlay',
         description: 'Offensive Security',
         category: 'security',
-        experiences: ['Led red team engagements', 'Phishing simulations', 'Penetration testing', 'CRTO Certification (2021)']
       },
-      position: { x: 50, y: 210 },
+      position: { x: 200, y: 150 },
       className: 'subclass-node security'
     },
     {
@@ -282,9 +210,8 @@ const ClassPathways = () => {
         icon: 'Server',
         description: 'ByteDance/TikTok',
         category: 'security',
-        experiences: ['10,000+ security reviews', 'Penetration tests', 'Discovered critical vulnerabilities', 'Red Teaming with Python']
       },
-      position: { x: 190, y: 300 },
+      position: { x: 200, y: 450 },
       className: 'subclass-node security'
     },
     {
@@ -295,9 +222,8 @@ const ClassPathways = () => {
         icon: 'FileCode',
         description: 'Digital & Intelligence',
         category: 'teaching',
-        experiences: ['Incident Response team', 'Malware investigations', 'Attack scenarios', 'Splunk/Arkime/ELK']
       },
-      position: { x: 310, y: 150 },
+      position: { x: 500, y: 50 },
       className: 'subclass-node teaching'
     },
     {
@@ -308,9 +234,8 @@ const ClassPathways = () => {
         icon: 'Database',
         description: 'Personal Projects',
         category: 'digital',
-        experiences: ['CTF Team Leader (0x1EA7BEEF)', 'Freki XSS detector', 'DNS Tunneling Detection', 'CVSSv3 Classifier']
       },
-      position: { x: 610, y: 300 },
+      position: { x: 1400, y: 150 },
       className: 'subclass-node digital'
     },
     {
@@ -321,16 +246,15 @@ const ClassPathways = () => {
         icon: 'Network',
         description: 'Defence Science Tech',
         category: 'entrepreneur',
-        experiences: ['VAPT services', 'System hardening', 'Compliance checks', 'Security assessment']
       },
-      position: { x: 500, y: 450 },
+      position: { x: 1400, y: 450 },
       className: 'subclass-node entrepreneur'
     },
   ];
 
-  // Define the edges between nodes with more consistent and sleek styling
+  // Enhanced edges with better styling and spacing
   const initialEdges: Edge[] = [
-    // Main connections to primary classes - animated, thicker, with arrow markers
+    // Main connections to primary classes
     { 
       id: 'e-main-security', 
       source: 'main', 
@@ -364,7 +288,7 @@ const ClassPathways = () => {
       markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(168, 85, 247, 0.9)' }
     },
     
-    // Subclass connections with consistent styling
+    // Subclass connections 
     { 
       id: 'e-security-1', 
       source: 'security', 
@@ -401,35 +325,34 @@ const ClassPathways = () => {
       markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(168, 85, 247, 0.7)' }
     },
     
-    // Cross-skill connections with a dashed line for interdisciplinary skills
+    // Additional connections between subclasses to form a web
     { 
-      id: 'e-cross-1', 
-      source: 'security-2', 
-      target: 'teaching-1', 
-      style: { stroke: 'rgba(148, 163, 184, 0.6)', strokeDasharray: '5,5', strokeWidth: 2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.8)' }
-    },
-    { 
-      id: 'e-cross-2', 
-      source: 'digital-1', 
-      target: 'entrepreneur-1', 
-      style: { stroke: 'rgba(148, 163, 184, 0.6)', strokeDasharray: '5,5', strokeWidth: 2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.8)' }
-    },
-    // Additional cross-connections to make the tree more cohesive
-    { 
-      id: 'e-cross-3', 
+      id: 'e-sec1-teach1', 
       source: 'security-1', 
-      target: 'digital-1', 
-      style: { stroke: 'rgba(148, 163, 184, 0.6)', strokeDasharray: '5,5', strokeWidth: 2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.8)' }
+      target: 'teaching-1',
+      style: { stroke: 'rgba(148, 163, 184, 0.4)', strokeDasharray: '5,5', strokeWidth: 1.5 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.6)' }
     },
     { 
-      id: 'e-cross-4', 
-      source: 'teaching-1', 
-      target: 'entrepreneur-1', 
-      style: { stroke: 'rgba(148, 163, 184, 0.6)', strokeDasharray: '5,5', strokeWidth: 2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.8)' }
+      id: 'e-sec2-digital1', 
+      source: 'security-2', 
+      target: 'digital-1',
+      style: { stroke: 'rgba(148, 163, 184, 0.4)', strokeDasharray: '5,5', strokeWidth: 1.5 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.6)' }
+    },
+    { 
+      id: 'e-ent1-sec1', 
+      source: 'entrepreneur-1', 
+      target: 'security-1',
+      style: { stroke: 'rgba(148, 163, 184, 0.4)', strokeDasharray: '5,5', strokeWidth: 1.5 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.6)' }
+    },
+    { 
+      id: 'e-digital1-ent1', 
+      source: 'digital-1', 
+      target: 'entrepreneur-1',
+      style: { stroke: 'rgba(148, 163, 184, 0.4)', strokeDasharray: '5,5', strokeWidth: 1.5 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.6)' }
     },
   ];
 
@@ -438,11 +361,11 @@ const ClassPathways = () => {
   
   // Use useEffect to ensure proper positioning on initial load
   useEffect(() => {
-    // Wait for the flow to be rendered
+    // Initial fit view with a wider padding
     const timer = setTimeout(() => {
       if (flowRef.current) {
         const flowInstance = flowRef.current;
-        flowInstance.fitView({ padding: 0.2, includeHiddenNodes: false });
+        flowInstance.fitView({ padding: 0.3, includeHiddenNodes: false });
       }
     }, 100);
     
@@ -450,7 +373,7 @@ const ClassPathways = () => {
   }, []);
   
   return (
-    <div className="rpg-skill-tree w-full h-[600px] bg-gradient-to-br from-white/40 to-white/10 dark:from-cyber-navy/40 dark:to-cyber-navy/10 backdrop-blur-sm border rounded-md overflow-hidden shadow-lg">
+    <div className="rpg-skill-tree w-full h-[700px] bg-gradient-to-br from-white/40 to-white/10 dark:from-cyber-navy/40 dark:to-cyber-navy/10 backdrop-blur-sm border rounded-md overflow-hidden shadow-lg">
       <ReactFlow
         ref={flowRef}
         nodes={nodes}
@@ -459,8 +382,7 @@ const ClassPathways = () => {
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
         fitView
-        attributionPosition="bottom-right"
-        minZoom={0.5}
+        minZoom={0.4}
         maxZoom={1.5}
         className="skill-tree-flow"
         proOptions={{ hideAttribution: true }}
