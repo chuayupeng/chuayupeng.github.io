@@ -1,210 +1,39 @@
 
 import React from 'react';
-import { Shield, BookOpen, ChefHat, Terminal, VenetianMask, ArrowRight } from 'lucide-react';
+import SkillTree from './SkillTree';
+import './skill-tree/skillTreeStyles.css';
 
 const ClassPathways = () => {
-  const classData = {
-    main: {
-      label: 'Character Build',
-      icon: <VenetianMask className="h-5 w-5" />,
-      description: 'Multi-class adventurer',
-      rarity: 'Unique'
-    },
-    primary: [
-      {
-        id: 'security',
-        label: 'Security Mage',
-        icon: <Shield className="h-5 w-5" />,
-        description: 'Masters of defense magic',
-        rarity: 'Legendary',
-        color: 'blue',
-        subclasses: [
-          {
-            id: 'security-1',
-            label: 'Penetration Tester',
-            description: 'Identifies vulnerabilities'
-          },
-          {
-            id: 'security-2',
-            label: 'Web Security Expert',
-            description: 'Application exploit specialist'
-          }
-        ]
-      },
-      {
-        id: 'teaching',
-        label: 'Knowledge Sage',
-        icon: <BookOpen className="h-5 w-5" />,
-        description: 'Wielders of ancient wisdom',
-        rarity: 'Epic',
-        color: 'green',
-        subclasses: [
-          {
-            id: 'teaching-1',
-            label: 'Technical Instructor',
-            description: 'Transfer complex knowledge'
-          }
-        ]
-      },
-      {
-        id: 'culinary',
-        label: 'Culinary Alchemist',
-        icon: <ChefHat className="h-5 w-5" />,
-        description: 'Creates powerful consumables',
-        rarity: 'Rare',
-        color: 'amber',
-        subclasses: [
-          {
-            id: 'culinary-1',
-            label: 'Food Safety Officer',
-            description: 'Ensures potion quality'
-          }
-        ]
-      },
-      {
-        id: 'entrepreneur',
-        label: 'Guild Master',
-        icon: <Terminal className="h-5 w-5" />,
-        description: 'Leaders who build guilds',
-        rarity: 'Epic',
-        color: 'purple',
-        subclasses: [
-          {
-            id: 'entrepreneur-1',
-            label: 'Venture Builder',
-            description: 'Creates new guild outposts'
-          }
-        ]
-      }
-    ]
-  };
-
-  const getColorClass = (color) => {
-    switch (color) {
-      case 'blue': return 'border-blue-400 bg-blue-50 dark:bg-blue-950/30';
-      case 'green': return 'border-green-400 bg-green-50 dark:bg-green-950/30';
-      case 'amber': return 'border-amber-400 bg-amber-50 dark:bg-amber-950/30';
-      case 'purple': return 'border-purple-400 bg-purple-50 dark:bg-purple-950/30';
-      default: return 'border-gray-400 bg-gray-50 dark:bg-gray-800/30';
-    }
-  };
-
-  const getRarityClass = (rarity) => {
-    switch (rarity) {
-      case 'Legendary': return 'text-amber-400 border-amber-400/30 bg-amber-400/10';
-      case 'Epic': return 'text-purple-400 border-purple-400/30 bg-purple-400/10';
-      case 'Rare': return 'text-blue-400 border-blue-400/30 bg-blue-400/10';
-      case 'Unique': return 'text-cyan-400 border-cyan-400/30 bg-cyan-400/10';
-      default: return 'text-gray-400 border-gray-400/30 bg-gray-400/10';
-    }
-  };
-
-  const getGlowClass = (color) => {
-    switch (color) {
-      case 'blue': return 'skill-line-blue';
-      case 'green': return 'skill-line-green';
-      case 'amber': return 'skill-line-amber';
-      case 'purple': return 'skill-line-purple';
-      default: return 'skill-line-default';
-    }
-  };
-
   return (
-    <div className="rpg-card w-full p-6 bg-white dark:bg-cyber-navy border rounded-lg shadow-md">
-      <div className="skill-tree relative">
-        {/* Main character node */}
-        <div className="main-character-node mb-16 mx-auto text-center">
-          <div className="inline-block">
-            <div className="character-node bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg p-4 border-2 border-cyan-400/50 shadow-lg animate-pulse-glow">
-              <div className="flex items-center gap-2 justify-center mb-1">
-                {classData.main.icon}
-                <h3 className="font-bold text-lg">{classData.main.label}</h3>
-              </div>
-              <p className="text-sm opacity-90">{classData.main.description}</p>
-              <span className={`text-xs inline-block mt-2 px-2 py-0.5 rounded-full border ${getRarityClass(classData.main.rarity)}`}>
-                {classData.main.rarity}
-              </span>
-            </div>
+    <div className="w-full">
+      {/* SVG definitions for gradient paths */}
+      <svg style={{ width: 0, height: 0, position: 'absolute' }} aria-hidden="true">
+        <defs>
+          <linearGradient id="blue-to-green" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#38bdf8" />
+            <stop offset="100%" stopColor="#4ade80" />
+          </linearGradient>
+          <linearGradient id="amber-to-purple" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#fbbf24" />
+            <stop offset="100%" stopColor="#a78bfa" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <SkillTree />
+      
+      <div className="cross-skills bg-muted/20 rounded-lg p-4 border border-dashed mt-8">
+        <h4 className="text-sm font-medium mb-3">Cross-Skill Synergies</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-medium text-blue-400">Web Security Expert</span>
+            <div className="flex-1 h-0.5 bg-gradient-to-r from-blue-400 to-green-400 rounded-full"></div>
+            <span className="text-xs font-medium text-green-400">Technical Instructor</span>
           </div>
-        </div>
-
-        {/* Branching structure with improved connections */}
-        <div className="branching-structure relative mt-4">
-          {/* Central branch line from main character */}
-          <div className="absolute top-[-4rem] left-1/2 w-1 h-16 transform -translate-x-1/2 bg-gradient-to-b from-cyan-400 to-blue-400 shadow-glow rounded-full"></div>
-          
-          {/* Horizontal branch line */}
-          <div className="absolute top-[-1rem] left-1/4 right-1/4 h-1 transform -translate-y-1/2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 shadow-glow rounded-full"></div>
-          
-          {/* Vertical connectors to each primary class */}
-          <div className="grid grid-cols-4 gap-6 relative">
-            {classData.primary.map((primaryClass, index) => (
-              <div key={primaryClass.id} className="flex flex-col items-center">
-                {/* Vertical connector from horizontal line to class */}
-                <div className={`h-8 w-1 ${getGlowClass(primaryClass.color)} rounded-full shadow-glow mb-2`}></div>
-                
-                {/* Primary class node */}
-                <div className={`class-node rounded-lg p-3 border-2 shadow-md w-full max-w-[180px] ${getColorClass(primaryClass.color)}`}>
-                  <div className="flex items-center gap-2 mb-1">
-                    {primaryClass.icon}
-                    <h4 className="font-bold">{primaryClass.label}</h4>
-                  </div>
-                  <p className="text-xs text-muted-foreground mb-2">{primaryClass.description}</p>
-                  <span className={`text-xs inline-block px-2 py-0.5 rounded-full border ${getRarityClass(primaryClass.rarity)}`}>
-                    {primaryClass.rarity}
-                  </span>
-                </div>
-
-                {/* Subclass branch */}
-                {primaryClass.subclasses.length > 0 && (
-                  <div className="subclasses-branch mt-4 space-y-10 relative w-full">
-                    {/* Vertical connector from primary to subclasses */}
-                    <div className={`absolute top-[-0.5rem] left-1/2 w-1 h-6 transform -translate-x-1/2 ${getGlowClass(primaryClass.color)} rounded-full shadow-glow`}></div>
-                    
-                    {/* Horizontal line for subclasses if more than one */}
-                    {primaryClass.subclasses.length > 1 && (
-                      <div className={`absolute top-[1.5rem] left-1/4 right-1/4 h-1 transform -translate-y-1/2 ${getGlowClass(primaryClass.color)} rounded-full shadow-glow`}></div>
-                    )}
-                    
-                    {/* Subclass nodes with improved branch connections */}
-                    <div className="grid grid-cols-1 gap-10">
-                      <div className="flex flex-col items-center">
-                        {primaryClass.subclasses.map((subclass, subIndex) => (
-                          <div key={subclass.id} className="mb-4 w-full max-w-[160px]">
-                            {/* Vertical connector to subclass if needed */}
-                            {subIndex > 0 && subIndex < primaryClass.subclasses.length - 1 && (
-                              <div className={`h-6 w-1 mx-auto mb-2 ${getGlowClass(primaryClass.color)} rounded-full shadow-glow`}></div>
-                            )}
-                            
-                            <div className={`subclass-node rounded p-2 border shadow-sm ${getColorClass(primaryClass.color)} opacity-90`}>
-                              <h5 className="font-medium text-sm">{subclass.label}</h5>
-                              <p className="text-xs text-muted-foreground">{subclass.description}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Cross-skill connections with improved styling */}
-        <div className="cross-skills bg-muted/20 rounded-lg p-4 border border-dashed mt-16">
-          <h4 className="text-sm font-medium mb-3">Cross-Skill Synergies</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-blue-400">Web Security Expert</span>
-              <div className="flex-1 h-0.5 bg-gradient-to-r from-blue-400 to-green-400 rounded-full shadow-glow"></div>
-              <span className="text-xs font-medium text-green-400">Technical Instructor</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-amber-400">Food Safety Officer</span>
-              <div className="flex-1 h-0.5 bg-gradient-to-r from-amber-400 to-purple-400 rounded-full shadow-glow"></div>
-              <span className="text-xs font-medium text-purple-400">Venture Builder</span>
-            </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-medium text-amber-400">Food Safety Officer</span>
+            <div className="flex-1 h-0.5 bg-gradient-to-r from-amber-400 to-purple-400 rounded-full"></div>
+            <span className="text-xs font-medium text-purple-400">Venture Builder</span>
           </div>
         </div>
       </div>
