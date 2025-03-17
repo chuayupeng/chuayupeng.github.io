@@ -10,6 +10,8 @@ import {
   Edge,
   MarkerType,
   Panel,
+  NodeTypes,
+  ReactFlowInstance,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { 
@@ -18,8 +20,8 @@ import {
   ArrowRight
 } from 'lucide-react';
 
-// Define the node data interface
-interface ClassNodeData {
+// Define the node data interface with index signature to satisfy Record<string, unknown>
+interface ClassNodeData extends Record<string, unknown> {
   label: string;
   icon?: string;
   description?: string;
@@ -113,12 +115,13 @@ const ClassNode = ({ data }: { data: ClassNodeData }) => {
 };
 
 // Node types definition
-const nodeTypes = {
+const nodeTypes: NodeTypes = {
   classNode: ClassNode,
 };
 
 const ClassPathways = () => {
-  const flowRef = useRef(null);
+  const flowRef = useRef<HTMLDivElement>(null);
+  const reactFlowInstanceRef = useRef<ReactFlowInstance | null>(null);
   
   // Redesigned layout with wider spacing to avoid overlaps
   const initialNodes: Node<ClassNodeData>[] = [
@@ -359,17 +362,21 @@ const ClassPathways = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   
-  // Use useEffect to ensure proper positioning on initial load
+  // Handle fit view on component mount
   useEffect(() => {
-    // Initial fit view with a wider padding
+    // Initial fit view after a short delay to ensure the DOM is ready
     const timer = setTimeout(() => {
-      if (flowRef.current) {
-        const flowInstance = flowRef.current;
-        flowInstance.fitView({ padding: 0.3, includeHiddenNodes: false });
+      if (reactFlowInstanceRef.current) {
+        reactFlowInstanceRef.current.fitView({ padding: 0.3, includeHiddenNodes: false });
       }
     }, 100);
     
     return () => clearTimeout(timer);
+  }, []);
+  
+  // Store the reference to the ReactFlow instance
+  const onInit = useCallback((instance: ReactFlowInstance) => {
+    reactFlowInstanceRef.current = instance;
   }, []);
   
   return (
@@ -382,6 +389,7 @@ const ClassPathways = () => {
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
         fitView
+        onInit={onInit}
         minZoom={0.4}
         maxZoom={1.5}
         className="skill-tree-flow"
