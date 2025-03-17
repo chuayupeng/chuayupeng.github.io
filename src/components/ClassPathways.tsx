@@ -1,5 +1,5 @@
 
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   ReactFlow,
   Background,
@@ -7,7 +7,6 @@ import {
   MiniMap,
   useNodesState,
   useEdgesState,
-  addEdge,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Shield, BookOpen, ChefHat, Terminal } from 'lucide-react';
@@ -192,10 +191,6 @@ const ClassPathways = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   
-  const onConnect = useCallback((params: any) => 
-    setEdges((eds) => addEdge(params, eds)),
-  []);
-  
   return (
     <div className="rpg-card w-full h-[400px] bg-white dark:bg-cyber-navy border">
       <ReactFlow
@@ -203,7 +198,6 @@ const ClassPathways = () => {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
         nodeTypes={nodeTypes}
         fitView
         attributionPosition="bottom-right"
