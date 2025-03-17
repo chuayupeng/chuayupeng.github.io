@@ -113,7 +113,7 @@ const ClassPathways = () => {
     <div className="rpg-card w-full p-6 bg-white dark:bg-cyber-navy border rounded-lg shadow-md">
       <div className="skill-tree relative">
         {/* Main character node */}
-        <div className="main-character-node mb-8 mx-auto text-center">
+        <div className="main-character-node mb-16 mx-auto text-center">
           <div className="inline-block">
             <div className="character-node bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg p-4 border-2 border-cyan-400/50 shadow-lg animate-pulse-glow">
               <div className="flex items-center gap-2 justify-center mb-1">
@@ -126,26 +126,25 @@ const ClassPathways = () => {
               </span>
             </div>
           </div>
-
-          {/* Sleek connecting line to primary classes */}
-          <div className="flex justify-center">
-            <div className="main-connector h-12 w-1 bg-gradient-to-b from-cyan-400 to-blue-400 rounded-full shadow-glow"></div>
-          </div>
         </div>
 
-        {/* Primary class nodes with enhanced connections */}
-        <div className="primary-classes-container relative">
-          {/* Horizontal connecting line */}
-          <div className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 transform -translate-y-1/2 hidden lg:block rounded-full shadow-glow"></div>
+        {/* Branching structure with improved connections */}
+        <div className="branching-structure relative mt-4">
+          {/* Central branch line from main character */}
+          <div className="absolute top-[-4rem] left-1/2 w-1 h-16 transform -translate-x-1/2 bg-gradient-to-b from-cyan-400 to-blue-400 shadow-glow rounded-full"></div>
           
-          <div className="primary-classes grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+          {/* Horizontal branch line */}
+          <div className="absolute top-[-1rem] left-1/4 right-1/4 h-1 transform -translate-y-1/2 bg-gradient-to-r from-blue-400 via-blue-500 to-blue-400 shadow-glow rounded-full"></div>
+          
+          {/* Vertical connectors to each primary class */}
+          <div className="grid grid-cols-4 gap-6 relative">
             {classData.primary.map((primaryClass, index) => (
-              <div key={primaryClass.id} className="class-branch flex flex-col items-center relative">
-                {/* Vertical connector to horizontal line (only visible on large screens) */}
-                <div className={`absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full h-10 w-1 ${getGlowClass(primaryClass.color)} rounded-full hidden lg:block`}></div>
+              <div key={primaryClass.id} className="flex flex-col items-center">
+                {/* Vertical connector from horizontal line to class */}
+                <div className={`h-8 w-1 ${getGlowClass(primaryClass.color)} rounded-full shadow-glow mb-2`}></div>
                 
                 {/* Primary class node */}
-                <div className={`class-node rounded-lg p-3 border-2 shadow-md ${getColorClass(primaryClass.color)}`}>
+                <div className={`class-node rounded-lg p-3 border-2 shadow-md w-full max-w-[180px] ${getColorClass(primaryClass.color)}`}>
                   <div className="flex items-center gap-2 mb-1">
                     {primaryClass.icon}
                     <h4 className="font-bold">{primaryClass.label}</h4>
@@ -156,42 +155,54 @@ const ClassPathways = () => {
                   </span>
                 </div>
 
-                {/* Sleek connecting line to subclasses */}
+                {/* Subclass branch */}
                 {primaryClass.subclasses.length > 0 && (
-                  <div className={`subclass-connector h-8 w-1 ${getGlowClass(primaryClass.color)} rounded-full mt-2`}></div>
-                )}
-
-                {/* Subclass nodes with improved connection lines */}
-                <div className="subclasses space-y-3 w-full max-w-[240px]">
-                  {primaryClass.subclasses.map((subclass) => (
-                    <div key={subclass.id} className="flex items-center gap-2">
-                      <div className={`subclass-arrow w-4 h-4 flex items-center justify-center rounded-full ${getGlowClass(primaryClass.color).replace('skill-line', 'skill-node')}`}>
-                        <ArrowRight className="h-3 w-3 text-white" />
-                      </div>
-                      <div className={`subclass-node rounded p-2 border shadow-sm ${getColorClass(primaryClass.color)} opacity-90 flex-1`}>
-                        <h5 className="font-medium text-sm">{subclass.label}</h5>
-                        <p className="text-xs text-muted-foreground">{subclass.description}</p>
+                  <div className="subclasses-branch mt-4 space-y-10 relative w-full">
+                    {/* Vertical connector from primary to subclasses */}
+                    <div className={`absolute top-[-0.5rem] left-1/2 w-1 h-6 transform -translate-x-1/2 ${getGlowClass(primaryClass.color)} rounded-full shadow-glow`}></div>
+                    
+                    {/* Horizontal line for subclasses if more than one */}
+                    {primaryClass.subclasses.length > 1 && (
+                      <div className={`absolute top-[1.5rem] left-1/4 right-1/4 h-1 transform -translate-y-1/2 ${getGlowClass(primaryClass.color)} rounded-full shadow-glow`}></div>
+                    )}
+                    
+                    {/* Subclass nodes with improved branch connections */}
+                    <div className="grid grid-cols-1 gap-10">
+                      <div className="flex flex-col items-center">
+                        {primaryClass.subclasses.map((subclass, subIndex) => (
+                          <div key={subclass.id} className="mb-4 w-full max-w-[160px]">
+                            {/* Vertical connector to subclass if needed */}
+                            {subIndex > 0 && subIndex < primaryClass.subclasses.length - 1 && (
+                              <div className={`h-6 w-1 mx-auto mb-2 ${getGlowClass(primaryClass.color)} rounded-full shadow-glow`}></div>
+                            )}
+                            
+                            <div className={`subclass-node rounded p-2 border shadow-sm ${getColorClass(primaryClass.color)} opacity-90`}>
+                              <h5 className="font-medium text-sm">{subclass.label}</h5>
+                              <p className="text-xs text-muted-foreground">{subclass.description}</p>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
         </div>
 
         {/* Cross-skill connections with improved styling */}
-        <div className="cross-skills bg-muted/20 rounded-lg p-4 border border-dashed">
+        <div className="cross-skills bg-muted/20 rounded-lg p-4 border border-dashed mt-16">
           <h4 className="text-sm font-medium mb-3">Cross-Skill Synergies</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-blue-400">Web Security Expert</span>
-              <div className="flex-1 h-0.5 bg-gradient-to-r from-blue-400 to-green-400 rounded-full"></div>
+              <div className="flex-1 h-0.5 bg-gradient-to-r from-blue-400 to-green-400 rounded-full shadow-glow"></div>
               <span className="text-xs font-medium text-green-400">Technical Instructor</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs font-medium text-amber-400">Food Safety Officer</span>
-              <div className="flex-1 h-0.5 bg-gradient-to-r from-amber-400 to-purple-400 rounded-full"></div>
+              <div className="flex-1 h-0.5 bg-gradient-to-r from-amber-400 to-purple-400 rounded-full shadow-glow"></div>
               <span className="text-xs font-medium text-purple-400">Venture Builder</span>
             </div>
           </div>
