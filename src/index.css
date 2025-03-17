@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -83,7 +84,8 @@
 
 .rpg-progress::before {
   content: '';
-  @apply absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-white/70 to-cyan-500/0 animate-gleam;
+  @apply absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-white/70 to-cyan-500/0;
+  animation: gleam 2s linear infinite;
 }
 
 .rpg-card {

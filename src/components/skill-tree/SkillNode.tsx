@@ -13,10 +13,14 @@ export interface SkillNodeData {
   unlocked?: boolean;
   progress?: number;
   category?: string;
+  [key: string]: unknown; // Add index signature to satisfy Record<string, unknown>
 }
 
 // Type for the node props including our custom data
 export function SkillNode({ data, isConnectable }: NodeProps<SkillNodeData>) {
+  // Provide defaults if data is missing
+  const nodeData = data || {};
+  
   const {
     label = "",
     description = "",
@@ -25,7 +29,7 @@ export function SkillNode({ data, isConnectable }: NodeProps<SkillNodeData>) {
     unlocked = false,
     progress = 0,
     category = "default"
-  } = data || {};
+  } = nodeData;
 
   return (
     <div className={`skill-node ${unlocked ? 'unlocked' : 'locked'} ${category}`}>
