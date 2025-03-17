@@ -2,7 +2,18 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { 
   Shield, Terminal, ChefHat, BookOpen, ArrowRight, Zap, Star, Trophy,
-  ShieldAlert, ShieldCheck, FileSearch, Skull, Monitor, Database
+  ShieldAlert, ShieldCheck, FileSearch, Skull, Monitor, Database,
+  Swords,
+  ShieldPlus,
+  Radar,
+  UserRound,
+  VenetianMask,
+  Book,
+  GraduationCap,
+  Wine,
+  Rocket,
+  Flame,
+  Bug
 } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -22,37 +33,61 @@ const Index = () => {
   
   // Skill stats based on timeline categories
   const skills = {
-    cybersecurity: timelineData.filter(item => item.category === 'cybersecurity').length * 15,
-    teaching: timelineData.filter(item => item.category === 'teaching').length * 15,
-    'f&b': timelineData.filter(item => item.category === 'f&b').length * 15,
-    entrepreneurship: timelineData.filter(item => item.category === 'entrepreneurship').length * 15,
+    cybersecurity: timelineData.filter(item => item.category === 'cybersecurity').length * 25,
+    teaching: timelineData.filter(item => item.category === 'teaching').length * 25,
+    'f&b': timelineData.filter(item => item.category === 'f&b').length * 25,
+    entrepreneurship: timelineData.filter(item => item.category === 'entrepreneurship').length * 25,
   };
 
   // Cybersecurity specializations
-  const cyberSpecializations = [
+  const certifications = [
     {
-      title: 'Red Team Specialist',
-      description: 'Offensive security expert who simulates attacks to identify vulnerabilities before real threats can exploit them.',
-      icon: Skull,
+      title: 'OSCP (2019)',
+      description: 'Offensive Security Certified Professional',
+      icon: Swords,
       iconClass: 'text-red-500 dark:text-red-400',
       bgClass: 'bg-red-100 dark:bg-red-900/30',
-      stars: 4
+      stars: 3
     },
     {
-      title: 'Blue Team Defender',
-      description: 'Defensive security specialist who monitors systems, detects intrusions, and responds to security incidents.',
-      icon: ShieldCheck,
-      iconClass: 'text-blue-600 dark:text-blue-400',
-      bgClass: 'bg-blue-100 dark:bg-blue-900/30',
-      stars: 5
+      title: 'CPSA (2019-2022)',
+      description: 'CREST Practitioner Security Analyst (Expired)',
+      icon: Radar,
+      iconClass: 'text-blue-300 dark:text-blue-400',
+      bgClass: 'bg-blue-50 dark:bg-blue-900/30',
+      stars: 1
     },
     {
-      title: 'DFIR Investigator',
-      description: 'Digital Forensics & Incident Response expert who analyzes breaches and recovers evidence of attacks.',
-      icon: FileSearch,
+      title: 'CRT (2019-2022)',
+      description: 'CREST Registered Penetration Tester (Expired)',
+      icon: Bug,
+      iconClass: 'text-red-300 dark:text-red-400',
+      bgClass: 'bg-red-50 dark:bg-red-900/30',
+      stars: 2
+    },
+    {
+      title: 'OSWE (2020)',
+      description: 'Offensive Security Web Expert',
+      icon: Bug,
       iconClass: 'text-purple-600 dark:text-purple-400',
       bgClass: 'bg-purple-100 dark:bg-purple-900/30',
       stars: 4
+    },
+    {
+      title: 'CRTO (2021)',
+      description: 'Certified Red Team Operator',
+      icon: Radar,
+      iconClass: 'text-red-600 dark:text-red-400',
+      bgClass: 'bg-red-100 dark:bg-red-900/30',
+      stars: 2
+    },
+    {
+      title: 'WSQ FSC L3 (2024)',
+      description: 'Food Safety and Hygiene Officer',
+      icon: ChefHat,
+      iconClass: 'text-yellow-600 dark:text-yellow-400',
+      bgClass: 'bg-yellow-100 dark:bg-yellow-900/30',
+      stars: 3
     }
   ];
   
@@ -72,10 +107,10 @@ const Index = () => {
               </div>
               
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white">
-                Where <span className="gradient-text">Security</span> Meets <span className="gradient-text">Innovation</span>
+                Leveling Up: From <span className="gradient-text">Elixirs</span> To <span className="gradient-text">Exploits</span>
               </h1>
               <p className="text-lg text-white/80 max-w-lg">
-                Cybersecurity professional with a passion for teaching, F&B innovation, and entrepreneurship.
+                Versatile cybersecurity professional with a wide range of passion projects.
               </p>
               
               {/* XP Progress Bar */}
@@ -96,7 +131,7 @@ const Index = () => {
                 <Button asChild size="lg" className="bg-cyber-cyan text-cyber-blue hover:bg-cyber-cyan/80">
                   <Link to="/timeline">View My Quest Log</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="border-cyber-cyan text-cyber-cyan hover:bg-cyber-navy">
+                <Button asChild variant="outline" size="lg" className="border-cyber-cyan text-cyber-navy hover:bg-gray-100/70">
                   <Link to="/about">Character Profile</Link>
                 </Button>
               </div>
@@ -109,28 +144,28 @@ const Index = () => {
                   {/* Base Character */}
                   <div className="relative w-56 h-56 animate-float">
                     {/* Shared character base */}
-                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                      <div className="w-24 h-24 bg-white/10 rounded-full"></div>
+                    <div className="absolute w-full h-full top-4 flex items-center justify-center">
+                      <VenetianMask className="w-16 h-16 rounded-lg" />
                     </div>
-                    
+
                     {/* Cybersecurity Armor (Shield) */}
-                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                      <Shield className="w-32 h-32 text-blue-400 animate-pulse-glow" />
+                    <div className="absolute bottom-16 left-2 flex items-center justify-center">
+                      <Shield className="w-16 h-16 text-blue-400 rounded-full animate-pulse-glow" style={{animationDelay: "2s"}}/>
                     </div>
                     
-                    {/* Teaching Armor (Book) */}
-                    <div className="absolute top-10 right-4 flex items-center justify-center">
-                      <BookOpen className="w-16 h-16 text-green-400 animate-pulse-glow" style={{animationDelay: "0.5s"}} />
+                    {/* Teaching Armor (Cap) */}
+                    <div className="absolute bottom-32 left-20 flex items-center justify-center">
+                      <GraduationCap className="w-16 h-16 text-green-400 rounded-full animate-pulse-glow" style={{animationDelay: "0.5s"}} />
                     </div>
                     
-                    {/* F&B Armor (Chef Hat) */}
-                    <div className="absolute bottom-10 left-4 flex items-center justify-center">
-                      <ChefHat className="w-16 h-16 text-amber-400 animate-pulse-glow" style={{animationDelay: "1s"}} />
+                    {/* F&B Armor (Wine) */}
+                    <div className="absolute bottom-16 right-2 flex items-center justify-center">
+                      <Wine className="w-16 h-16 text-amber-400 rounded-full animate-pulse-glow" style={{animationDelay: "1s"}} />
                     </div>
                     
-                    {/* Entrepreneurship Armor (Terminal) */}
-                    <div className="absolute bottom-10 right-4 flex items-center justify-center">
-                      <Terminal className="w-16 h-16 text-purple-400 animate-pulse-glow" style={{animationDelay: "1.5s"}} />
+                    {/* Entrepreneurship Armor (Flame) */}
+                    <div className="absolute bottom-0 left-20 flex items-center justify-center">
+                      <Flame className="w-16 h-16 text-purple-400 rounded-full animate-pulse-glow" style={{animationDelay: "1.5s"}} />
                     </div>
                   </div>
                 </div>
@@ -182,14 +217,14 @@ const Index = () => {
       <section className="py-20 px-4 bg-gray-50 dark:bg-cyber-navy">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Cybersecurity Specializations</h2>
+            <h2 className="text-3xl font-bold mb-4">Industry Certifications</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Advanced skill trees in different branches of security expertise.
+              Unlocking levels of cross-disciplinary expertise.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {cyberSpecializations.map((spec, index) => (
+            {certifications.map((spec, index) => (
               <div key={index} className="rpg-card bg-white dark:bg-cyber-navy p-6">
                 <div className={`w-12 h-12 ${spec.bgClass} rounded-full flex items-center justify-center mb-4 animate-pulse-glow`}>
                   <spec.icon className={`w-6 h-6 ${spec.iconClass}`} />
@@ -208,7 +243,7 @@ const Index = () => {
                   ))}
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  {spec.stars === 5 ? 'Legendary' : spec.stars === 4 ? 'Epic' : 'Rare'} Specialization
+                  {spec.stars === 5 ? 'Legendary' : spec.stars === 4 ? 'Epic' : spec.stars === 3 ? 'Rare': spec.stars === 2 ? 'Uncommon' : 'Common'} Specialization
                 </div>
               </div>
             ))}

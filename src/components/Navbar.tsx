@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Shield, Cpu } from 'lucide-react';
+import { Menu, X, Shield, Cpu, VenetianMask } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
@@ -45,8 +45,8 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2" onClick={closeMenu}>
-          <Shield className="h-8 w-8 text-cyber-cyan" />
-          <span className={`font-bold text-xl ${textColorClass}`}>CyberPortfolio</span>
+          <VenetianMask className="h-8 w-8 text-cyber-red" />
+          <span className={`font-bold text-xl ${textColorClass}`}>yup.eng</span>
         </Link>
 
         {/* Desktop Navigation */}
