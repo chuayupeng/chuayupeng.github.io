@@ -20,6 +20,7 @@ import Footer from '@/components/Footer';
 import { blogData } from '@/data/blogData';
 import { timelineData } from '@/data/timelineData';
 import ClassPathways from '@/components/ClassPathways';
+import { useTimelineCalculations } from '@/hooks/useTimelineCalculations';
 
 const Index = () => {
   // Get the 3 most recent blog posts
@@ -27,19 +28,9 @@ const Index = () => {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
   }).slice(0, 3);
   
-  // Calculate RPG stats based on timeline data
-  const totalExperience = timelineData.length * 150;
-  const level = Math.floor(totalExperience / 500) + 1;
-  const currentLevelXP = totalExperience % 500;
+  // Use the same hook as the Timeline page to ensure consistency
+  const { level, currentLevelXP, xpToNextLevel, totalExperience, skills } = useTimelineCalculations(timelineData);
   
-  // Skill stats based on timeline categories
-  const skills = {
-    cybersecurity: timelineData.filter(item => item.category === 'cybersecurity').length * 25,
-    teaching: timelineData.filter(item => item.category === 'teaching').length * 25,
-    'f&b': timelineData.filter(item => item.category === 'f&b').length * 25,
-    entrepreneurship: timelineData.filter(item => item.category === 'entrepreneurship').length * 25,
-  };
-
   // Cybersecurity specializations
   const certifications = [
     {
@@ -118,12 +109,12 @@ const Index = () => {
               <div className="mt-4 mb-2">
                 <div className="flex justify-between text-xs mb-1">
                   <span>Level {level}</span>
-                  <span>{currentLevelXP}/500 XP to Level {level + 1}</span>
+                  <span>{currentLevelXP}/{xpToNextLevel} XP to Level {level + 1}</span>
                 </div>
                 <div className="w-full bg-muted/30 rounded-full h-2">
                   <div 
                     className="rpg-progress" 
-                    style={{ width: `${(currentLevelXP / 500) * 100}%` }} 
+                    style={{ width: `${(currentLevelXP / xpToNextLevel) * 100}%` }} 
                   />
                 </div>
               </div>
@@ -177,7 +168,9 @@ const Index = () => {
                   <div className="space-y-2">
                     {Object.entries(skills).map(([skill, value]) => (
                       <div key={skill} className="flex justify-between items-center gap-2">
-                        <span className="text-xs capitalize text-white/80">{skill}</span>
+                        <span className="text-xs capitalize text-white/80">
+                          {skill === 'f&b' ? 'F&B' : skill.charAt(0).toUpperCase() + skill.slice(1)}
+                        </span>
                         <div className="w-16 bg-muted/30 rounded-full h-1">
                           <div 
                             className={`h-1 rounded-full ${
@@ -186,7 +179,7 @@ const Index = () => {
                               skill === 'f&b' ? 'bg-amber-500' :
                               'bg-purple-500'
                             }`}
-                            style={{ width: `${(value / 100) * 40}%` }}
+                            style={{ width: `${Math.min(100, value / 2)}%` }}
                           />
                         </div>
                       </div>
