@@ -7,6 +7,19 @@ import Footer from '@/components/Footer';
 import { Shield, Trophy, Zap, X, ArrowLeft, ArrowRight, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+const getItemRarity = (id: number) => {
+  if (id <= 5) return { label: 'Legendary', class: 'text-amber-400 border-amber-400/30 bg-amber-400/10', xpBase: 200 };
+  if (id <= 10) return { label: 'Epic', class: 'text-purple-400 border-purple-400/30 bg-purple-400/10', xpBase: 150 };
+  if (id <= 20) return { label: 'Rare', class: 'text-blue-400 border-blue-400/30 bg-blue-400/10', xpBase: 100 };
+  return { label: 'Common', class: 'text-gray-400 border-gray-400/30 bg-gray-400/10', xpBase: 50 };
+};
+
+const calculateXP = (id: number) => {
+  const rarity = getItemRarity(id);
+  const variance = (id % 5) * 5;
+  return rarity.xpBase + variance;
+};
+
 const Timeline = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [statsVisible, setStatsVisible] = useState(false);
@@ -15,27 +28,22 @@ const Timeline = () => {
   const filteredData = activeFilter === 'all' 
     ? timelineData 
     : timelineData.filter(item => {
-        // Check if the category is an array and if it contains the active filter
         if (Array.isArray(item.category)) {
           return item.category.includes(activeFilter as CategoryType);
         }
-        // Or if it's a single category matching the filter
         return item.category === activeFilter;
       });
 
-  // Extract all unique categories
   const allCategories = timelineData.flatMap(item => 
     Array.isArray(item.category) ? item.category : [item.category]
   );
   const categories = Array.from(new Set(allCategories));
   
-  // Calculate stats based on timeline entries
-  const totalExperience = timelineData.length * 150;
+  const totalExperience = timelineData.reduce((total, item) => total + calculateXP(item.id), 0);
   const level = Math.floor(totalExperience / 500) + 1;
   const currentLevelXP = totalExperience % 500;
   const xpToNextLevel = 500 - currentLevelXP;
   
-  // RPG-style skill stats - count appearances in categories
   const skills = {
     cybersecurity: timelineData.filter(item => 
       Array.isArray(item.category) 
@@ -85,7 +93,6 @@ const Timeline = () => {
               Filter by skill class to explore specific areas of expertise.
             </p>
 
-            {/* Character Stats Toggle Button */}
             <Button 
               variant="outline" 
               size="sm" 
@@ -103,14 +110,12 @@ const Timeline = () => {
             categories={categories}
           />
           
-          {/* Floating Character Stats Card */}
           <div 
             className={`fixed ${statsPosition === 'right' ? 'right-0' : 'left-0'} top-1/3 transform transition-all duration-300 ease-in-out z-30
               ${statsVisible ? 'translate-x-0' : (statsPosition === 'right' ? 'translate-x-full' : '-translate-x-full')}
             `}
           >
             <div className="relative">
-              {/* Tab to grab when collapsed */}
               <div 
                 className={`absolute ${statsPosition === 'right' ? '-left-10' : '-right-10'} top-4 cursor-pointer bg-card/80 backdrop-blur-sm border rounded-l-lg p-2
                   ${statsPosition === 'left' ? 'rounded-r-lg rounded-l-none' : ''}`}
@@ -143,7 +148,6 @@ const Timeline = () => {
                   </div>
                 </div>
                 
-                {/* XP Progress */}
                 <div className="mb-4">
                   <div className="flex justify-between text-xs mb-1">
                     <span>Level {level}</span>
@@ -160,7 +164,6 @@ const Timeline = () => {
                   </div>
                 </div>
                 
-                {/* Skill Bars */}
                 <div className="grid grid-cols-1 gap-3 text-sm">
                   {Object.entries(skills).map(([skill, value]) => (
                     <div key={skill} className="flex flex-col">
@@ -187,10 +190,8 @@ const Timeline = () => {
           </div>
 
           <div className="relative mt-12">
-            {/* Timeline vertical line (visible on md screens and up) */}
             <div className="timeline-line hidden md:block"></div>
             
-            {/* Timeline items */}
             <div className="flex flex-col items-center">
               {filteredData.length > 0 ? (
                 filteredData.map((item) => (

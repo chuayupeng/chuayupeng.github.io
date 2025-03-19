@@ -84,10 +84,18 @@ const getCategoryGradient = (categories: CategoryType[]) => {
 
 // Calculate "rarity" based on timeline item id
 const getItemRarity = (id: number) => {
-  if (id <= 10) return { label: 'Legendary', class: 'text-amber-400 border-amber-400/30 bg-amber-400/10' };
-  if (id <= 20) return { label: 'Epic', class: 'text-purple-400 border-purple-400/30 bg-purple-400/10' };
-  if (id <= 30) return { label: 'Rare', class: 'text-blue-400 border-blue-400/30 bg-blue-400/10' };
-  return { label: 'Common', class: 'text-gray-400 border-gray-400/30 bg-gray-400/10' };
+  if (id <= 5) return { label: 'Legendary', class: 'text-amber-400 border-amber-400/30 bg-amber-400/10', xpBase: 200 };
+  if (id <= 10) return { label: 'Epic', class: 'text-purple-400 border-purple-400/30 bg-purple-400/10', xpBase: 150 };
+  if (id <= 20) return { label: 'Rare', class: 'text-blue-400 border-blue-400/30 bg-blue-400/10', xpBase: 100 };
+  return { label: 'Common', class: 'text-gray-400 border-gray-400/30 bg-gray-400/10', xpBase: 50 };
+};
+
+// Calculate XP based on rarity and add some variance
+const calculateXP = (id: number) => {
+  const rarity = getItemRarity(id);
+  // Add some variance based on the id
+  const variance = (id % 5) * 5; // 0, 5, 10, 15, or 20 additional XP
+  return rarity.xpBase + variance;
 };
 
 const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
@@ -95,7 +103,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
   const categories = Array.isArray(item.category) ? item.category : [item.category];
   const categoryColor = getCategoryGradient(categories);
   const rarity = getItemRarity(item.id);
-  const xpValue = 150 - (item.id * 5); // Higher XP for earlier achievements
+  const xpValue = calculateXP(item.id);
   
   return (
     <div className="timeline-item relative animate-fade-in w-full md:w-[45%] mb-12 hover:-translate-y-1 transition-transform">
