@@ -13,6 +13,12 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
   setActiveFilter,
   categories
 }) => {
+  // Function to format category names
+  const formatCategoryName = (category: string): string => {
+    if (category === 'f&b') return 'F&B';
+    return category.charAt(0).toUpperCase() + category.slice(1);
+  };
+
   return (
     <div className="flex flex-wrap gap-2 justify-center mb-8">
       <Button
@@ -30,7 +36,7 @@ const FilterButtons: React.FC<FilterButtonsProps> = ({
           onClick={() => setActiveFilter(category)}
           className={activeFilter === category ? 'bg-cyber-cyan text-cyber-blue hover:bg-cyber-cyan/80' : ''}
         >
-          {category.charAt(0).toUpperCase() + category.slice(1)}
+          {formatCategoryName(category)}
         </Button>
       ))}
     </div>

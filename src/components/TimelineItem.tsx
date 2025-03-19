@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Shield, Utensils, GraduationCap, BarChart, Rocket, 
@@ -62,7 +61,6 @@ const getCategoryGradient = (categories: CategoryType[]) => {
     return getCategoryColor(categories[0]);
   }
   
-  // Multi-category gradients
   const categoryColors: Record<CategoryType, string> = {
     'cybersecurity': 'from-blue-500',
     'teaching': 'from-green-500',
@@ -70,7 +68,6 @@ const getCategoryGradient = (categories: CategoryType[]) => {
     'entrepreneurship': 'from-purple-500'
   };
   
-  // Use the first two categories for the gradient
   const primaryCategory = categories[0];
   const secondaryCategory = categories[1] || categories[0];
   
@@ -85,7 +82,11 @@ const getCategoryGradient = (categories: CategoryType[]) => {
   return `bg-gradient-to-r ${fromColor} ${toColor}`;
 };
 
-// Calculate "rarity" based on timeline item id
+const formatCategoryName = (category: CategoryType): string => {
+  if (category === 'f&b') return 'F&B';
+  return category.charAt(0).toUpperCase() + category.slice(1);
+};
+
 const getItemRarity = (id: number) => {
   if (id <= 5) return { label: 'Legendary', class: 'text-amber-400 border-amber-400/30 bg-amber-400/10', xpBase: 200 };
   if (id <= 10) return { label: 'Epic', class: 'text-purple-400 border-purple-400/30 bg-purple-400/10', xpBase: 150 };
@@ -93,11 +94,9 @@ const getItemRarity = (id: number) => {
   return { label: 'Common', class: 'text-gray-400 border-gray-400/30 bg-gray-400/10', xpBase: 50 };
 };
 
-// Calculate XP based on rarity and add some variance
 const calculateXP = (id: number) => {
   const rarity = getItemRarity(id);
-  // Add some variance based on the id
-  const variance = (id % 5) * 5; // 0, 5, 10, 15, or 20 additional XP
+  const variance = (id % 5) * 5;
   return rarity.xpBase + variance;
 };
 
@@ -113,7 +112,6 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
     <div className="timeline-item relative animate-fade-in w-full md:w-[45%] mb-12 hover:-translate-y-1 transition-transform">
       <Card className="overflow-hidden border shadow-md hover:shadow-lg transition-shadow bg-card/90 backdrop-blur-sm">
         <CardContent className="p-0">
-          {/* Top banner with smooth gradient */}
           <div 
             className={`h-3 w-full ${categoryColor}`}
             style={{ 
@@ -136,7 +134,6 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
                 }}
               >
                 <IconComponent size={20} />
-                {/* Decorative elements for the icon */}
                 <div className="absolute inset-0 rounded-lg border border-white/20"></div>
                 <div className="absolute -inset-0.5 rounded-lg bg-white opacity-0 hover:opacity-20 transition-opacity"></div>
               </div>
@@ -166,12 +163,11 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
                         "inline-block px-3 py-1 text-xs font-medium rounded-full text-white",
                         getCategoryColor(category)
                       )}>
-                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                        {formatCategoryName(category)}
                       </span>
                     ))}
                   </div>
                   
-                  {/* XP indicator */}
                   <div className="flex items-center gap-1 text-xs font-medium text-cyan-500 mt-2">
                     <Zap size={12} />
                     <span>+{xpValue} XP</span>
