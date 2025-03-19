@@ -20,6 +20,15 @@ const CharacterStats: React.FC<CharacterStatsProps> = ({
   toggleStats,
   togglePosition
 }) => {
+  // Find the maximum skill value to calculate relative percentages
+  const maxSkillValue = Math.max(...Object.values(skills));
+  
+  // Format category names for display
+  const formatCategoryName = (category: string): string => {
+    if (category === 'f&b') return 'F&B';
+    return category.charAt(0).toUpperCase() + category.slice(1);
+  };
+  
   return (
     <div className="bg-card/90 backdrop-blur-sm border rounded-lg p-4 w-64 shadow-lg">
       <div className="flex items-center justify-between mb-2">
@@ -62,8 +71,8 @@ const CharacterStats: React.FC<CharacterStatsProps> = ({
         {Object.entries(skills).map(([skill, value]) => (
           <div key={skill} className="flex flex-col">
             <div className="flex justify-between mb-1">
-              <span className="capitalize">{skill}</span>
-              <span>{value}</span>
+              <span className="capitalize">{formatCategoryName(skill)}</span>
+              <span>{Math.round(value)}</span>
             </div>
             <div className="w-full bg-muted rounded-full h-1.5">
               <div 
@@ -73,7 +82,7 @@ const CharacterStats: React.FC<CharacterStatsProps> = ({
                   skill === 'f&b' ? 'bg-amber-500' :
                   'bg-purple-500'
                 }`}
-                style={{ width: `${(value / 100) * 50}%` }}
+                style={{ width: `${(value / maxSkillValue) * 100}%` }}
               />
             </div>
           </div>

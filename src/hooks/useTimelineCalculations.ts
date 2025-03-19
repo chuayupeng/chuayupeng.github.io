@@ -17,6 +17,16 @@ export const calculateXP = (id: number) => {
   return rarity.xpBase + variance;
 };
 
+// Calculate skill points based on item rarity
+export const calculateSkillPoints = (id: number) => {
+  const rarity = getItemRarity(id);
+  // Apply multipliers based on rarity
+  if (rarity.label === 'Legendary') return 30; // Higher multiplier for legendary items
+  if (rarity.label === 'Epic') return 25;
+  if (rarity.label === 'Rare') return 20;
+  return 15; // Base points for common items
+};
+
 export const useTimelineCalculations = (timelineData: TimelineItemType[]) => {
   const totalExperience = useMemo(() => 
     timelineData.reduce((total, item) => total + calculateXP(item.id), 0)
@@ -26,28 +36,31 @@ export const useTimelineCalculations = (timelineData: TimelineItemType[]) => {
   const currentLevelXP = totalExperience % 500;
   const xpToNextLevel = 500 - currentLevelXP;
   
-  const skills = useMemo(() => ({
-    cybersecurity: timelineData.filter(item => 
-      Array.isArray(item.category) 
-        ? item.category.includes('cybersecurity')
-        : item.category === 'cybersecurity'
-    ).length * 15,
-    teaching: timelineData.filter(item => 
-      Array.isArray(item.category) 
-        ? item.category.includes('teaching')
-        : item.category === 'teaching'
-    ).length * 15,
-    'f&b': timelineData.filter(item => 
-      Array.isArray(item.category) 
-        ? item.category.includes('f&b')
-        : item.category === 'f&b'
-    ).length * 15,
-    entrepreneurship: timelineData.filter(item => 
-      Array.isArray(item.category) 
-        ? item.category.includes('entrepreneurship')
-        : item.category === 'entrepreneurship'
-    ).length * 15,
-  }), [timelineData]);
+  const skills = useMemo(() => {
+    const skillPoints = {
+      cybersecurity: 0,
+      teaching: 0,
+      'f&b': 0,
+      entrepreneurship: 0
+    };
+    
+    timelineData.forEach(item => {
+      const points = calculateSkillPoints(item.id);
+      
+      if (Array.isArray(item.category)) {
+        // Distribute points among multiple categories
+        const pointsPerCategory = points / item.category.length;
+        item.category.forEach(cat => {
+          skillPoints[cat] += pointsPerCategory;
+        });
+      } else {
+        // Single category gets all points
+        skillPoints[item.category] += points;
+      }
+    });
+    
+    return skillPoints;
+  }, [timelineData]);
 
   return {
     totalExperience,
