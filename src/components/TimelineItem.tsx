@@ -90,15 +90,15 @@ const formatCategoryName = (category: CategoryType): string => {
 };
 
 const getItemRarity = (id: number) => {
-  if (id <= 5) return { label: 'Legendary', class: 'text-amber-400 border-amber-400/30 bg-amber-400/10', xpBase: 200 };
-  if (id <= 10) return { label: 'Epic', class: 'text-purple-400 border-purple-400/30 bg-purple-400/10', xpBase: 150 };
-  if (id <= 20) return { label: 'Rare', class: 'text-blue-400 border-blue-400/30 bg-blue-400/10', xpBase: 100 };
-  return { label: 'Common', class: 'text-gray-400 border-gray-400/30 bg-gray-400/10', xpBase: 50 };
+  if (id <= 20) return { label: 'Legendary', class: 'text-amber-400 border-amber-400/30 bg-amber-400/10', xpBase: 400 };
+  if (id <= 40) return { label: 'Epic', class: 'text-purple-400 border-purple-400/30 bg-purple-400/10', xpBase: 150 };
+  if (id <= 60) return { label: 'Rare', class: 'text-blue-400 border-blue-400/30 bg-blue-400/10', xpBase: 75 };
+  return { label: 'Common', class: 'text-gray-400 border-gray-400/30 bg-gray-400/10', xpBase: 25 };
 };
 
 const calculateXP = (id: number) => {
   const rarity = getItemRarity(id);
-  const variance = (id % 5) * 5;
+  const variance = (id % 10) * 50;
   return rarity.xpBase + variance;
 };
 

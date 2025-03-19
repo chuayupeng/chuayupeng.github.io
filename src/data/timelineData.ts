@@ -13,16 +13,16 @@ export type TimelineItemType = {
 
 export const timelineData: TimelineItemType[] = [
   {
-    id: 1,
+    id: 5,
     title: "Information Security Practitioner",
     date: "2024 - Present",
-    description: "Protected the fund by uncovering legacy risks and threats. Brought an offensive mindset into a defensive role.",
+    description: "Protecting the fund by uncovering legacy risks and threats. Brought an offensive mindset into a defensive role.",
     category: "cybersecurity",
     icon: "Shield",
     coy: "Symmetry Investments"
   },
   {
-    id: 20,
+    id: 53,
     title: "Computer Science Teacher",
     date: "2024 - Present",
     description: "Taught Computer Science for Cambridge AS and A Levels Examinations.",
@@ -31,7 +31,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "Furen International School"
   },
   {
-    id: 2,
+    id: 9,
     title: "Co-Founder",
     date: "2024 - 2024",
     description: "Created original recipes and helped open a stall at Marketplace@Expo.",
@@ -40,7 +40,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "WhiteHatOne Pte Ltd/Cloud Bingsu"
   },
   {
-    id: 3,
+    id: 39,
     title: "CSIRT Member",
     date: "2023 - Present",
     description: "Conducted incident response, malware analysis, and forensic investigations under military service.",
@@ -49,7 +49,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "Digital Intelligence Services"
   },
   {
-    id: 14,
+    id: 51,
     title: "Red Team Member",
     date: "2023 - 2024",
     description: "Freelance penetration testing services.",
@@ -58,7 +58,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "Synack Red Team"
   },
   {
-    id: 11,
+    id: 52,
     title: "Cybersecurity Advisor",
     date: "2022 - 2023",
     description: "Advised stealth gaming startup on security integration and best practices.",
@@ -67,7 +67,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "_______________________"
   },
   {
-    id: 4,
+    id: 35,
     title: "Product Security Engineer",
     date: "2021 - 2024",
     description: "Securing TikTok E-Commerce products, performing S-SDLC and SAST research on other ByteDance products.",
@@ -76,7 +76,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "ByteDance/TikTok"
   },
   {
-    id: 11,
+    id: 13,
     title: "Founder",
     date: "2021 - 2021",
     description: "Crafted bespoke bottled cocktails.",
@@ -85,7 +85,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "Moonshots"
   },
   {
-    id: 5,
+    id: 41,
     title: "Security Consultant",
     date: "2020 - 2021",
     description: "Conducted VAPT services and security reviews for clients across various industries.",
@@ -94,7 +94,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "ITSEC Asia Pte Ltd"
   },
   {
-    id: 6,
+    id: 61,
     title: "Security Engineer",
     date: "2019 - 2020",
     description: "Performed VAPT and compliance checks for military systems. Hardened critical infrastructure.",
@@ -103,7 +103,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "Defense Science and Technology Agency"
   },
   {
-    id: 15,
+    id: 38,
     title: "Bartender",
     date: "2019 - 2019",
     description: "Performed bar back duties, mixing drinks and stock taking.",
@@ -112,7 +112,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "La Maison Du Whisky Singapore"
   },
   {
-    id: 7,
+    id: 27,
     title: "Red Team Intern",
     date: "2018 - 2019",
     description: "NFC card cloning research and Machine Learning for Cybersecurity.",
@@ -121,7 +121,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "Government Technology Agency of Singapore"
   },
   {
-    id: 8,
+    id: 63,
     title: "Penetration Tester Intern",
     date: "2018 - 2018",
     description: "Cleaned Data for automated analysis of attacks, and analysed malware samples on clients.",
@@ -130,7 +130,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "InsiderSecurity"
   },
   {
-    id: 10,
+    id: 41,
     title: "Team Lead",
     date: "2018 - 2023",
     description: "Led team 0x1EA7BEEF to top 15% rankings in local CTF competitions.",
@@ -139,16 +139,16 @@ export const timelineData: TimelineItemType[] = [
     coy: "0x1EA7BEEF"
   },
   {
-    id: 18,
+    id: 39,
     title: "Co-Founder",
     date: "2017 - 2017",
-    description: "Created a startup and got $10k in funding to build the application.",
+    description: "Created a startup and got first funding round to build the application.",
     category: "entrepreneurship",
     icon: "Trophy",
     coy: "JAYEO"
   },
   {
-    id: 9,
+    id: 59,
     title: "Fullstack Software Engineer Intern",
     date: "2017 - 2017",
     description: "Built web interfaces using React/Redux and Laravel for ShopBack's internal platforms.",
@@ -157,7 +157,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "Shopback Singapore"
   },
   {
-    id: 25,
+    id: 71,
     title: "Assistant Teacher",
     date: "2017 - 2017",
     description: "Taught courses teaching microbits and ethical hacking to secondary school students in various schools.",
@@ -166,7 +166,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "TinkerTanker"
   },
   {
-    id: 19,
+    id: 44,
     title: "Teaching Assistant",
     date: "2016 - 2019",
     description: "Taught basic programming, algorithms and data structure modules to university students.",
@@ -175,7 +175,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "National University of Singapore"
   },
   {
-    id: 26,
+    id: 80,
     title: "Relief Allied Educator",
     date: "2015 - 2015",
     description: "Taught chemistry, marked class tests, conducted lessons and practical laboratory sessions.",

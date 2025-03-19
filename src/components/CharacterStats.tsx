@@ -73,7 +73,7 @@ const CharacterStats: React.FC<CharacterStatsProps> = ({
                   skill === 'f&b' ? 'bg-amber-500' :
                   'bg-purple-500'
                 }`}
-                style={{ width: `${(value / 100) * 100}%` }}
+                style={{ width: `${(value / 100) * 50}%` }}
               />
             </div>
           </div>
