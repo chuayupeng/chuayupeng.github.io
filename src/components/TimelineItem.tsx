@@ -95,13 +95,9 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
     <div className="timeline-item relative animate-fade-in w-full md:w-[45%] mb-12 hover:-translate-y-1 transition-transform">
       <Card className="overflow-hidden border shadow-md hover:shadow-lg transition-shadow bg-card/90 backdrop-blur-sm">
         <CardContent className="p-0">
-          {/* Top banner with pattern */}
+          {/* Top banner with smooth gradient */}
           <div 
-            className={`h-3 w-full ${categoryColor} opacity-80`}
-            style={{
-              backgroundImage: 'url("data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23ffffff" fill-opacity="0.2" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="1"/%3E%3Ccircle cx="13" cy="13" r="1"/%3E%3C/g%3E%3C/svg%3E")',
-              backgroundSize: '12px 12px',
-            }}
+            className={`h-3 w-full ${categoryColor}`}
           />
           
           <div className="p-5">
