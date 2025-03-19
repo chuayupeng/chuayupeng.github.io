@@ -14,6 +14,7 @@ import {
 import { TimelineItemType, CategoryType } from '@/data/timelineData';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TimelineItemProps {
   item: TimelineItemType;
@@ -104,6 +105,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
   const categoryColor = getCategoryGradient(categories);
   const rarity = getItemRarity(item.id);
   const xpValue = calculateXP(item.id);
+  const isMobile = useIsMobile();
   
   return (
     <div className="timeline-item relative animate-fade-in w-full md:w-[45%] mb-12 hover:-translate-y-1 transition-transform">
@@ -112,6 +114,11 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
           {/* Top banner with smooth gradient */}
           <div 
             className={`h-3 w-full ${categoryColor}`}
+            style={{ 
+              backgroundImage: categories.length > 1 
+                ? `linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to))` 
+                : 'none' 
+            }}
           />
           
           <div className="p-5">
@@ -119,7 +126,13 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
               <div className={cn(
                 "p-3 rounded-lg text-white shrink-0 relative",
                 categoryColor
-              )}>
+              )}
+                style={{ 
+                  backgroundImage: categories.length > 1 
+                    ? `linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to))` 
+                    : 'none' 
+                }}
+              >
                 <IconComponent size={20} />
                 {/* Decorative elements for the icon */}
                 <div className="absolute inset-0 rounded-lg border border-white/20"></div>
@@ -127,8 +140,8 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
               </div>
               
               <div className="flex-1">
-                <div className="flex flex-wrap items-baseline justify-between gap-4 mb-2">
-                  <div className="flex items-center gap-1">
+                <div className="flex flex-col gap-1 mb-3">
+                  <div className="flex flex-wrap items-center gap-2">
                     <h3 className="font-bold text-lg">{item.title}</h3>
                     <span className={cn(
                       "text-xs px-2 py-0.5 rounded-full border",
@@ -137,7 +150,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
                       {rarity.label}
                     </span>
                   </div>
-                  <div></div>
+                  
                   <span className="text-sm text-muted-foreground">{item.coy}</span>
                   <span className="text-sm text-muted-foreground">{item.date}</span>
                 </div>
@@ -157,7 +170,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
                   </div>
                   
                   {/* XP indicator */}
-                  <div className="flex items-center gap-1 text-xs font-medium text-cyan-500">
+                  <div className="flex items-center gap-1 text-xs font-medium text-cyan-500 mt-2">
                     <Zap size={12} />
                     <span>+{xpValue} XP</span>
                   </div>
