@@ -1,11 +1,13 @@
 
+export type CategoryType = "cybersecurity" | "teaching" | "f&b" | "entrepreneurship";
+
 export type TimelineItemType = {
   coy: string;
   id: number;
   title: string;
   date: string;
   description: string;
-  category: "cybersecurity" | "teaching" | "f&b" | "entrepreneurship";
+  category: CategoryType | CategoryType[];
   icon: string;
 };
 
@@ -24,7 +26,7 @@ export const timelineData: TimelineItemType[] = [
     title: "Computer Science Teacher",
     date: "2024 - Present",
     description: "Taught Computer Science for Cambridge AS and A Levels Examinations.",
-    category: "teaching",
+    category: ["teaching", "cybersecurity"],
     icon: "BookOpen",
     coy: "Furen International School"
   },
@@ -33,7 +35,7 @@ export const timelineData: TimelineItemType[] = [
     title: "Co-Founder",
     date: "2024 - 2024",
     description: "Created original recipes and helped open a stall at Marketplace@Expo.",
-    category: "f&b",
+    category: ["f&b", "entrepreneurship"],
     icon: "ChefHat",
     coy: "WhiteHatOne Pte Ltd/Cloud Bingsu"
   },
@@ -60,7 +62,7 @@ export const timelineData: TimelineItemType[] = [
     title: "Security Consultant",
     date: "2020 - 2021",
     description: "Conducted VAPT services and security reviews for clients across various industries.",
-    category: "cybersecurity",
+    category: ["cybersecurity", "entrepreneurship"],
     icon: "Swords",
     coy: "ITSEC Asia Pte Ltd"
   },
@@ -78,7 +80,7 @@ export const timelineData: TimelineItemType[] = [
     title: "Red Team Intern",
     date: "2018 - 2019",
     description: "NFC card cloning research and Machine Learning for Cybersecurity.",
-    category: "cybersecurity",
+    category: ["cybersecurity", "teaching"],
     icon: "BugPlay",
     coy: "Government Technology Agency of Singapore"
   },
@@ -105,7 +107,7 @@ export const timelineData: TimelineItemType[] = [
     title: "Team Lead/Web Security Focus",
     date: "2018 - 2023",
     description: "Led team 0x1EA7BEEF to top 15% rankings in local CTF competitions.",
-    category: "cybersecurity",
+    category: ["cybersecurity", "teaching"],
     icon: "Trophy",
     coy: "0x1EA7BEEF"
   },
@@ -114,7 +116,7 @@ export const timelineData: TimelineItemType[] = [
     title: "Cybersecurity Advisor",
     date: "2022 - 2023",
     description: "Advised stealth gaming startup on security integration and best practices.",
-    category: "entrepreneurship",
+    category: ["entrepreneurship", "cybersecurity"],
     icon: "BookOpen",
     coy: "_______________________"
   }

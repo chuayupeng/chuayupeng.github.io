@@ -8,7 +8,7 @@ import {
   Swords,
   Code
 } from 'lucide-react';
-import { TimelineItemType } from '@/data/timelineData';
+import { TimelineItemType, CategoryType } from '@/data/timelineData';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
@@ -33,7 +33,7 @@ const iconMap: Record<string, LucideIcon> = {
   Code: Code
 };
 
-const getCategoryColor = (category: TimelineItemType['category']) => {
+const getCategoryColor = (category: CategoryType) => {
   switch (category) {
     case 'cybersecurity':
       return 'bg-blue-500';
@@ -48,6 +48,34 @@ const getCategoryColor = (category: TimelineItemType['category']) => {
   }
 };
 
+const getCategoryGradient = (categories: CategoryType[]) => {
+  if (categories.length === 1) {
+    return getCategoryColor(categories[0]);
+  }
+  
+  // Multi-category gradients
+  const categoryColors: Record<CategoryType, string> = {
+    'cybersecurity': 'from-blue-500',
+    'teaching': 'from-green-500',
+    'f&b': 'from-amber-500',
+    'entrepreneurship': 'from-purple-500'
+  };
+  
+  // Use the first two categories for the gradient
+  const primaryCategory = categories[0];
+  const secondaryCategory = categories[1] || categories[0];
+  
+  const fromColor = categoryColors[primaryCategory];
+  const toColor = {
+    'cybersecurity': 'to-blue-500',
+    'teaching': 'to-green-500',
+    'f&b': 'to-amber-500',
+    'entrepreneurship': 'to-purple-500'
+  }[secondaryCategory];
+  
+  return `bg-gradient-to-r ${fromColor} ${toColor}`;
+};
+
 // Calculate "rarity" based on timeline item id
 const getItemRarity = (id: number) => {
   if (id <= 10) return { label: 'Legendary', class: 'text-amber-400 border-amber-400/30 bg-amber-400/10' };
@@ -58,7 +86,8 @@ const getItemRarity = (id: number) => {
 
 const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
   const IconComponent = iconMap[item.icon] || Shield;
-  const categoryColor = getCategoryColor(item.category);
+  const categories = Array.isArray(item.category) ? item.category : [item.category];
+  const categoryColor = getCategoryGradient(categories);
   const rarity = getItemRarity(item.id);
   const xpValue = 150 - (item.id * 5); // Higher XP for earlier achievements
   
@@ -106,12 +135,16 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
                 <p className="text-sm text-muted-foreground mb-3">{item.description}</p>
                 
                 <div className="flex flex-wrap items-center justify-between">
-                  <span className={cn(
-                    "inline-block px-3 py-1 text-xs font-medium rounded-full text-white",
-                    categoryColor
-                  )}>
-                    {item.category.charAt(0).toUpperCase() + item.category.slice(1)}
-                  </span>
+                  <div className="flex flex-wrap gap-1">
+                    {categories.map((category) => (
+                      <span key={category} className={cn(
+                        "inline-block px-3 py-1 text-xs font-medium rounded-full text-white",
+                        getCategoryColor(category)
+                      )}>
+                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                      </span>
+                    ))}
+                  </div>
                   
                   {/* XP indicator */}
                   <div className="flex items-center gap-1 text-xs font-medium text-cyan-500">

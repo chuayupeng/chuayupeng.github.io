@@ -1,5 +1,6 @@
 
 import { Button } from '@/components/ui/button';
+import { CategoryType } from '@/data/timelineData';
 
 interface FilterButtonsProps {
   activeFilter: string;

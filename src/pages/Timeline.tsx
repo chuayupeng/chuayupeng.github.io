@@ -1,6 +1,5 @@
-
 import { useState } from 'react';
-import { timelineData } from '@/data/timelineData';
+import { timelineData, CategoryType } from '@/data/timelineData';
 import TimelineItem from '@/components/TimelineItem';
 import FilterButtons from '@/components/FilterButtons';
 import Navbar from '@/components/Navbar';
@@ -15,9 +14,20 @@ const Timeline = () => {
   
   const filteredData = activeFilter === 'all' 
     ? timelineData 
-    : timelineData.filter(item => item.category === activeFilter);
+    : timelineData.filter(item => {
+        // Check if the category is an array and if it contains the active filter
+        if (Array.isArray(item.category)) {
+          return item.category.includes(activeFilter as CategoryType);
+        }
+        // Or if it's a single category matching the filter
+        return item.category === activeFilter;
+      });
 
-  const categories = Array.from(new Set(timelineData.map(item => item.category)));
+  // Extract all unique categories
+  const allCategories = timelineData.flatMap(item => 
+    Array.isArray(item.category) ? item.category : [item.category]
+  );
+  const categories = Array.from(new Set(allCategories));
   
   // Calculate stats based on timeline entries
   const totalExperience = timelineData.length * 150;
@@ -25,12 +35,28 @@ const Timeline = () => {
   const currentLevelXP = totalExperience % 500;
   const xpToNextLevel = 500 - currentLevelXP;
   
-  // RPG-style skill stats
+  // RPG-style skill stats - count appearances in categories
   const skills = {
-    cybersecurity: timelineData.filter(item => item.category === 'cybersecurity').length * 15,
-    teaching: timelineData.filter(item => item.category === 'teaching').length * 15,
-    'f&b': timelineData.filter(item => item.category === 'f&b').length * 15,
-    entrepreneurship: timelineData.filter(item => item.category === 'entrepreneurship').length * 15,
+    cybersecurity: timelineData.filter(item => 
+      Array.isArray(item.category) 
+        ? item.category.includes('cybersecurity')
+        : item.category === 'cybersecurity'
+    ).length * 15,
+    teaching: timelineData.filter(item => 
+      Array.isArray(item.category) 
+        ? item.category.includes('teaching')
+        : item.category === 'teaching'
+    ).length * 15,
+    'f&b': timelineData.filter(item => 
+      Array.isArray(item.category) 
+        ? item.category.includes('f&b')
+        : item.category === 'f&b'
+    ).length * 15,
+    entrepreneurship: timelineData.filter(item => 
+      Array.isArray(item.category) 
+        ? item.category.includes('entrepreneurship')
+        : item.category === 'entrepreneurship'
+    ).length * 15,
   };
 
   const toggleStats = () => {
