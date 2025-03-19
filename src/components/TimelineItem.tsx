@@ -2,7 +2,11 @@
 import React from 'react';
 import { 
   Shield, Utensils, GraduationCap, BarChart, Rocket, 
-  BookOpen, Coffee, Lock, ChefHat, Users, Zap, LucideIcon
+  BookOpen, Coffee, Lock, ChefHat, Users, Zap, LucideIcon,
+  Sword,
+  BugPlay,
+  Swords,
+  Code
 } from 'lucide-react';
 import { TimelineItemType } from '@/data/timelineData';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,7 +26,11 @@ const iconMap: Record<string, LucideIcon> = {
   Coffee: Coffee,
   Lock: Lock,
   ChefHat: ChefHat,
-  Users: Users
+  Users: Users,
+  Sword: Sword,
+  Swords: Swords,
+  BugPlay: BugPlay,
+  Code: Code
 };
 
 const getCategoryColor = (category: TimelineItemType['category']) => {
@@ -42,9 +50,9 @@ const getCategoryColor = (category: TimelineItemType['category']) => {
 
 // Calculate "rarity" based on timeline item id
 const getItemRarity = (id: number) => {
-  if (id <= 3) return { label: 'Legendary', class: 'text-amber-400 border-amber-400/30 bg-amber-400/10' };
-  if (id <= 5) return { label: 'Epic', class: 'text-purple-400 border-purple-400/30 bg-purple-400/10' };
-  if (id <= 7) return { label: 'Rare', class: 'text-blue-400 border-blue-400/30 bg-blue-400/10' };
+  if (id <= 10) return { label: 'Legendary', class: 'text-amber-400 border-amber-400/30 bg-amber-400/10' };
+  if (id <= 20) return { label: 'Epic', class: 'text-purple-400 border-purple-400/30 bg-purple-400/10' };
+  if (id <= 30) return { label: 'Rare', class: 'text-blue-400 border-blue-400/30 bg-blue-400/10' };
   return { label: 'Common', class: 'text-gray-400 border-gray-400/30 bg-gray-400/10' };
 };
 
@@ -80,8 +88,8 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
               </div>
               
               <div className="flex-1">
-                <div className="flex flex-wrap items-baseline justify-between gap-2 mb-1">
-                  <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-baseline justify-between gap-4 mb-2">
+                  <div className="flex items-center gap-1">
                     <h3 className="font-bold text-lg">{item.title}</h3>
                     <span className={cn(
                       "text-xs px-2 py-0.5 rounded-full border",
@@ -90,6 +98,8 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
                       {rarity.label}
                     </span>
                   </div>
+                  <div></div>
+                  <span className="text-sm text-muted-foreground">{item.coy}</span>
                   <span className="text-sm text-muted-foreground">{item.date}</span>
                 </div>
                 
