@@ -21,10 +21,10 @@ export const calculateXP = (id: number) => {
 export const calculateSkillPoints = (id: number) => {
   const rarity = getItemRarity(id);
   // Apply multipliers based on rarity
-  if (rarity.label === 'Legendary') return 30; // Higher multiplier for legendary items
-  if (rarity.label === 'Epic') return 25;
+  if (rarity.label === 'Legendary') return 60; // Higher multiplier for legendary items
+  if (rarity.label === 'Epic') return 40;
   if (rarity.label === 'Rare') return 20;
-  return 15; // Base points for common items
+  return 10; // Base points for common items
 };
 
 export const useTimelineCalculations = (timelineData: TimelineItemType[]) => {

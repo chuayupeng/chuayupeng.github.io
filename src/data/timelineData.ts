@@ -40,7 +40,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "WhiteHatOne Pte Ltd/Cloud Bingsu"
   },
   {
-    id: 39,
+    id: 49,
     title: "CSIRT Member",
     date: "2023 - Present",
     description: "Conducted incident response, malware analysis, and forensic investigations under military service.",
@@ -175,7 +175,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "National University of Singapore"
   },
   {
-    id: 80,
+    id: 84,
     title: "Relief Allied Educator",
     date: "2015 - 2015",
     description: "Taught chemistry, marked class tests, conducted lessons and practical laboratory sessions.",
