@@ -26,7 +26,7 @@ export const timelineData: TimelineItemType[] = [
     title: "Computer Science Teacher",
     date: "2024 - Present",
     description: "Taught Computer Science for Cambridge AS and A Levels Examinations.",
-    category: ["teaching", "cybersecurity"],
+    category: "teaching",
     icon: "BookOpen",
     coy: "Furen International School"
   },
@@ -80,7 +80,7 @@ export const timelineData: TimelineItemType[] = [
     title: "Security Consultant",
     date: "2020 - 2021",
     description: "Conducted VAPT services and security reviews for clients across various industries.",
-    category: ["cybersecurity", "entrepreneurship"],
+    category: "cybersecurity",
     icon: "Swords",
     coy: "ITSEC Asia Pte Ltd"
   },
@@ -94,11 +94,20 @@ export const timelineData: TimelineItemType[] = [
     coy: "Defense Science and Technology Agency"
   },
   {
+    id: 15,
+    title: "Bartender",
+    date: "2019 - 2019",
+    description: "Performed bar back duties, mixing drinks and stock taking.",
+    category: "f&b",
+    icon: "Martini",
+    coy: "La Maison Du Whisky Singapore"
+  },
+  {
     id: 7,
     title: "Red Team Intern",
     date: "2018 - 2019",
     description: "NFC card cloning research and Machine Learning for Cybersecurity.",
-    category: ["cybersecurity", "teaching"],
+    category: "cybersecurity",
     icon: "BugPlay",
     coy: "Government Technology Agency of Singapore"
   },
@@ -113,12 +122,21 @@ export const timelineData: TimelineItemType[] = [
   },
   {
     id: 10,
-    title: "Team Lead/Web Security Focus",
+    title: "Team Lead",
     date: "2018 - 2023",
     description: "Led team 0x1EA7BEEF to top 15% rankings in local CTF competitions.",
     category: ["cybersecurity", "teaching"],
     icon: "Trophy",
     coy: "0x1EA7BEEF"
+  },
+  {
+    id: 18,
+    title: "Co-Founder",
+    date: "2017 - 2017",
+    description: "Created a startup and got $10k in funding to build the application.",
+    category: "entrepreneurship",
+    icon: "Trophy",
+    coy: "JAYEO"
   },
   {
     id: 9,
