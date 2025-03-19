@@ -76,6 +76,15 @@ export const timelineData: TimelineItemType[] = [
     coy: "ByteDance/TikTok"
   },
   {
+    id: 11,
+    title: "Founder",
+    date: "2021 - 2021",
+    description: "Crafted bespoke bottled cocktails.",
+    category: ["f&b", "entrepreneurship"],
+    icon: "MoonStar",
+    coy: "Moonshots"
+  },
+  {
     id: 5,
     title: "Security Consultant",
     date: "2020 - 2021",

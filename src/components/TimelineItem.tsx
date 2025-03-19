@@ -9,7 +9,8 @@ import {
   Bot,
   University,
   School,
-  Martini
+  Martini,
+  MoonStar
 } from 'lucide-react';
 import { TimelineItemType, CategoryType } from '@/data/timelineData';
 import { Card, CardContent } from '@/components/ui/card';
@@ -38,7 +39,8 @@ const iconMap: Record<string, LucideIcon> = {
   Bot: Bot,
   University: University,
   School: School,
-  Martini: Martini
+  Martini: Martini,
+  MoonStar: MoonStar
 };
 
 const getCategoryColor = (category: CategoryType) => {
