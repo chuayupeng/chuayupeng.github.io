@@ -49,6 +49,24 @@ export const timelineData: TimelineItemType[] = [
     coy: "Digital Intelligence Services"
   },
   {
+    id: 14,
+    title: "Red Team Member",
+    date: "2023 - 2024",
+    description: "Freelance penetration testing services.",
+    category: "cybersecurity",
+    icon: "Swords",
+    coy: "Synack Red Team"
+  },
+  {
+    id: 11,
+    title: "Cybersecurity Advisor",
+    date: "2022 - 2023",
+    description: "Advised stealth gaming startup on security integration and best practices.",
+    category: ["entrepreneurship", "cybersecurity"],
+    icon: "BookOpen",
+    coy: "_______________________"
+  },
+  {
     id: 4,
     title: "Product Security Engineer",
     date: "2021 - 2024",
@@ -94,15 +112,6 @@ export const timelineData: TimelineItemType[] = [
     coy: "InsiderSecurity"
   },
   {
-    id: 9,
-    title: "Fullstack Software Engineer Intern",
-    date: "2017 - 2017",
-    description: "Built web interfaces using React/Redux and Laravel for ShopBack's internal platforms.",
-    category: "cybersecurity",
-    icon: "Code",
-    coy: "Shopback Singapore"
-  },
-  {
     id: 10,
     title: "Team Lead/Web Security Focus",
     date: "2018 - 2023",
@@ -112,12 +121,39 @@ export const timelineData: TimelineItemType[] = [
     coy: "0x1EA7BEEF"
   },
   {
-    id: 11,
-    title: "Cybersecurity Advisor",
-    date: "2022 - 2023",
-    description: "Advised stealth gaming startup on security integration and best practices.",
-    category: ["entrepreneurship", "cybersecurity"],
-    icon: "BookOpen",
-    coy: "_______________________"
+    id: 9,
+    title: "Fullstack Software Engineer Intern",
+    date: "2017 - 2017",
+    description: "Built web interfaces using React/Redux and Laravel for ShopBack's internal platforms.",
+    category: "cybersecurity",
+    icon: "Code",
+    coy: "Shopback Singapore"
+  },
+  {
+    id: 25,
+    title: "Assistant Teacher",
+    date: "2017 - 2017",
+    description: "Taught courses teaching microbits and ethical hacking to secondary school students in various schools.",
+    category: ["cybersecurity", "teaching"],
+    icon: "Bot",
+    coy: "TinkerTanker"
+  },
+  {
+    id: 19,
+    title: "Teaching Assistant",
+    date: "2016 - 2019",
+    description: "Taught basic programming, algorithms and data structure modules to university students.",
+    category: "teaching",
+    icon: "University",
+    coy: "National University of Singapore"
+  },
+  {
+    id: 26,
+    title: "Relief Allied Educator",
+    date: "2015 - 2015",
+    description: "Taught chemistry, marked class tests, conducted lessons and practical laboratory sessions.",
+    category: "teaching",
+    icon: "School",
+    coy: "Ministry of Education, Singapore"
   }
 ];

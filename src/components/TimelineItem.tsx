@@ -6,7 +6,10 @@ import {
   Sword,
   BugPlay,
   Swords,
-  Code
+  Code,
+  Bot,
+  University,
+  School
 } from 'lucide-react';
 import { TimelineItemType, CategoryType } from '@/data/timelineData';
 import { Card, CardContent } from '@/components/ui/card';
@@ -30,7 +33,10 @@ const iconMap: Record<string, LucideIcon> = {
   Sword: Sword,
   Swords: Swords,
   BugPlay: BugPlay,
-  Code: Code
+  Code: Code,
+  Bot: Bot,
+  University: University,
+  School: School
 };
 
 const getCategoryColor = (category: CategoryType) => {
