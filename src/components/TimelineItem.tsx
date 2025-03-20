@@ -153,16 +153,35 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
           
           <div className="p-5 relative">
             {/* Company logo background image with fade transition */}
-            <div 
-              className="absolute bottom-0 right-0 w-36 h-36 opacity-5 pointer-events-none transition-opacity duration-500"
-              style={{
-                backgroundImage: `url(${logoUrl})`,
-                backgroundSize: 'contain',
-                backgroundPosition: 'bottom right',
-                backgroundRepeat: 'no-repeat',
-                zIndex: 0
-              }}
-            />
+            <div className="absolute bottom-0 right-0 w-36 h-36 opacity-5 pointer-events-none">
+              {/* Current logo - with fade out/in effect */}
+              <div 
+                className={`absolute inset-0 transition-opacity duration-700 ${
+                  isByteDance && (isByteDanceRevealed ? 'opacity-0' : 'opacity-100')
+                }`}
+                style={{
+                  backgroundImage: `url(${item.logo})`,
+                  backgroundSize: 'contain',
+                  backgroundPosition: 'bottom right',
+                  backgroundRepeat: 'no-repeat'
+                }}
+              />
+              
+              {/* Alternative logo (TikTok) with fade in/out effect */}
+              {isByteDance && (
+                <div 
+                  className={`absolute inset-0 transition-opacity duration-700 ${
+                    isByteDanceRevealed ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  style={{
+                    backgroundImage: `url(./coylogo/tiktok.png)`,
+                    backgroundSize: 'contain',
+                    backgroundPosition: 'bottom right',
+                    backgroundRepeat: 'no-repeat'
+                  }}
+                />
+              )}
+            </div>
             
             <div className="flex items-start gap-4 relative z-10">
               <div className={cn(
