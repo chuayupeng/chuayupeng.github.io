@@ -113,13 +113,6 @@ const calculateXP = (id: number) => {
   return rarity.xpBase + variance;
 };
 
-// Helper function to generate a placeholder logo URL based on company name
-const getCompanyLogoPlaceholder = (companyName: string): string => {
-  // This is a placeholder. In real implementation, you would map company names to actual logo URLs
-  // For now, we'll just use a generic placeholder
-  return '/placeholder.svg';
-};
-
 const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
   const IconComponent = iconMap[item.icon] || Shield;
   const categories = Array.isArray(item.category) ? item.category : [item.category];
@@ -127,7 +120,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
   const rarity = getItemRarity(item.id);
   const xpValue = calculateXP(item.id);
   const isMobile = useIsMobile();
-  const logoUrl = getCompanyLogoPlaceholder(item.coy);
+  const logoUrl = item.logo;
   
   return (
     <div className="timeline-item relative animate-fade-in w-full md:w-[45%] mb-12 hover:-translate-y-1 transition-transform">
@@ -145,7 +138,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
           <div className="p-5 relative">
             {/* Company logo background image */}
             <div 
-              className="absolute bottom-0 right-0 w-24 h-24 opacity-50 pointer-events-none"
+              className="absolute bottom-0 right-0 w-36 h-36 opacity-5 pointer-events-none"
               style={{
                 backgroundImage: `url(${logoUrl})`,
                 backgroundSize: 'contain',
