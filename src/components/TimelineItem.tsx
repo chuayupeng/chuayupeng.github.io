@@ -138,10 +138,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
   return (
     <div className="timeline-item relative animate-fade-in w-full md:w-[45%] mb-12 hover:-translate-y-1 transition-transform">
       <Card 
-        className={cn(
-          "overflow-hidden border shadow-md hover:shadow-lg transition-shadow bg-card/90 backdrop-blur-sm",
-          isByteDance && "cursor-pointer"
-        )}
+        className="overflow-hidden border shadow-md hover:shadow-lg transition-shadow bg-card/90 backdrop-blur-sm"
         onClick={handleCardClick}
       >
         <CardContent className="p-0">
@@ -195,9 +192,27 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
                     </span>
                   </div>
                   
-                  {/* Company name with transition effect */}
-                  <span className="text-sm text-muted-foreground transition-opacity duration-300">
-                    {displayCompany}
+                  {/* Company name with improved transition effect */}
+                  <span className="text-sm text-muted-foreground relative h-5 overflow-hidden">
+                    {/* Current company name - with fade out/in effect */}
+                    <span 
+                      className={`absolute inset-0 transition-opacity duration-700 ${
+                        isByteDance && (isByteDanceRevealed ? 'opacity-0' : 'opacity-100')
+                      }`}
+                    >
+                      {item.coy}
+                    </span>
+                    
+                    {/* Alternative company name (TikTok) with fade in/out effect */}
+                    {isByteDance && (
+                      <span 
+                        className={`absolute inset-0 transition-opacity duration-700 ${
+                          isByteDanceRevealed ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      >
+                        TikTok
+                      </span>
+                    )}
                   </span>
                   <span className="text-sm text-muted-foreground">{item.date}</span>
                 </div>
