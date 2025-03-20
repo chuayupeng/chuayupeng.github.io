@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Shield, Utensils, GraduationCap, BarChart, Rocket, 
   BookOpen, Coffee, Lock, ChefHat, Users, Zap, LucideIcon,
@@ -114,17 +114,36 @@ const calculateXP = (id: number) => {
 };
 
 const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
+  const [isByteDanceRevealed, setIsByteDanceRevealed] = useState(false);
   const IconComponent = iconMap[item.icon] || Shield;
   const categories = Array.isArray(item.category) ? item.category : [item.category];
   const categoryColor = getCategoryGradient(categories);
   const rarity = getItemRarity(item.id);
   const xpValue = calculateXP(item.id);
   const isMobile = useIsMobile();
-  const logoUrl = item.logo;
+  
+  // ByteDance easter egg handling
+  const isByteDance = item.id === 35; // ID for ByteDance item
+  const displayCompany = isByteDance && isByteDanceRevealed ? "TikTok" : item.coy;
+  const logoUrl = isByteDance && isByteDanceRevealed 
+    ? "./coylogo/tiktok.png" // This will be the TikTok logo
+    : item.logo;
+  
+  const handleCardClick = () => {
+    if (isByteDance) {
+      setIsByteDanceRevealed(!isByteDanceRevealed);
+    }
+  };
   
   return (
     <div className="timeline-item relative animate-fade-in w-full md:w-[45%] mb-12 hover:-translate-y-1 transition-transform">
-      <Card className="overflow-hidden border shadow-md hover:shadow-lg transition-shadow bg-card/90 backdrop-blur-sm">
+      <Card 
+        className={cn(
+          "overflow-hidden border shadow-md hover:shadow-lg transition-shadow bg-card/90 backdrop-blur-sm",
+          isByteDance && "cursor-pointer"
+        )}
+        onClick={handleCardClick}
+      >
         <CardContent className="p-0">
           <div 
             className={`h-3 w-full ${categoryColor}`}
@@ -136,9 +155,9 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
           />
           
           <div className="p-5 relative">
-            {/* Company logo background image */}
+            {/* Company logo background image with fade transition */}
             <div 
-              className="absolute bottom-0 right-0 w-36 h-36 opacity-5 pointer-events-none"
+              className="absolute bottom-0 right-0 w-36 h-36 opacity-5 pointer-events-none transition-opacity duration-500"
               style={{
                 backgroundImage: `url(${logoUrl})`,
                 backgroundSize: 'contain',
@@ -176,7 +195,10 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
                     </span>
                   </div>
                   
-                  <span className="text-sm text-muted-foreground">{item.coy}</span>
+                  {/* Company name with transition effect */}
+                  <span className="text-sm text-muted-foreground transition-opacity duration-300">
+                    {displayCompany}
+                  </span>
                   <span className="text-sm text-muted-foreground">{item.date}</span>
                 </div>
                 
