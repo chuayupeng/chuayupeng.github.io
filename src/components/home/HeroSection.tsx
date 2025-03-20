@@ -34,12 +34,12 @@ const HeroSection = ({ level, currentLevelXP, xpToNextLevel, skills }: HeroSecti
             <div className="mt-4 mb-2">
               <div className="flex justify-between text-xs mb-1">
                 <span>Level {level}</span>
-                <span>{currentLevelXP}/{xpToNextLevel} XP to Level {level + 1}</span>
+                <span>{currentLevelXP}/500 XP to Level {level + 1}</span>
               </div>
               <div className="w-full bg-muted/30 rounded-full h-2">
                 <div 
                   className="rpg-progress" 
-                  style={{ width: `${(currentLevelXP / xpToNextLevel) * 100}%` }} 
+                  style={{ width: `${(currentLevelXP / 500) * 100}%` }} 
                 />
               </div>
             </div>

@@ -10,7 +10,12 @@ import {
   University,
   School,
   Martini,
-  MoonStar
+  MoonStar,
+  Trophy,
+  IceCreamBowl,
+  Radar,
+  Usb,
+  Banana
 } from 'lucide-react';
 import { TimelineItemType, CategoryType } from '@/data/timelineData';
 import { Card, CardContent } from '@/components/ui/card';
@@ -40,7 +45,12 @@ const iconMap: Record<string, LucideIcon> = {
   University: University,
   School: School,
   Martini: Martini,
-  MoonStar: MoonStar
+  MoonStar: MoonStar,
+  Trophy: Trophy,
+  IceCreamBowl: IceCreamBowl,
+  Radar: Radar,
+  Usb: Usb,
+  Banana: Banana
 };
 
 const getCategoryColor = (category: CategoryType) => {

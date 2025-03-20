@@ -18,7 +18,7 @@ export const timelineData: TimelineItemType[] = [
     date: "2024 - Present",
     description: "Protecting the fund by uncovering legacy risks and threats. Brought an offensive mindset into a defensive role.",
     category: "cybersecurity",
-    icon: "Shield",
+    icon: "Usb",
     coy: "Symmetry Investments"
   },
   {
@@ -36,7 +36,7 @@ export const timelineData: TimelineItemType[] = [
     date: "2024 - 2024",
     description: "Created original recipes and helped open a stall at Marketplace@Expo.",
     category: ["f&b", "entrepreneurship"],
-    icon: "ChefHat",
+    icon: "IceCreamBowl",
     coy: "WhiteHatOne Pte Ltd/Cloud Bingsu"
   },
   {
@@ -45,7 +45,7 @@ export const timelineData: TimelineItemType[] = [
     date: "2023 - Present",
     description: "Conducted incident response, malware analysis, and forensic investigations under military service.",
     category: "cybersecurity",
-    icon: "Shield",
+    icon: "Radar",
     coy: "Digital Intelligence Services"
   },
   {
@@ -85,7 +85,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "Moonshots"
   },
   {
-    id: 41,
+    id: 43,
     title: "Security Consultant",
     date: "2020 - 2021",
     description: "Conducted VAPT services and security reviews for clients across various industries.",
@@ -144,7 +144,7 @@ export const timelineData: TimelineItemType[] = [
     date: "2017 - 2017",
     description: "Created a startup and got first funding round to build the application.",
     category: "entrepreneurship",
-    icon: "Trophy",
+    icon: "Banana",
     coy: "JAYEO"
   },
   {
@@ -157,7 +157,7 @@ export const timelineData: TimelineItemType[] = [
     coy: "Shopback Singapore"
   },
   {
-    id: 71,
+    id: 73,
     title: "Assistant Teacher",
     date: "2017 - 2017",
     description: "Taught courses teaching microbits and ethical hacking to secondary school students in various schools.",
