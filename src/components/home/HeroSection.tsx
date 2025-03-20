@@ -1,7 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Zap, VenetianMask, Shield, GraduationCap, Wine, Flame } from 'lucide-react';
+import { Zap, VenetianMask, Shield, GraduationCap, Wine, Flame, Trophy, Star } from 'lucide-react';
 import { TimelineItemType } from '@/data/timelineData';
 
 interface HeroSectionProps {
