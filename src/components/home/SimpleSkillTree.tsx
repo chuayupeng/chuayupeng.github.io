@@ -23,6 +23,7 @@ type SkillNodeType = {
   x: number;
   y: number;
   color: string;
+  path: string; // Added path to organize skills in columns
   connections: string[];
 }
 
@@ -31,134 +32,240 @@ interface SimpleSkillTreeProps {
 }
 
 const SimpleSkillTree: React.FC<SimpleSkillTreeProps> = ({ className }) => {
-  // Define skill tree data
+  // Define skill tree data with three distinct paths
   const skills: SkillNodeType[] = [
-    // Core central skill
+    // Offensive Path (left column)
     {
-      id: 'core',
-      icon: <Star className="w-6 h-6" />,
-      title: 'Core Skills',
-      description: 'Foundation of all your abilities',
+      id: 'offensive-root',
+      icon: <Sword className="w-6 h-6" />,
+      title: 'Offensive Security',
+      description: 'Red team techniques',
       unlocked: true,
       highlight: true,
-      x: 50,
-      y: 50,
-      color: 'from-cyan-500 to-teal-500',
-      connections: ['hacking', 'defense', 'forensics', 'development']
-    },
-    // Main branches
-    {
-      id: 'hacking',
-      icon: <Sword className="w-5 h-5" />,
-      title: 'Offensive Security',
-      description: 'Penetration testing and red team skills',
-      unlocked: true,
-      x: 30,
-      y: 25,
+      x: 20,
+      y: 15,
       color: 'from-red-500 to-rose-500',
-      connections: ['exploit', 'social']
+      path: 'offensive',
+      connections: ['exploit', 'web-app']
     },
-    {
-      id: 'defense',
-      icon: <Shield className="w-5 h-5" />,
-      title: 'Defensive Security',
-      description: 'Blue team and security monitoring',
-      unlocked: true,
-      x: 70,
-      y: 25,
-      color: 'from-blue-500 to-indigo-500',
-      connections: ['soc', 'incident']
-    },
-    {
-      id: 'forensics',
-      icon: <Bug className="w-5 h-5" />,
-      title: 'Digital Forensics',
-      description: 'Evidence collection and analysis',
-      unlocked: true,
-      x: 30,
-      y: 75,
-      color: 'from-purple-500 to-violet-500',
-      connections: ['malware']
-    },
-    {
-      id: 'development',
-      icon: <Code className="w-5 h-5" />,
-      title: 'Secure Development',
-      description: 'Building secure applications',
-      unlocked: true,
-      x: 70,
-      y: 75,
-      color: 'from-emerald-500 to-green-500',
-      connections: ['devops']
-    },
-    // Sub-skills
     {
       id: 'exploit',
-      icon: <Zap className="w-4 h-4" />,
+      icon: <Zap className="w-5 h-5" />,
       title: 'Exploit Development',
-      description: 'Creating and using exploits',
+      description: 'Creating and utilizing exploits',
       unlocked: true,
-      x: 10,
-      y: 15,
+      x: 20,
+      y: 35,
       color: 'from-red-400 to-rose-400',
-      connections: []
+      path: 'offensive',
+      connections: ['reverse-eng']
     },
     {
-      id: 'social',
-      icon: <Lock className="w-4 h-4" />,
+      id: 'web-app',
+      icon: <Lock className="w-5 h-5" />,
+      title: 'Web App Security',
+      description: 'Testing web application security',
+      unlocked: true,
+      x: 20,
+      y: 55,
+      color: 'from-red-400 to-rose-400',
+      path: 'offensive',
+      connections: ['social-eng']
+    },
+    {
+      id: 'reverse-eng',
+      icon: <Bug className="w-5 h-5" />,
+      title: 'Reverse Engineering',
+      description: 'Analyzing code and binaries',
+      unlocked: false,
+      x: 20,
+      y: 75,
+      color: 'from-red-300 to-rose-300',
+      path: 'offensive',
+      connections: ['red-team']
+    },
+    {
+      id: 'social-eng',
+      icon: <ServerCrash className="w-5 h-5" />,
       title: 'Social Engineering',
       description: 'Human-focused attack vectors',
       unlocked: false,
       x: 20,
-      y: 10,
-      color: 'from-orange-400 to-amber-400',
+      y: 85,
+      color: 'from-red-300 to-rose-300',
+      path: 'offensive',
       connections: []
+    },
+    {
+      id: 'red-team',
+      icon: <Sword className="w-6 h-6" />,
+      title: 'Red Team Ops',
+      description: 'Advanced offensive operations',
+      unlocked: false,
+      x: 20,
+      y: 95,
+      color: 'from-red-500 to-rose-500',
+      path: 'offensive',
+      connections: []
+    },
+    
+    // Defensive Path (middle column)
+    {
+      id: 'defensive-root',
+      icon: <Shield className="w-6 h-6" />,
+      title: 'Defensive Security',
+      description: 'Blue team techniques',
+      unlocked: true,
+      highlight: true,
+      x: 50,
+      y: 15,
+      color: 'from-blue-500 to-cyan-500',
+      path: 'defensive',
+      connections: ['soc', 'threat-intel']
     },
     {
       id: 'soc',
-      icon: <Cpu className="w-4 h-4" />,
+      icon: <Cpu className="w-5 h-5" />,
       title: 'Security Operations',
       description: 'Monitoring and alert triage',
       unlocked: true,
-      x: 80,
-      y: 10,
-      color: 'from-blue-400 to-indigo-400',
-      connections: []
+      x: 50,
+      y: 35,
+      color: 'from-blue-400 to-cyan-400',
+      path: 'defensive',
+      connections: ['incident-resp']
     },
     {
-      id: 'incident',
-      icon: <ServerCrash className="w-4 h-4" />,
+      id: 'threat-intel',
+      icon: <ChevronsUp className="w-5 h-5" />,
+      title: 'Threat Intelligence',
+      description: 'Analyzing threat data',
+      unlocked: true,
+      x: 50,
+      y: 55,
+      color: 'from-blue-400 to-cyan-400',
+      path: 'defensive',
+      connections: ['threat-hunting']
+    },
+    {
+      id: 'incident-resp',
+      icon: <Zap className="w-5 h-5" />,
       title: 'Incident Response',
       description: 'Handling security breaches',
       unlocked: false,
-      x: 90,
-      y: 15,
-      color: 'from-sky-400 to-cyan-400',
+      x: 50,
+      y: 75,
+      color: 'from-blue-300 to-cyan-300',
+      path: 'defensive',
+      connections: ['blue-team']
+    },
+    {
+      id: 'threat-hunting',
+      icon: <ServerCrash className="w-5 h-5" />,
+      title: 'Threat Hunting',
+      description: 'Proactive detection techniques',
+      unlocked: false,
+      x: 50,
+      y: 85,
+      color: 'from-blue-300 to-cyan-300',
+      path: 'defensive',
       connections: []
     },
     {
-      id: 'malware',
-      icon: <Bug className="w-4 h-4" />,
-      title: 'Malware Analysis',
-      description: 'Reverse engineering malicious code',
+      id: 'blue-team',
+      icon: <Shield className="w-6 h-6" />,
+      title: 'Blue Team Ops',
+      description: 'Advanced defensive operations',
       unlocked: false,
-      x: 15,
-      y: 85,
-      color: 'from-purple-400 to-violet-400',
+      x: 50,
+      y: 95,
+      color: 'from-blue-500 to-cyan-500',
+      path: 'defensive',
       connections: []
+    },
+    
+    // Development Path (right column)
+    {
+      id: 'dev-root',
+      icon: <Code className="w-6 h-6" />,
+      title: 'Secure Development',
+      description: 'Building secure systems',
+      unlocked: true,
+      highlight: true,
+      x: 80,
+      y: 15,
+      color: 'from-purple-500 to-violet-500',
+      path: 'development',
+      connections: ['secure-coding', 'secure-design']
+    },
+    {
+      id: 'secure-coding',
+      icon: <Code className="w-5 h-5" />,
+      title: 'Secure Coding',
+      description: 'Writing secure code',
+      unlocked: true,
+      x: 80,
+      y: 35,
+      color: 'from-purple-400 to-violet-400',
+      path: 'development',
+      connections: ['code-review']
+    },
+    {
+      id: 'secure-design',
+      icon: <Bug className="w-5 h-5" />,
+      title: 'Secure Design',
+      description: 'Designing security architecture',
+      unlocked: true,
+      x: 80,
+      y: 55,
+      color: 'from-purple-400 to-violet-400',
+      path: 'development',
+      connections: ['devops']
+    },
+    {
+      id: 'code-review',
+      icon: <Zap className="w-5 h-5" />,
+      title: 'Security Code Review',
+      description: 'Finding flaws in source code',
+      unlocked: false,
+      x: 80,
+      y: 75,
+      color: 'from-purple-300 to-violet-300',
+      path: 'development',
+      connections: ['secure-sdlc']
     },
     {
       id: 'devops',
-      icon: <ChevronsUp className="w-4 h-4" />,
+      icon: <ChevronsUp className="w-5 h-5" />,
       title: 'DevSecOps',
       description: 'Security in CI/CD pipelines',
-      unlocked: true,
-      x: 85,
+      unlocked: false,
+      x: 80,
       y: 85,
-      color: 'from-emerald-400 to-green-400',
+      color: 'from-purple-300 to-violet-300',
+      path: 'development',
+      connections: []
+    },
+    {
+      id: 'secure-sdlc',
+      icon: <Star className="w-6 h-6" />,
+      title: 'Secure SDLC',
+      description: 'Enterprise security program',
+      unlocked: false,
+      x: 80,
+      y: 95,
+      color: 'from-purple-500 to-violet-500',
+      path: 'development',
       connections: []
     },
   ];
+
+  // Group skills by path
+  const pathColors = {
+    offensive: "rgba(244, 63, 94, 0.3)", // red path
+    defensive: "rgba(6, 182, 212, 0.3)",  // cyan path
+    development: "rgba(139, 92, 246, 0.3)" // purple path
+  };
 
   // Function to draw connections between nodes
   const renderConnections = () => {
@@ -179,17 +286,22 @@ const SimpleSkillTree: React.FC<SimpleSkillTreeProps> = ({ className }) => {
           
           // Determine if the connection should be highlighted
           const isHighlighted = skill.unlocked && target.unlocked;
+
+          // Get path color
+          const pathColor = skill.path === 'offensive' ? "#f43f5e" : 
+                            skill.path === 'defensive' ? "#06b6d4" : 
+                            "#8b5cf6";
           
           connections.push(
             <path
               key={`${skill.id}-${target.id}`}
               d={path}
-              stroke={isHighlighted ? "#38bdf8" : "#64748b"}
-              strokeWidth={isHighlighted ? 2 : 1.5}
-              strokeDasharray={isHighlighted ? "" : "4,4"}
+              stroke={isHighlighted ? pathColor : "rgba(255,255,255,0.15)"}
+              strokeWidth={isHighlighted ? 1 : 0.75}
+              strokeDasharray={!isHighlighted ? "4,2" : ""}
               className={cn(
                 "transition-all duration-300",
-                isHighlighted ? "opacity-90" : "opacity-40"
+                isHighlighted ? "opacity-80" : "opacity-40"
               )}
             />
           );
@@ -200,16 +312,45 @@ const SimpleSkillTree: React.FC<SimpleSkillTreeProps> = ({ className }) => {
     return connections;
   };
 
+  // Function to render vertical paths behind nodes
+  const renderPaths = () => {
+    return (
+      <>
+        {Object.entries(pathColors).map(([path, color]) => {
+          const pathSkills = skills.filter(s => s.path === path);
+          if (pathSkills.length === 0) return null;
+          
+          const x = pathSkills[0].x;
+          const minY = Math.min(...pathSkills.map(s => s.y));
+          const maxY = Math.max(...pathSkills.map(s => s.y));
+          
+          return (
+            <rect
+              key={`path-${path}`}
+              x={x - 1}
+              y={minY}
+              width={2}
+              height={maxY - minY}
+              fill={color}
+              rx={1}
+              className="opacity-50"
+            />
+          );
+        })}
+      </>
+    );
+  };
+
   return (
-    <div className={cn("relative w-full max-w-3xl mx-auto py-8", className)}>
-      <h2 className="text-2xl font-bold text-foreground mb-6 text-center">Skill Tree</h2>
-      <div className="relative w-full aspect-[4/3] border bg-black/90 rounded-lg overflow-hidden">
-        {/* SVG for connection lines */}
+    <div className={cn("relative w-full max-w-4xl mx-auto py-8", className)}>
+      <div className="relative w-full aspect-[5/3] border border-gray-800 bg-black/90 rounded-lg overflow-hidden">
+        {/* SVG for paths and connection lines */}
         <svg 
           className="absolute inset-0 w-full h-full z-0" 
           viewBox="0 0 100 100"
           preserveAspectRatio="none"
         >
+          {renderPaths()}
           {renderConnections()}
         </svg>
         
@@ -222,7 +363,7 @@ const SimpleSkillTree: React.FC<SimpleSkillTreeProps> = ({ className }) => {
                   className={cn(
                     "absolute transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300",
                     skill.unlocked ? "opacity-100" : "opacity-50",
-                    skill.highlight ? "scale-125" : ""
+                    skill.highlight ? "scale-110" : ""
                   )}
                   style={{
                     left: `${skill.x}%`,
@@ -231,20 +372,23 @@ const SimpleSkillTree: React.FC<SimpleSkillTreeProps> = ({ className }) => {
                 >
                   <div
                     className={cn(
-                      "flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br",
+                      "flex items-center justify-center rounded-full bg-gradient-to-br",
                       `bg-gradient-to-br ${skill.color}`,
-                      "border-2",
+                      "border",
                       skill.unlocked 
-                        ? "border-cyan-300 shadow-lg shadow-cyan-500/30" 
-                        : "border-gray-600",
-                      "cursor-pointer transition-transform hover:scale-110"
+                        ? skill.path === 'offensive' ? "border-red-300 shadow-sm shadow-red-500/30" :
+                          skill.path === 'defensive' ? "border-cyan-300 shadow-sm shadow-cyan-500/30" :
+                          "border-purple-300 shadow-sm shadow-purple-500/30"
+                        : "border-gray-700",
+                      "cursor-pointer transition-transform hover:scale-110",
+                      skill.highlight ? "w-10 h-10" : "w-8 h-8"
                     )}
                   >
                     {skill.icon}
                   </div>
                 </div>
               </TooltipTrigger>
-              <TooltipContent side="top" className="bg-black/90 border-gray-700">
+              <TooltipContent side="top" className="bg-black/95 border-gray-800">
                 <div className="p-1">
                   <div className="font-bold text-sm">{skill.title}</div>
                   <div className="text-xs text-gray-300">{skill.description}</div>
@@ -257,10 +401,17 @@ const SimpleSkillTree: React.FC<SimpleSkillTreeProps> = ({ className }) => {
           ))}
         </TooltipProvider>
         
+        {/* Path Labels */}
+        <div className="absolute bottom-4 left-0 right-0 flex justify-around">
+          <div className="text-red-400 text-sm font-semibold">Offensive</div>
+          <div className="text-cyan-400 text-sm font-semibold">Defensive</div>
+          <div className="text-purple-400 text-sm font-semibold">Development</div>
+        </div>
+        
         {/* XP Progress Bar */}
-        <div className="absolute bottom-3 right-3 flex items-center gap-2 text-xs text-cyan-300">
-          <div className="w-32 h-2 bg-gray-800 rounded-full overflow-hidden">
-            <div className="h-full bg-cyan-500 w-3/4"></div>
+        <div className="absolute top-3 right-3 flex items-center gap-2 text-xs text-gray-300">
+          <div className="w-32 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-cyan-500 to-purple-500 w-3/4"></div>
           </div>
           <span>750/1000 XP</span>
         </div>

@@ -36,10 +36,10 @@ const Index = () => {
       <CertificationsSection />
       
       {/* Simple Skill Tree Section */}
-      <section className="py-12 bg-background">
+      <section className="py-12 bg-black">
         <div className="container px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">Skill Tree</h2>
-          <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-10">
+          <h2 className="text-3xl font-bold text-center mb-8 text-white">Skill Tree</h2>
+          <p className="text-gray-300 text-center max-w-2xl mx-auto mb-10">
             Explore my cybersecurity skillset organized as an interactive skill tree.
             Hover over nodes to see details about each skill area.
           </p>
