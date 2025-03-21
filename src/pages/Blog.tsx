@@ -49,7 +49,7 @@ const Blog = () => {
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4">Blog & Insights</h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Thoughts, tutorials, and perspectives on cybersecurity, teaching, food & beverage, and entrepreneurship.
+              Thoughts, tutorials, and perspectives on various areas of specialisation.
             </p>
           </div>
           

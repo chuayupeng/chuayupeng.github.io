@@ -19,7 +19,7 @@ const RecentBlogPostsSection = ({ recentPosts }: RecentBlogPostsSectionProps) =>
               Wisdom and knowledge gathered during adventures.
             </p>
           </div>
-          <Button asChild variant="ghost" className="text-cyber-cyan">
+          <Button asChild variant="ghost" className="text-cyber-black">
             <Link to="/blog" className="flex items-center">
               View all scrolls <ArrowRight size={16} className="ml-1" />
             </Link>
