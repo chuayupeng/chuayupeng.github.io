@@ -7,7 +7,6 @@ import { timelineData } from '@/data/timelineData';
 import { useTimelineCalculations } from '@/hooks/useTimelineCalculations';
 import HeroSection from '@/components/home/HeroSection';
 import CertificationsSection from '@/components/home/CertificationsSection';
-import ClassSpecializationsSection from '@/components/home/ClassSpecializationsSection';
 import RecentBlogPostsSection from '@/components/home/RecentBlogPostsSection';
 import CallToActionSection from '@/components/home/CallToActionSection';
 
@@ -34,9 +33,6 @@ const Index = () => {
       
       {/* Certifications Section */}
       <CertificationsSection />
-      
-      {/* Class Specializations Section */}
-      <ClassSpecializationsSection />
       
       {/* Recent Blog Posts Section */}
       <RecentBlogPostsSection recentPosts={recentPosts} />
