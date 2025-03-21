@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   ReactFlow,
@@ -13,10 +14,10 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { 
-  GraduationCap, Shield, Sword, Hammer, Flask, Search,
+  GraduationCap, Shield, Sword, Hammer, Beaker, Search,
   BookOpen, Code, Bug, ServerCrash, Sparkles, Terminal,
   ChefHat, Building, Star, Microscope, UserSearch, FlaskConical,
-  Martini, Factory, Beaker, Anvil, Laptop, Construction, BugPlay
+  Martini, Factory, Anvil, Laptop, Construction, BugPlay
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -179,7 +180,7 @@ const SkillTree: React.FC<SkillTreeProps> = ({ view }) => {
       type: 'skillNode',
       data: { 
         label: 'Potion Master',
-        icon: 'Flask',
+        icon: 'Beaker',
         description: 'Culinary Expert',
         level: 3,
         category: 'potion',

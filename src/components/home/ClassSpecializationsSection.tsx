@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { 
-  GraduationCap, Shield, Sword, Hammer, Flask, Search,
+  GraduationCap, Shield, Sword, Hammer, Beaker, Search,
   BookOpen, Code, Bug, ServerCrash, Sparkles,
   ChefHat, Building, Star
 } from 'lucide-react';
@@ -37,7 +37,7 @@ const ClassSpecializationsSection = () => {
               Investigator
             </TabsTrigger>
             <TabsTrigger value="potion" className="data-[state=active]:bg-amber-100 dark:data-[state=active]:bg-amber-900/30">
-              <Flask className="mr-2 h-4 w-4" />
+              <Beaker className="mr-2 h-4 w-4" />
               Potion Master
             </TabsTrigger>
             <TabsTrigger value="blacksmith" className="data-[state=active]:bg-red-100 dark:data-[state=active]:bg-red-900/30">
@@ -132,7 +132,7 @@ const ClassSpecializationsSection = () => {
           {/* Potion Master Card */}
           <div className="rpg-card bg-white dark:bg-cyber-navy p-6 border border-amber-200 dark:border-amber-900/30">
             <div className="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center mb-4 animate-pulse-glow">
-              <Flask className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+              <Beaker className="w-6 h-6 text-amber-600 dark:text-amber-400" />
             </div>
             <h3 className="text-xl font-bold mb-2">Potion Master</h3>
             <p className="text-muted-foreground text-sm mb-4">
