@@ -32,6 +32,9 @@ const Index = () => {
         skills={skills}
       />
       
+      {/* Certifications Section */}
+      <CertificationsSection />
+      
       {/* Simple Skill Tree Section */}
       <section className="py-12 bg-background">
         <div className="container px-4">
@@ -43,9 +46,6 @@ const Index = () => {
           <SimpleSkillTree />
         </div>
       </section>
-      
-      {/* Certifications Section */}
-      <CertificationsSection />
       
       {/* Recent Blog Posts Section */}
       <RecentBlogPostsSection recentPosts={recentPosts} />
