@@ -1,3 +1,4 @@
+
 import React from 'react';
 import {
   ReactFlow,
@@ -467,27 +468,43 @@ const SkillTree: React.FC<SkillTreeProps> = ({ view }) => {
       markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(239, 68, 68, 0.6)' } 
     },
     
-    // Cross-class connections (show relationships between different classes)
+    // Cross-class connections (dotted lines between different classes)
     { 
       id: 'e-hacker-to-investigator', 
       source: 'hacker-1', 
       target: 'investigator-1',
-      style: { stroke: 'rgba(148, 163, 184, 0.3)', strokeDasharray: '5,5', strokeWidth: 1.5 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.5)' } 
+      style: { stroke: 'rgba(148, 163, 184, 0.5)', strokeDasharray: '5,5', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.7)' } 
     },
     { 
       id: 'e-blacksmith-to-hacker', 
       source: 'blacksmith-1', 
       target: 'hacker-2',
-      style: { stroke: 'rgba(148, 163, 184, 0.3)', strokeDasharray: '5,5', strokeWidth: 1.5 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.5)' } 
+      style: { stroke: 'rgba(148, 163, 184, 0.5)', strokeDasharray: '5,5', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.7)' } 
     },
     { 
       id: 'e-sage-to-potion', 
       source: 'sage-2', 
       target: 'potion-2',
-      style: { stroke: 'rgba(148, 163, 184, 0.3)', strokeDasharray: '5,5', strokeWidth: 1.5 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.5)' } 
+      style: { stroke: 'rgba(148, 163, 184, 0.5)', strokeDasharray: '5,5', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.7)' } 
+    },
+    
+    // Additional cross-class connections (more dotted lines)
+    { 
+      id: 'e-sage-to-investigator', 
+      source: 'sage-1', 
+      target: 'investigator-2',
+      style: { stroke: 'rgba(148, 163, 184, 0.5)', strokeDasharray: '5,5', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.7)' } 
+    },
+    { 
+      id: 'e-blacksmith-to-potion', 
+      source: 'blacksmith-2', 
+      target: 'potion-1',
+      style: { stroke: 'rgba(148, 163, 184, 0.5)', strokeDasharray: '5,5', strokeWidth: 2 },
+      markerEnd: { type: MarkerType.ArrowClosed, color: 'rgba(148, 163, 184, 0.7)' } 
     },
   ];
   
