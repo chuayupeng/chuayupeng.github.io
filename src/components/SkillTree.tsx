@@ -1,4 +1,3 @@
-
 import React from 'react';
 import {
   ReactFlow,
@@ -34,10 +33,10 @@ interface SkillNodeData extends Record<string, unknown> {
 // Custom node component
 const SkillNode = ({ data }: { data: SkillNodeData }) => {
   const IconMap: Record<string, React.ElementType> = {
-    GraduationCap, Shield, Sword, Hammer, Flask, Search,
+    GraduationCap, Shield, Sword, Hammer, Beaker, Search,
     BookOpen, Code, Bug, ServerCrash, Sparkles, Terminal,
     ChefHat, Building, Star, Microscope, UserSearch, FlaskConical,
-    Martini, Factory, Beaker, Anvil, Laptop, Construction, BugPlay
+    Martini, Factory, Anvil, Laptop, Construction, BugPlay
   };
   
   const IconComponent = IconMap[data.icon] || Shield;
