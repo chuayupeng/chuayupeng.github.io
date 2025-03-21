@@ -9,6 +9,7 @@ import HeroSection from '@/components/home/HeroSection';
 import CertificationsSection from '@/components/home/CertificationsSection';
 import RecentBlogPostsSection from '@/components/home/RecentBlogPostsSection';
 import CallToActionSection from '@/components/home/CallToActionSection';
+import SimpleSkillTree from '@/components/home/SimpleSkillTree';
 
 const Index = () => {
   // Get the 3 most recent blog posts
@@ -30,6 +31,18 @@ const Index = () => {
         xpToNextLevel={xpToNextLevel}
         skills={skills}
       />
+      
+      {/* Simple Skill Tree Section */}
+      <section className="py-12 bg-background">
+        <div className="container px-4">
+          <h2 className="text-3xl font-bold text-center mb-8">Skill Tree</h2>
+          <p className="text-muted-foreground text-center max-w-2xl mx-auto mb-10">
+            Explore my cybersecurity skillset organized as an interactive skill tree.
+            Hover over nodes to see details about each skill area.
+          </p>
+          <SimpleSkillTree />
+        </div>
+      </section>
       
       {/* Certifications Section */}
       <CertificationsSection />
