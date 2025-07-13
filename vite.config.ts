@@ -14,6 +14,15 @@ export default defineConfig(({ mode }) => ({
     react(),
     mode === 'development' &&
     componentTagger(),
+    {
+      name: 'replace-tsx-in-html',
+      transformIndexHtml(html) {
+        return html.replace(
+          'src="/src/main.tsx"',
+          'src="./assets/main.js"'
+        );
+      }
+    }
   ].filter(Boolean),
   resolve: {
     alias: {
