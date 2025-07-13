@@ -139,8 +139,7 @@ const BlogPost = () => {
               <div>
                 <h3 className="font-bold text-lg mb-2">{post?.author}</h3>
                 <p className="text-muted-foreground text-sm">
-                  Expert in cybersecurity and technology with over a decade of industry experience. 
-                  Passionate about sharing knowledge and helping others understand complex security concepts.
+                  Expert in cybersecurity and technology with over 5 years of industry experience. Passionate about sharing knowledge.
                 </p>
               </div>
             </div>
