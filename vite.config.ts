@@ -18,6 +18,17 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "./runtimeConfig": "./runtimeConfig.browser",
     },
   },
+  esbuild: {
+    loader: 'jsx',
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        '.js': '.jsx',
+      }
+    }
+  }
 }));
