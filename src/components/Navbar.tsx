@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Terminal } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,16 +24,22 @@ const Navbar = () => {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 inset-x-0 z-50 h-20 transition-colors duration-300 ${
         scrolled
-          ? 'bg-background/70 backdrop-blur-xl border-b border-white/[0.06]'
+          ? 'bg-background/95 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_2px_20px_-8px_rgba(0,0,0,0.6)]'
           : 'bg-transparent'
       }`}
     >
-      <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 group" onClick={close}>
-          <div className="w-8 h-8 rounded-lg bg-cyber-cyan/10 border border-cyber-cyan/30 flex items-center justify-center group-hover:bg-cyber-cyan/20 transition-colors">
-            <Terminal className="h-4 w-4 text-cyber-cyan" />
+      <div className="container mx-auto px-4 h-full flex items-center justify-between">
+        <Link to="/" className="flex items-center gap-3 group" onClick={close}>
+          <div className="h-16 flex items-center transition-transform group-hover:scale-110">
+            <img
+              src="/usb.png"
+              alt=""
+              aria-hidden
+              className="h-full w-auto object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.45)]"
+              style={{ imageRendering: 'pixelated' }}
+            />
           </div>
           <span className="font-mono text-sm font-semibold tracking-tight">
             <span className="text-foreground">yup</span>
@@ -62,13 +67,6 @@ const Navbar = () => {
               </Link>
             );
           })}
-          <Button
-            asChild
-            size="sm"
-            className="ml-2 bg-cyber-cyan text-cyber-blue hover:bg-cyber-cyan/90 font-medium"
-          >
-            <Link to="/about#contact">Contact</Link>
-          </Button>
         </nav>
 
         <button
@@ -81,7 +79,7 @@ const Navbar = () => {
       </div>
 
       <div
-        className={`md:hidden fixed inset-0 top-16 bg-background/95 backdrop-blur-xl transition-all duration-300 ${
+        className={`md:hidden fixed inset-0 top-20 bg-background/95 backdrop-blur-xl transition-all duration-300 ${
           isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
         }`}
       >
@@ -103,14 +101,6 @@ const Navbar = () => {
               </Link>
             );
           })}
-          <Button
-            asChild
-            size="lg"
-            className="mt-4 bg-cyber-cyan text-cyber-blue hover:bg-cyber-cyan/90 font-medium"
-            onClick={close}
-          >
-            <Link to="/about#contact">Contact</Link>
-          </Button>
         </div>
       </div>
     </header>

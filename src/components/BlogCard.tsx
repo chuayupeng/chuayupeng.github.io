@@ -38,42 +38,48 @@ const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
   
   return (
     <Link to={`/blog/${post.slug}`} className="block h-full group">
-      <Card className="overflow-hidden transition-all duration-300 h-full flex flex-col cursor-pointer rpg-border bg-card/95 backdrop-blur-sm hover:shadow-xl">
-        <div 
-          className="h-48 bg-cover bg-center relative overflow-hidden" 
-          style={{ 
-            backgroundImage: `url(${post.image})`,
-            position: 'relative'
-          }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-          
-          {/* Decorative frame corners */}
-          <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-primary"></div>
-          <div className="absolute top-0 right-0 w-4 h-4 border-r-2 border-t-2 border-primary"></div>
-          <div className="absolute bottom-0 left-0 w-4 h-4 border-l-2 border-b-2 border-primary"></div>
-          <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-primary"></div>
-          
-          <div className="absolute left-0 bottom-0 p-3 w-full">
-            {/* Category badge */}
-            <span className={cn(
-              "inline-block px-3 py-1 text-xs font-medium rounded-full bg-gradient-to-r text-white shadow-md",
-              gradientColors
-            )}>
-              {post.category.charAt(0).toUpperCase() + post.category.slice(1)}
-            </span>
-            
-            {/* Rarity indicator with stars */}
-            <div className="absolute right-3 bottom-3 flex items-center gap-0.5">
-              {[...Array(5)].map((_, i) => (
-                <Star 
-                  key={i} 
-                  size={12} 
-                  className={i < rarity.stars ? 'text-yellow-400 fill-yellow-400' : 'text-gray-400'}
-                />
-              ))}
+      <Card className="overflow-hidden transition-all duration-300 h-full flex flex-col cursor-pointer rpg-border bg-card/95 backdrop-blur-sm border-white/[0.06] hover:border-cyber-cyan/40 hover:shadow-[0_0_28px_-4px_rgba(139,92,246,0.45)] hover:-translate-y-0.5">
+        <div className="relative h-48 m-2">
+          {/* Rounded image + overlays clipped to the rounded shape */}
+          <div className="absolute inset-0 rounded-lg overflow-hidden border border-white/[0.06]">
+            <img
+              src={post.image}
+              alt={post.title}
+              className="absolute inset-0 w-full h-full object-cover object-left"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+
+            <div className="absolute left-0 bottom-0 p-3 w-full">
+              {/* Category badge */}
+              <span className={cn(
+                "inline-block px-3 py-1 text-xs font-medium rounded-full bg-gradient-to-r text-white shadow-md",
+                gradientColors
+              )}>
+                {post.category.charAt(0).toUpperCase() + post.category.slice(1)}
+              </span>
+
+              {/* Rarity indicator with stars */}
+              <div className="absolute right-3 bottom-3 flex items-center gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    size={12}
+                    className={i < rarity.stars ? 'text-yellow-400 fill-yellow-400' : 'text-gray-400'}
+                  />
+                ))}
+              </div>
             </div>
           </div>
+
+          {/* L-shaped glowing frame corners — each one's outer corner is
+              rounded with the same radius (rounded-lg = 8px) as the image
+              underneath, so the bracket arc hugs the rounded picture
+              instead of sticking out as a square. */}
+          <div className="pointer-events-none absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-cyber-cyan rounded-tl-lg drop-shadow-[0_0_4px_rgba(139,92,246,0.7)]" />
+          <div className="pointer-events-none absolute top-0 right-0 w-4 h-4 border-r-2 border-t-2 border-cyber-cyan rounded-tr-lg drop-shadow-[0_0_4px_rgba(139,92,246,0.7)]" />
+          <div className="pointer-events-none absolute bottom-0 left-0 w-4 h-4 border-l-2 border-b-2 border-cyber-cyan rounded-bl-lg drop-shadow-[0_0_4px_rgba(139,92,246,0.7)]" />
+          <div className="pointer-events-none absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-cyber-cyan rounded-br-lg drop-shadow-[0_0_4px_rgba(139,92,246,0.7)]" />
         </div>
         
         <div className="p-5 flex-grow flex flex-col">

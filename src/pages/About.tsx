@@ -40,7 +40,7 @@ const About = () => {
                 <img
                   src="/hero.png"
                   alt="yup.eng — pixel-art portrait"
-                  className="w-full max-w-xs rounded-full border border-cyber-cyan/20 shadow-[0_0_60px_-10px_rgba(100,255,218,0.28)]"
+                  className="w-full max-w-xs rounded-full border border-cyber-cyan/20 shadow-[0_0_60px_-10px_rgba(139,92,246,0.28)]"
                   style={{ imageRendering: 'pixelated' }}
                 />
               </div>

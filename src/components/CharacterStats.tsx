@@ -51,7 +51,7 @@ const CharacterStats: React.FC<CharacterStatsProps> = ({
       <div className="font-mono text-sm space-y-4">
         <div className="flex items-baseline justify-between">
           <div>
-            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">years_in_security</div>
+            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">years_of_experience</div>
             <div className="text-2xl font-bold tabular-nums">
               {String(level).padStart(2, '0')}
               <span className="text-sm font-normal text-muted-foreground ml-1">yrs</span>

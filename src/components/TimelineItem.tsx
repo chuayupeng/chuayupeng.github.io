@@ -32,7 +32,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
         'px-3 py-2 transition-all duration-200',
         'hover:border-white/[0.14] hover:bg-card/95 hover:translate-x-0.5',
         isCurrent &&
-          'border-cyber-cyan/40 shadow-[0_0_28px_-4px_rgba(100,255,218,0.32)] hover:border-cyber-cyan/60',
+          'border-cyber-cyan/40 shadow-[0_0_28px_-4px_rgba(139,92,246,0.32)] hover:border-cyber-cyan/60',
         isByteDance && 'cursor-pointer'
       )}
       onClick={() => isByteDance && setIsByteDanceRevealed((v) => !v)}

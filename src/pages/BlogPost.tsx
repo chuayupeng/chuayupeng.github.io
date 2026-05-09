@@ -133,9 +133,12 @@ const BlogPost = () => {
           {/* Author Bio */}
           <div className="bg-gray-50 dark:bg-cyber-navy/50 rounded-lg p-6 mb-16">
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-              <div className="w-16 h-16 bg-cyber-cyan rounded-full text-center flex items-center justify-center text-2xl font-bold text-cyber-blue">
-                {post?.author.charAt(0)}
-              </div>
+              <img
+                src="/avatar.png"
+                alt={post?.author || 'Author'}
+                className="w-16 h-16 rounded-full border border-cyber-cyan/30 shadow-[0_0_20px_-4px_rgba(139,92,246,0.35)]"
+                style={{ imageRendering: 'pixelated' }}
+              />
               <div>
                 <h3 className="font-bold text-lg mb-2">{post?.author}</h3>
                 <p className="text-muted-foreground text-sm">

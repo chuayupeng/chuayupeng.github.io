@@ -3,8 +3,8 @@ title: "Abusing Templating Engines: Remote Code Execution on Jenkins Workflow S
 excerpt: "Deep dive into Jenkins Workflow Script and how template engines can offer interesting vulnerabilities"
 date: "2023-09-04"
 category: "cybersecurity"
-author: "Yu Peng"
-image: "https://images.unsplash.com/photo-1606761568499-6d2451b23c66"
+author: "yup.eng"
+image: "/blogBanner/secBanner.png"
 ---
 
 ## The Background

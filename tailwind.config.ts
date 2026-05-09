@@ -69,7 +69,10 @@ export default {
 				},
 				cyber: {
 					'blue': '#0a192f',
-					'cyan': '#64ffda',
+					// Brand accent. Kept the "cyan" key for legacy class names
+					// (text-cyber-cyan, border-cyber-cyan/N, …) but the value
+					// is now a purple to match the pixel-art palette.
+					'cyan': '#8b5cf6',
 					'slate': '#8892b0',
 					'light-slate': '#ccd6f6',
 					'navy': '#112240',
@@ -113,8 +116,8 @@ export default {
 					'50%': { transform: 'translateY(-5px)' }
 				},
 				'glow': {
-					'0%, 100%': { boxShadow: '0 0 5px rgba(100, 255, 218, 0.3)' },
-					'50%': { boxShadow: '0 0 15px rgba(100, 255, 218, 0.6)' }
+					'0%, 100%': { boxShadow: '0 0 5px rgba(139, 92, 246, 0.3)' },
+					'50%': { boxShadow: '0 0 15px rgba(139, 92, 246, 0.6)' }
 				}
 			},
 			animation: {

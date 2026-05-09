@@ -28,7 +28,7 @@ const TimelineHeader: React.FC<TimelineHeaderProps> = ({
           {level} years across <span className="gradient-text">security</span> &amp; building.
         </h1>
         <p className="text-muted-foreground text-lg">
-          A chronological log of roles, projects, and side quests — read it like a git history.
+          A chronological log of roles, projects, and side quests, presented in a git-like history.
           Filter by focus area to narrow it down.
         </p>
       </div>

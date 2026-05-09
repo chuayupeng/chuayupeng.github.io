@@ -333,9 +333,9 @@ const TimelineContent: React.FC<TimelineContentProps> = ({ filteredData }) => {
 
             {/* Top terminal — "Now" / present, pulsing */}
             <g>
-              <circle cx={MAIN_X} cy={yMainTop} r={10} fill="#64ffda" fillOpacity={0.12} />
-              <circle cx={MAIN_X} cy={yMainTop} r={6} fill="#64ffda" fillOpacity={0.28} />
-              <circle cx={MAIN_X} cy={yMainTop} r={4} fill="#64ffda">
+              <circle cx={MAIN_X} cy={yMainTop} r={10} fill="#8b5cf6" fillOpacity={0.12} />
+              <circle cx={MAIN_X} cy={yMainTop} r={6} fill="#8b5cf6" fillOpacity={0.28} />
+              <circle cx={MAIN_X} cy={yMainTop} r={4} fill="#8b5cf6">
                 <animate
                   attributeName="opacity"
                   values="0.6;1;0.6"

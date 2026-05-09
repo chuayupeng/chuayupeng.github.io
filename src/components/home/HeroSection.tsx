@@ -37,11 +37,49 @@ const HeroSection = ({ level }: HeroSectionProps) => {
               to <span className="gradient-text">exploits</span>.
             </h1>
 
-            <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
-              I'm <span className="text-foreground font-medium">Yu Peng</span> — a cybersecurity
-              engineer and entrepreneur, with side quests through F&amp;B. I break and harden systems
-              by day, and build the things I wish existed by night.
-            </p>
+            {/* Terminal-style intro to match the ~/character.json card aesthetic. */}
+            <div className="font-mono text-sm max-w-xl space-y-4">
+              <div>
+                <div>
+                  <span className="text-cyber-cyan">$</span>{' '}
+                  <span className="text-foreground">whoami</span>
+                </div>
+                <div className="text-muted-foreground pl-4 mt-1">
+                  <span className="text-foreground">yup.eng</span>
+                </div>
+              </div>
+              <div>
+                <div>
+                  <span className="text-cyber-cyan">$</span>{' '}
+                  <span className="text-foreground">alias me</span>
+                </div>
+                <div className="text-muted-foreground pl-4 mt-1">
+                  me=<span className="text-foreground">'vificatem'</span>
+                </div>
+              </div>
+              <div>
+                <div>
+                  <span className="text-cyber-cyan">$</span>{' '}
+                  <span className="text-foreground">id</span>
+                </div>
+                <div className="text-muted-foreground pl-4 mt-1 break-words">
+                  uid=1337(<span className="text-foreground">yup.eng</span>) gid=1000(security) groups=security,entrepreneur,f&amp;b
+                </div>
+              </div>
+              <div>
+                <div>
+                  <span className="text-cyber-cyan">$</span>{' '}
+                  <span className="text-foreground">cat ~/manifesto.md</span>
+                </div>
+                <div className="text-muted-foreground pl-4 mt-1 leading-relaxed">
+                  I break and harden systems by day, and build the things I wish existed by night.
+                </div>
+              </div>
+              <div className="pt-1">
+                <span className="text-cyber-cyan">$</span>{' '}
+                <span className="terminal-cursor" />
+              </div>
+            </div>
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
               <Button asChild size="lg" className="bg-cyber-cyan text-cyber-blue hover:bg-cyber-cyan/90 group">
@@ -87,7 +125,7 @@ const HeroSection = ({ level }: HeroSectionProps) => {
                   <img
                     src="/avatar.png"
                     alt="yup.eng"
-                    className="w-16 h-16 rounded-full border border-cyber-cyan/30 shadow-[0_0_20px_-4px_rgba(100,255,218,0.35)]"
+                    className="w-20 h-20 rounded-full border border-cyber-cyan/30 shadow-[0_0_22px_-4px_rgba(139,92,246,0.4)]"
                     style={{ imageRendering: 'pixelated' }}
                   />
                   <div className="min-w-0">
@@ -100,7 +138,7 @@ const HeroSection = ({ level }: HeroSectionProps) => {
 
                 <div className="flex items-baseline justify-between">
                   <div>
-                    <div className="text-xs text-muted-foreground">years_in_security</div>
+                    <div className="text-xs text-muted-foreground">years_of_experience</div>
                     <div className="text-3xl font-bold text-foreground tabular-nums">
                       {String(level).padStart(2, '0')}
                       <span className="text-base font-normal text-muted-foreground ml-1">yrs</span>
@@ -137,9 +175,6 @@ const HeroSection = ({ level }: HeroSectionProps) => {
                   ))}
                 </div>
 
-                <div className="pt-3 text-xs text-muted-foreground border-t border-white/[0.06]">
-                  <span className="terminal-cursor">$ ready</span>
-                </div>
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Coffee, Github, Linkedin, Mail, Terminal } from 'lucide-react';
+import { Coffee, Github, Linkedin, Mail } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -9,9 +9,15 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-14">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
           <div className="md:col-span-6">
-            <Link to="/" className="inline-flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-cyber-cyan/10 border border-cyber-cyan/30 flex items-center justify-center">
-                <Terminal className="h-4 w-4 text-cyber-cyan" />
+            <Link to="/" className="inline-flex items-center gap-3 mb-4">
+              <div className="h-16 flex items-center">
+                <img
+                  src="/usb.png"
+                  alt=""
+                  aria-hidden
+                  className="h-full w-auto object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.45)]"
+                  style={{ imageRendering: 'pixelated' }}
+                />
               </div>
               <span className="font-mono text-sm font-semibold">
                 <span className="text-foreground">yup</span>
