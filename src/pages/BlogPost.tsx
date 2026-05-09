@@ -102,10 +102,20 @@ const BlogPost = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-transparent"></div>
           <div className="container mx-auto px-4 max-w-4xl relative h-full flex flex-col justify-end pb-12">
-            <div className="mb-4">
-              <span className="px-3 py-1 bg-cyber-cyan text-cyber-blue text-sm font-medium rounded-full">
-                {post?.category.charAt(0).toUpperCase() + post?.category.slice(1)}
-              </span>
+            <div className="mb-4 flex flex-wrap gap-2">
+              {(post
+                ? Array.isArray(post.category)
+                  ? post.category
+                  : [post.category]
+                : []
+              ).map((cat) => (
+                <span
+                  key={cat}
+                  className="px-3 py-1 bg-cyber-cyan text-cyber-blue text-sm font-medium rounded-full"
+                >
+                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </span>
+              ))}
             </div>
             <h1 className="text-4xl font-bold text-white mb-4">{post?.title}</h1>
             <div className="flex flex-wrap items-center text-white/80 gap-4">

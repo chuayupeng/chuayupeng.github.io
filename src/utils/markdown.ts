@@ -33,7 +33,11 @@ export interface MarkdownPost {
 export const getMarkdownPosts = async (): Promise<MarkdownPost[]> => {
   try {
     // Use Vite's import.meta.glob to import all markdown files
-    const markdownFiles = import.meta.glob('/content/blog/*.md', { eager: true, as: 'raw' });
+    const markdownFiles = import.meta.glob('/content/blog/*.md', {
+      eager: true,
+      query: '?raw',
+      import: 'default',
+    });
     
     if (Object.keys(markdownFiles).length === 0) {
       console.warn('No markdown files found in content/blog directory');
