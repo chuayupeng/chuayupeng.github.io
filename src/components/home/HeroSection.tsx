@@ -82,6 +82,22 @@ const HeroSection = ({ level }: HeroSectionProps) => {
               </div>
 
               <div className="p-6 space-y-5 font-mono text-sm">
+                {/* Avatar header — pixel-art portrait sets the tavern tone */}
+                <div className="flex items-center gap-4 pb-4 border-b border-white/[0.06]">
+                  <img
+                    src="/avatar.png"
+                    alt="yup.eng"
+                    className="w-16 h-16 rounded-full border border-cyber-cyan/30 shadow-[0_0_20px_-4px_rgba(100,255,218,0.35)]"
+                    style={{ imageRendering: 'pixelated' }}
+                  />
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-foreground">yup.eng</div>
+                    <div className="text-[11px] text-muted-foreground leading-snug">
+                      cybersecurity engineer<br />&amp; perpetual tinkerer
+                    </div>
+                  </div>
+                </div>
+
                 <div className="flex items-baseline justify-between">
                   <div>
                     <div className="text-xs text-muted-foreground">years_in_security</div>

@@ -25,14 +25,26 @@ const About = () => {
         <section className="relative pt-36 pb-20 px-4 overflow-hidden">
           <div className="absolute inset-0 grid-bg pointer-events-none" />
           <div className="container mx-auto max-w-5xl relative">
-            <div className="section-eyebrow">About</div>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-              Engineer, founder,<br />perpetual <span className="gradient-text">tinkerer</span>.
-            </h1>
-            <p className="text-muted-foreground text-lg max-w-2xl flex items-center gap-2">
-              <MapPin size={16} className="text-cyber-cyan" />
-              Based in Singapore — working globally.
-            </p>
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-10 items-center">
+              <div className="md:col-span-7">
+                <div className="section-eyebrow">About</div>
+                <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+                  Engineer, founder,<br />perpetual <span className="gradient-text">tinkerer</span>.
+                </h1>
+                <p className="text-muted-foreground text-lg max-w-2xl flex items-center gap-2">
+                  <MapPin size={16} className="text-cyber-cyan" />
+                  Based in Singapore — working globally.
+                </p>
+              </div>
+              <div className="md:col-span-5 flex justify-center md:justify-end">
+                <img
+                  src="/hero.png"
+                  alt="yup.eng — pixel-art portrait"
+                  className="w-full max-w-xs rounded-full border border-cyber-cyan/20 shadow-[0_0_60px_-10px_rgba(100,255,218,0.28)]"
+                  style={{ imageRendering: 'pixelated' }}
+                />
+              </div>
+            </div>
           </div>
         </section>
 
