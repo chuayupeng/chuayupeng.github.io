@@ -90,32 +90,32 @@ const About = () => {
                   <div className="space-y-3">
                     <a href="mailto:yupeng@u.nus.edu"
                        className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.06] bg-secondary/50 hover:border-cyber-cyan/30 hover:bg-cyber-cyan/[0.04] transition-colors group">
-                      <div className="w-10 h-10 rounded-md bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center">
+                      <div className="shrink-0 w-10 h-10 rounded-md bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center">
                         <Mail size={16} />
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div className="text-xs text-muted-foreground font-mono">email</div>
-                        <div className="text-sm font-medium">yupeng@u.nus.edu</div>
+                        <div className="text-sm font-medium truncate">yupeng@u.nus.edu</div>
                       </div>
                     </a>
                     <a href="https://linkedin.com/in/chuayupeng" target="_blank" rel="noreferrer"
                        className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.06] bg-secondary/50 hover:border-cyber-cyan/30 hover:bg-cyber-cyan/[0.04] transition-colors group">
-                      <div className="w-10 h-10 rounded-md bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center">
+                      <div className="shrink-0 w-10 h-10 rounded-md bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center">
                         <Linkedin size={16} />
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div className="text-xs text-muted-foreground font-mono">linkedin</div>
-                        <div className="text-sm font-medium">linkedin.com/in/chuayupeng</div>
+                        <div className="text-sm font-medium truncate">@chuayupeng</div>
                       </div>
                     </a>
                     <a href="https://github.com/chuayupeng" target="_blank" rel="noreferrer"
                        className="flex items-center gap-3 p-3 rounded-lg border border-white/[0.06] bg-secondary/50 hover:border-cyber-cyan/30 hover:bg-cyber-cyan/[0.04] transition-colors group">
-                      <div className="w-10 h-10 rounded-md bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center">
+                      <div className="shrink-0 w-10 h-10 rounded-md bg-cyber-cyan/10 text-cyber-cyan flex items-center justify-center">
                         <Github size={16} />
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div className="text-xs text-muted-foreground font-mono">github</div>
-                        <div className="text-sm font-medium">github.com/chuayupeng</div>
+                        <div className="text-sm font-medium truncate">@chuayupeng</div>
                       </div>
                     </a>
                   </div>
