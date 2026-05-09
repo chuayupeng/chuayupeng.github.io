@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Github, Linkedin, Mail, Terminal } from 'lucide-react';
+import { Coffee, Github, Linkedin, Mail, Terminal } from 'lucide-react';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -61,8 +61,9 @@ const Footer = () => {
           <p className="text-xs text-muted-foreground font-mono">
             © {currentYear} yup.eng — some rights reserved.
           </p>
-          <p className="text-xs text-muted-foreground/70 font-mono">
-            Built with React, Tailwind &amp; ☕
+          <p className="text-xs text-muted-foreground/70 font-mono inline-flex items-center gap-1.5">
+            Built with React, Tailwind &amp;
+            <Coffee size={12} className="text-cyber-cyan/70" aria-label="coffee" />
           </p>
         </div>
       </div>
