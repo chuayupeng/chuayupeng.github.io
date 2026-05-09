@@ -54,21 +54,23 @@ const About = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
               <div className="lg:col-span-7 space-y-5 text-foreground/85 leading-relaxed">
                 <p>
-                  I'm a cybersecurity specialist with hands-on experience across offensive security,
-                  red teaming, and incident response. I've tested and hardened defenses for
-                  organizations of every size, and continually explore emerging vulnerabilities
-                  through independent research and practical write-ups.
+                  I'm a cybersecurity specialist with hands-on experience across offensive
+                  security, red teaming, and incident response. I've tested and hardened
+                  defenses for organizations of every size — from scrappy startups to a
+                  sovereign defense agency.
                 </p>
                 <p>
-                  Outside of security, I'm a founder at heart. I've co-founded ventures in F&amp;B
-                  and security tooling, turning rough ideas into shipped products and learning the
-                  unglamorous parts — operations, hiring, and the slow grind of distribution — the
-                  hard way.
+                  I've also co-founded a couple of F&amp;B ventures — a cocktail label and
+                  a hawker stall. Neither changed the world, but each was an honest
+                  education in the half of building nobody
+                  warns you about: ops, hiring, distribution, the long tail between
+                  &ldquo;this works&rdquo; and &ldquo;people will pay for it.&rdquo;
                 </p>
                 <p>
-                  I work best at the intersection of rigor and experimentation: data-driven, but
-                  always shipping. The opportunities I find most interesting are the ones where
-                  security thinking and entrepreneurial speed compound on each other.
+                  What I'm actually drawn to lives at the seam. Security people tend to think
+                  too cautiously about shipping; founders tend to think too late about
+                  security. The interesting bit sits in the middle — where the discipline of
+                  one tempers the impatience of the other.
                 </p>
               </div>
 
