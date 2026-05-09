@@ -1,7 +1,5 @@
-
-import { ArrowRight, Star } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { BlogPostType } from '@/data/blogData';
 
 interface RecentBlogPostsSectionProps {
@@ -10,69 +8,58 @@ interface RecentBlogPostsSectionProps {
 
 const RecentBlogPostsSection = ({ recentPosts }: RecentBlogPostsSectionProps) => {
   return (
-    <section className="py-20 px-4 bg-gray-50 dark:bg-cyber-navy">
+    <section className="py-24 px-4 bg-card/40 border-y border-white/[0.04]">
       <div className="container mx-auto max-w-6xl">
-        <div className="flex flex-wrap justify-between items-center mb-12">
-          <div>
-            <h2 className="text-3xl font-bold mb-2">Quest Scrolls</h2>
+        <div className="flex flex-wrap justify-between items-end gap-6 mb-12">
+          <div className="max-w-2xl">
+            <div className="section-eyebrow">Writing</div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-3">
+              Recent posts
+            </h2>
             <p className="text-muted-foreground">
-              Wisdom and knowledge gathered during adventures.
+              Notes and write-ups from research, engagements, and side projects.
             </p>
           </div>
-          <Button asChild variant="ghost" className="text-cyber-black">
-            <Link to="/blog" className="flex items-center">
-              View all scrolls <ArrowRight size={16} className="ml-1" />
-            </Link>
-          </Button>
+          <Link
+            to="/blog"
+            className="group inline-flex items-center text-sm font-medium text-cyber-cyan hover:text-cyber-cyan/80"
+          >
+            View all
+            <ArrowRight size={14} className="ml-1.5 transition-transform group-hover:translate-x-0.5" />
+          </Link>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {recentPosts.map(post => (
-            <div key={post.id} className="rpg-card bg-white dark:bg-cyber-blue rounded-lg overflow-hidden">
-              <Link to={`/blog/${post.slug}`} className="block">
-                <div 
-                  className="h-48 bg-cover bg-center" 
+            <Link
+              key={post.id}
+              to={`/blog/${post.slug}`}
+              className="card-surface overflow-hidden group flex flex-col"
+            >
+              <div className="aspect-[16/9] overflow-hidden bg-secondary">
+                <div
+                  className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
                   style={{ backgroundImage: `url(${post.image})` }}
-                >
-                  {/* Decorative frame corners */}
-                  <div className="absolute top-0 left-0 w-4 h-4 border-l-2 border-t-2 border-primary"></div>
-                  <div className="absolute top-0 right-0 w-4 h-4 border-r-2 border-t-2 border-primary"></div>
-                  <div className="absolute bottom-0 left-0 w-4 h-4 border-l-2 border-b-2 border-primary"></div>
-                  <div className="absolute bottom-0 right-0 w-4 h-4 border-r-2 border-b-2 border-primary"></div>
-                </div>
-              </Link>
-              <div className="p-6">
-                <div className="mb-2">
-                  <span className="text-xs font-medium px-2 py-1 rounded-full bg-opacity-10 text-cyber-cyan bg-cyber-cyan">
-                    {post.category}
-                  </span>
-                  
-                  {/* Quest Rarity */}
-                  <div className="float-right flex items-center">
-                    {[...Array(post.id <= 2 ? 5 : post.id <= 4 ? 4 : post.id <= 6 ? 3 : 2)].map((_, i) => (
-                      <Star 
-                        key={i} 
-                        size={12} 
-                        className="text-yellow-400 fill-yellow-400" 
-                      />
-                    ))}
-                  </div>
-                </div>
-                <Link to={`/blog/${post.slug}`}>
-                  <h3 className="font-bold text-xl mb-2 hover:text-cyber-cyan transition-colors">{post.title}</h3>
-                </Link>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{post.excerpt}</p>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-muted-foreground">{post.date}</span>
-                  <Link 
-                    to={`/blog/${post.slug}`} 
-                    className="text-cyber-cyan hover:text-cyber-cyan/80 font-medium text-sm inline-flex items-center"
-                  >
-                    Begin Quest <ArrowRight size={14} className="ml-1" />
-                  </Link>
-                </div>
+                />
               </div>
-            </div>
+              <div className="p-6 flex-1 flex flex-col">
+                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3 font-mono">
+                  <span className="text-cyber-cyan">{post.category}</span>
+                  <span className="opacity-40">·</span>
+                  <span>{post.date}</span>
+                </div>
+                <h3 className="font-semibold text-lg mb-2 leading-snug group-hover:text-cyber-cyan transition-colors">
+                  {post.title}
+                </h3>
+                <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+                  {post.excerpt}
+                </p>
+                <span className="mt-auto inline-flex items-center text-sm font-medium text-cyber-cyan">
+                  Read post
+                  <ArrowRight size={14} className="ml-1.5 transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </div>
+            </Link>
           ))}
         </div>
       </div>

@@ -12,17 +12,17 @@ const Timeline = () => {
   const [activeFilter, setActiveFilter] = useState('all');
   const [statsVisible, setStatsVisible] = useState(false);
   const [statsPosition, setStatsPosition] = useState('right'); // 'right' or 'left'
-  
-  const filteredData = activeFilter === 'all' 
-    ? timelineData 
-    : timelineData.filter(item => {
+
+  const filteredData = activeFilter === 'all'
+    ? timelineData
+    : timelineData.filter((item) => {
         if (Array.isArray(item.category)) {
           return item.category.includes(activeFilter as CategoryType);
         }
         return item.category === activeFilter;
       });
 
-  const allCategories = timelineData.flatMap(item => 
+  const allCategories = timelineData.flatMap((item) =>
     Array.isArray(item.category) ? item.category : [item.category]
   );
   const categories = Array.from(new Set(allCategories));

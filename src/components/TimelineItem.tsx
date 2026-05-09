@@ -1,266 +1,112 @@
-
 import React, { useState } from 'react';
-import { 
-  Shield, Utensils, GraduationCap, BarChart, Rocket, 
-  BookOpen, Coffee, Lock, ChefHat, Users, Zap, LucideIcon,
-  Sword,
-  BugPlay,
-  Swords,
-  Code,
-  Bot,
-  University,
-  School,
-  Martini,
-  MoonStar,
-  Trophy,
-  IceCreamBowl,
-  Radar,
-  Usb,
-  Banana
-} from 'lucide-react';
 import { TimelineItemType, CategoryType } from '@/data/timelineData';
-import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 interface TimelineItemProps {
   item: TimelineItemType;
 }
 
-const iconMap: Record<string, LucideIcon> = {
-  Shield: Shield,
-  Utensils: Utensils,
-  GraduationCap: GraduationCap,
-  BarChart: BarChart,
-  Rocket: Rocket,
-  BookOpen: BookOpen,
-  Coffee: Coffee,
-  Lock: Lock,
-  ChefHat: ChefHat,
-  Users: Users,
-  Sword: Sword,
-  Swords: Swords,
-  BugPlay: BugPlay,
-  Code: Code,
-  Bot: Bot,
-  University: University,
-  School: School,
-  Martini: Martini,
-  MoonStar: MoonStar,
-  Trophy: Trophy,
-  IceCreamBowl: IceCreamBowl,
-  Radar: Radar,
-  Usb: Usb,
-  Banana: Banana
-};
-
-const getCategoryColor = (category: CategoryType) => {
-  switch (category) {
-    case 'cybersecurity':
-      return 'bg-blue-500';
-    case 'teaching':
-      return 'bg-green-500';
-    case 'f&b':
-      return 'bg-amber-500';
-    case 'entrepreneurship':
-      return 'bg-purple-500';
-    default:
-      return 'bg-gray-500';
-  }
-};
-
-const getCategoryGradient = (categories: CategoryType[]) => {
-  if (categories.length === 1) {
-    return getCategoryColor(categories[0]);
-  }
-  
-  const categoryColors: Record<CategoryType, string> = {
-    'cybersecurity': 'from-blue-500',
-    'teaching': 'from-green-500',
-    'f&b': 'from-amber-500',
-    'entrepreneurship': 'from-purple-500'
-  };
-  
-  const primaryCategory = categories[0];
-  const secondaryCategory = categories[1] || categories[0];
-  
-  const fromColor = categoryColors[primaryCategory];
-  const toColor = {
-    'cybersecurity': 'to-blue-500',
-    'teaching': 'to-green-500',
-    'f&b': 'to-amber-500',
-    'entrepreneurship': 'to-purple-500'
-  }[secondaryCategory];
-  
-  return `bg-gradient-to-r ${fromColor} ${toColor}`;
-};
-
-const formatCategoryName = (category: CategoryType): string => {
-  if (category === 'f&b') return 'F&B';
-  return category.charAt(0).toUpperCase() + category.slice(1);
-};
-
-const getItemRarity = (id: number) => {
-  if (id <= 20) return { label: 'Legendary', class: 'text-amber-400 border-amber-400/30 bg-amber-400/10', xpBase: 400 };
-  if (id <= 40) return { label: 'Epic', class: 'text-purple-400 border-purple-400/30 bg-purple-400/10', xpBase: 150 };
-  if (id <= 60) return { label: 'Rare', class: 'text-blue-400 border-blue-400/30 bg-blue-400/10', xpBase: 75 };
-  return { label: 'Common', class: 'text-gray-400 border-gray-400/30 bg-gray-400/10', xpBase: 25 };
-};
-
-const calculateXP = (id: number) => {
-  const rarity = getItemRarity(id);
-  const variance = (id % 10) * 50;
-  return rarity.xpBase + variance;
+const categoryStyles: Record<CategoryType, { dot: string; pill: string; label: string }> = {
+  cybersecurity:    { dot: 'bg-blue-400',    pill: 'border-blue-500/30 bg-blue-500/10 text-blue-300',          label: 'Security' },
+  teaching:         { dot: 'bg-emerald-400', pill: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-300', label: 'Teaching' },
+  'f&b':            { dot: 'bg-amber-400',   pill: 'border-amber-500/30 bg-amber-500/10 text-amber-300',       label: 'F&B' },
+  entrepreneurship: { dot: 'bg-purple-400',  pill: 'border-purple-500/30 bg-purple-500/10 text-purple-300',    label: 'Building' },
 };
 
 const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
   const [isByteDanceRevealed, setIsByteDanceRevealed] = useState(false);
-  const IconComponent = iconMap[item.icon] || Shield;
-  const categories = Array.isArray(item.category) ? item.category : [item.category];
-  const categoryColor = getCategoryGradient(categories);
-  const rarity = getItemRarity(item.id);
-  const xpValue = calculateXP(item.id);
-  const isMobile = useIsMobile();
-  
-  // ByteDance easter egg handling
-  const isByteDance = item.id === 35; // ID for ByteDance item
-  const displayCompany = isByteDance && isByteDanceRevealed ? "TikTok" : item.coy;
-  const logoUrl = isByteDance && isByteDanceRevealed 
-    ? "./coylogo/tiktok.png" // This will be the TikTok logo
-    : item.logo;
-  
-  const handleCardClick = () => {
-    if (isByteDance) {
-      setIsByteDanceRevealed(!isByteDanceRevealed);
-    }
-  };
-  
+
+  const visibleCategories = (Array.isArray(item.category) ? item.category : [item.category]) as CategoryType[];
+
+  const isByteDance = item.id === 35;
+  const displayCompany = isByteDance && isByteDanceRevealed ? 'TikTok' : item.coy;
+  const logoUrl = isByteDance && isByteDanceRevealed ? './coylogo/tiktok.png' : item.logo;
+
+  const isCurrent = /present/i.test(item.date);
+  const isIntern = item.intern === 1;
+
   return (
-    <div className="timeline-item relative animate-fade-in w-full md:w-[45%] mb-12 hover:-translate-y-1 transition-transform">
-      <Card 
-        className="overflow-hidden border shadow-md hover:shadow-lg transition-shadow bg-card/90 backdrop-blur-sm"
-        onClick={handleCardClick}
-      >
-        <CardContent className="p-0">
-          <div 
-            className={`h-3 w-full ${categoryColor}`}
-            style={{ 
-              backgroundImage: categories.length > 1 
-                ? `linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to))` 
-                : 'none' 
-            }}
+    <article
+      className={cn(
+        'group relative w-full rounded-lg border border-white/[0.06] bg-card/70 backdrop-blur-sm',
+        'px-3 py-2 transition-all duration-200',
+        'hover:border-white/[0.14] hover:bg-card/95 hover:translate-x-0.5',
+        isCurrent &&
+          'border-cyber-cyan/40 shadow-[0_0_28px_-4px_rgba(100,255,218,0.32)] hover:border-cyber-cyan/60',
+        isByteDance && 'cursor-pointer'
+      )}
+      onClick={() => isByteDance && setIsByteDanceRevealed((v) => !v)}
+    >
+      <div className="flex items-start gap-2.5 min-w-0">
+        {/* Logo chip */}
+        <div className="shrink-0 w-8 h-8 rounded-md bg-white border border-white/10 p-1 flex items-center justify-center overflow-hidden">
+          <img
+            src={logoUrl}
+            alt={`${displayCompany} logo`}
+            className="max-w-full max-h-full object-contain"
+            loading="lazy"
           />
-          
-          <div className="p-5 relative">
-            {/* Company logo background image with fade transition */}
-            <div className="absolute bottom-0 right-0 w-36 h-36 opacity-5 pointer-events-none">
-              {/* Current logo - with fade out/in effect */}
-              <div 
-                className={`absolute inset-0 transition-opacity duration-700 ${
-                  isByteDance && (isByteDanceRevealed ? 'opacity-0' : 'opacity-100')
-                }`}
-                style={{
-                  backgroundImage: `url(${item.logo})`,
-                  backgroundSize: 'contain',
-                  backgroundPosition: 'bottom right',
-                  backgroundRepeat: 'no-repeat'
-                }}
-              />
-              
-              {/* Alternative logo (TikTok) with fade in/out effect */}
-              {isByteDance && (
-                <div 
-                  className={`absolute inset-0 transition-opacity duration-700 ${
-                    isByteDanceRevealed ? 'opacity-100' : 'opacity-0'
-                  }`}
-                  style={{
-                    backgroundImage: `url(./coylogo/tiktok.png)`,
-                    backgroundSize: 'contain',
-                    backgroundPosition: 'bottom right',
-                    backgroundRepeat: 'no-repeat'
-                  }}
-                />
-              )}
-            </div>
-            
-            <div className="flex items-start gap-4 relative z-10">
-              <div className={cn(
-                "p-3 rounded-lg text-white shrink-0 relative",
-                categoryColor
-              )}
-                style={{ 
-                  backgroundImage: categories.length > 1 
-                    ? `linear-gradient(to right, var(--tw-gradient-from), var(--tw-gradient-to))` 
-                    : 'none' 
-                }}
+        </div>
+
+        <div className="flex-1 min-w-0">
+          {/* Title — full text, may wrap to a second line for long titles. */}
+          <div className="flex items-baseline gap-1.5 flex-wrap">
+            <h3 className="font-semibold text-sm leading-tight text-foreground break-words">
+              {item.title}
+            </h3>
+            {isCurrent && (
+              <span className="shrink-0 inline-flex items-center gap-1 text-[9px] font-mono uppercase tracking-wider text-emerald-400 px-1.5 py-0.5 rounded-full border border-emerald-500/30 bg-emerald-500/5">
+                <span className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                Now
+              </span>
+            )}
+            {isIntern && (
+              <span
+                className="shrink-0 inline-flex items-center gap-1 text-[9px] font-mono uppercase tracking-wider text-cyan-300 px-1.5 py-0.5 rounded-full border border-cyan-500/30 bg-cyan-500/5"
+                title="Internship"
               >
-                <IconComponent size={20} />
-                <div className="absolute inset-0 rounded-lg border border-white/20"></div>
-                <div className="absolute -inset-0.5 rounded-lg bg-white opacity-0 hover:opacity-20 transition-opacity"></div>
-              </div>
-              
-              <div className="flex-1">
-                <div className="flex flex-col gap-1 mb-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="font-bold text-lg">{item.title}</h3>
-                    <span className={cn(
-                      "text-xs px-2 py-0.5 rounded-full border",
-                      rarity.class
-                    )}>
-                      {rarity.label}
-                    </span>
-                  </div>
-                  
-                  {/* Company name with improved transition effect */}
-                  <span className="text-sm text-muted-foreground relative h-5 overflow-hidden">
-                    {/* Current company name - with fade out/in effect */}
-                    <span 
-                      className={`absolute inset-0 transition-opacity duration-700 ${
-                        isByteDance && (isByteDanceRevealed ? 'opacity-0' : 'opacity-100')
-                      }`}
-                    >
-                      {item.coy}
-                    </span>
-                    
-                    {/* Alternative company name (TikTok) with fade in/out effect */}
-                    {isByteDance && (
-                      <span 
-                        className={`absolute inset-0 transition-opacity duration-700 ${
-                          isByteDanceRevealed ? 'opacity-100' : 'opacity-0'
-                        }`}
-                      >
-                        TikTok
-                      </span>
-                    )}
-                  </span>
-                  <span className="text-sm text-muted-foreground">{item.date}</span>
-                </div>
-                
-                <p className="text-sm text-muted-foreground mb-3">{item.description}</p>
-                
-                <div className="flex flex-wrap items-center justify-between">
-                  <div className="flex flex-wrap gap-1">
-                    {categories.map((category) => (
-                      <span key={category} className={cn(
-                        "inline-block px-3 py-1 text-xs font-medium rounded-full text-white",
-                        getCategoryColor(category)
-                      )}>
-                        {formatCategoryName(category)}
-                      </span>
-                    ))}
-                  </div>
-                  
-                  <div className="flex items-center gap-1 text-xs font-medium text-cyan-500 mt-2">
-                    <Zap size={12} />
-                    <span>+{xpValue} XP</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+                Internship
+              </span>
+            )}
           </div>
-        </CardContent>
-      </Card>
-    </div>
+
+          {/* Company + date inline — no truncation */}
+          <div className="flex items-baseline gap-1.5 flex-wrap mt-0.5 text-xs text-foreground/70">
+            <span className="break-words">{displayCompany}</span>
+            <span className="text-muted-foreground/40">·</span>
+            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground/80">
+              {item.date}
+            </span>
+          </div>
+
+          {/* Description */}
+          <p className="text-[11px] text-muted-foreground leading-snug mt-1 line-clamp-2">
+            {item.description}
+          </p>
+
+          {/* Category pills */}
+          {visibleCategories.length > 0 && (
+            <div className="flex items-center gap-1 mt-1.5 flex-wrap">
+              {visibleCategories.map((category) => {
+                const style = categoryStyles[category];
+                return (
+                  <span
+                    key={category}
+                    className={cn(
+                      'inline-flex items-center gap-1 px-1.5 py-0.5 text-[9px] font-mono uppercase tracking-wider rounded-full border',
+                      style.pill
+                    )}
+                  >
+                    <span className={cn('w-1 h-1 rounded-full', style.dot)} />
+                    {style.label}
+                  </span>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+    </article>
   );
 };
 

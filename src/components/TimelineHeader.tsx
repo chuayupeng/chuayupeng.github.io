@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Zap, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import FilterButtons from '@/components/FilterButtons';
 
@@ -19,39 +18,38 @@ const TimelineHeader: React.FC<TimelineHeaderProps> = ({
   setActiveFilter,
   categories,
   toggleStats,
-  statsVisible
+  statsVisible,
 }) => {
   return (
-    <>
-      <div className="text-center mb-8">
-        <div className="mb-2 inline-flex items-center justify-center gap-2 text-sm font-medium px-3 py-1 rounded-full bg-accent/20 text-accent-foreground">
-          <Zap size={16} className="text-primary" />
-          <span>Level {level} Professional</span>
-          <Zap size={16} className="text-primary" />
-        </div>
-        <h1 className="text-4xl font-bold mb-4 gradient-text">Professional Quest Log</h1>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          A chronological journey through my career across different domains.
-          Filter by skill class to explore specific areas of expertise.
+    <div className="pt-8">
+      <div className="max-w-3xl mb-10">
+        <div className="section-eyebrow">Timeline</div>
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
+          {level} years across <span className="gradient-text">security</span> &amp; building.
+        </h1>
+        <p className="text-muted-foreground text-lg">
+          A chronological log of roles, projects, and side quests — read it like a git history.
+          Filter by focus area to narrow it down.
         </p>
+      </div>
 
-        <Button 
-          variant="outline" 
-          size="sm" 
+      <div className="flex flex-wrap items-center justify-between gap-4 mb-2">
+        <FilterButtons
+          activeFilter={activeFilter}
+          setActiveFilter={setActiveFilter}
+          categories={categories}
+        />
+        <Button
+          variant="outline"
+          size="sm"
           onClick={toggleStats}
-          className="mt-4 bg-card/50 backdrop-blur-sm border-primary/20 hover:bg-card/80"
+          className="border-white/10 bg-secondary/50 hover:bg-secondary text-foreground/80"
         >
-          <User size={16} className="mr-2" />
-          {statsVisible ? "Hide Character Sheet" : "Show Character Sheet"}
+          <User size={14} className="mr-1.5" />
+          {statsVisible ? 'Hide stats' : 'Show stats'}
         </Button>
       </div>
-      
-      <FilterButtons 
-        activeFilter={activeFilter} 
-        setActiveFilter={setActiveFilter}
-        categories={categories}
-      />
-    </>
+    </div>
   );
 };
 

@@ -29,14 +29,14 @@ const CharacterStatsPanel: React.FC<CharacterStatsPanelProps> = ({
       `}
     >
       <div className="relative">
-        <div 
-          className={`absolute ${statsPosition === 'right' ? '-left-10' : '-right-10'} top-4 cursor-pointer bg-card/80 backdrop-blur-sm border rounded-l-lg p-2
-            ${statsPosition === 'left' ? 'rounded-r-lg rounded-l-none' : ''}`}
+        <div
+          className={`absolute ${statsPosition === 'right' ? '-left-10' : '-right-10'} top-4 cursor-pointer bg-card/90 backdrop-blur-md border border-white/[0.08] p-2 text-foreground/80 hover:text-cyber-cyan transition-colors
+            ${statsPosition === 'right' ? 'rounded-l-lg' : 'rounded-r-lg'}`}
           onClick={toggleStats}
         >
-          {statsVisible ? 
-            (statsPosition === 'right' ? <ArrowRight size={20} /> : <ArrowLeft size={20} />) : 
-            (statsPosition === 'right' ? <ArrowLeft size={20} /> : <ArrowRight size={20} />)
+          {statsVisible ?
+            (statsPosition === 'right' ? <ArrowRight size={18} /> : <ArrowLeft size={18} />) :
+            (statsPosition === 'right' ? <ArrowLeft size={18} /> : <ArrowRight size={18} />)
           }
         </div>
         

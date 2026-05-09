@@ -1,6 +1,4 @@
-
 import { Button } from '@/components/ui/button';
-import { CategoryType } from '@/data/timelineData';
 
 interface FilterButtonsProps {
   activeFilter: string;
@@ -8,37 +6,41 @@ interface FilterButtonsProps {
   categories: string[];
 }
 
-const FilterButtons: React.FC<FilterButtonsProps> = ({ 
-  activeFilter, 
+const labels: Record<string, string> = {
+  cybersecurity: 'Security',
+  entrepreneurship: 'Entrepreneurship',
+  'f&b': 'F&B',
+  teaching: 'Teaching',
+};
+
+const FilterButtons: React.FC<FilterButtonsProps> = ({
+  activeFilter,
   setActiveFilter,
-  categories
+  categories,
 }) => {
-  // Function to format category names
-  const formatCategoryName = (category: string): string => {
-    if (category === 'f&b') return 'F&B';
-    return category.charAt(0).toUpperCase() + category.slice(1);
-  };
+  const all = ['all', ...categories];
 
   return (
-    <div className="flex flex-wrap gap-2 justify-center mb-8">
-      <Button
-        variant={activeFilter === 'all' ? 'default' : 'outline'}
-        onClick={() => setActiveFilter('all')}
-        className={activeFilter === 'all' ? 'bg-cyber-cyan text-cyber-blue hover:bg-cyber-cyan/80' : ''}
-      >
-        All
-      </Button>
-      
-      {categories.map((category) => (
-        <Button
-          key={category}
-          variant={activeFilter === category ? 'default' : 'outline'}
-          onClick={() => setActiveFilter(category)}
-          className={activeFilter === category ? 'bg-cyber-cyan text-cyber-blue hover:bg-cyber-cyan/80' : ''}
-        >
-          {formatCategoryName(category)}
-        </Button>
-      ))}
+    <div className="flex flex-wrap gap-2 justify-center mb-4">
+      {all.map((cat) => {
+        const active = activeFilter === cat;
+        const label = cat === 'all' ? 'All' : (labels[cat] ?? cat);
+        return (
+          <Button
+            key={cat}
+            size="sm"
+            variant={active ? 'default' : 'outline'}
+            onClick={() => setActiveFilter(cat)}
+            className={
+              active
+                ? 'bg-cyber-cyan text-cyber-blue hover:bg-cyber-cyan/90'
+                : 'border-white/10 bg-secondary/50 hover:bg-secondary text-foreground/80'
+            }
+          >
+            {label}
+          </Button>
+        );
+      })}
     </div>
   );
 };

@@ -28,12 +28,17 @@ export const calculateSkillPoints = (id: number) => {
 };
 
 export const useTimelineCalculations = (timelineData: TimelineItemType[]) => {
-  const totalExperience = useMemo(() => 
+  const totalExperience = useMemo(() =>
     timelineData.reduce((total, item) => total + calculateXP(item.id), 0)
   , [timelineData]);
-  
-  const level = Math.floor(totalExperience / 500) + 1;
-  const currentLevelXP = totalExperience % 500;
+
+  // Level = years in the security industry. First full-time role was 2019;
+  // earlier internships count as "tutorial stages" in the timeline.
+  const SECURITY_START_YEAR = 2019;
+  const now = new Date();
+  const level = now.getFullYear() - SECURITY_START_YEAR;
+  const monthsElapsed = now.getMonth() + now.getDate() / 31;
+  const currentLevelXP = Math.round((monthsElapsed / 12) * 500);
   const xpToNextLevel = 500 - currentLevelXP;
   
   const skills = useMemo(() => {

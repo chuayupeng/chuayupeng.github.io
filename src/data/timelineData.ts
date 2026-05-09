@@ -10,6 +10,14 @@ export type TimelineItemType = {
   logo: string;
   category: CategoryType | CategoryType[];
   icon: string;
+  // Month granularity (1=Jan .. 12=Dec). Used by the timeline graph to order
+  // and place merge points within a year. Not surfaced on cards or year axis.
+  // For roles whose date ends in "Present", endMonth is ignored — current
+  // branches always merge into the "Now" dot regardless of this field.
+  startMonth: number;
+  endMonth: number;
+  // Mark this entry as an internship for the "INTERNSHIP" badge.
+  intern: 0 | 1;
 };
 
 export const timelineData: TimelineItemType[] = [
@@ -22,16 +30,35 @@ export const timelineData: TimelineItemType[] = [
     icon: "Usb",
     coy: "Symmetry Investments",
     logo: "./coylogo/sym.ico",
+    startMonth: 1,
+    endMonth: 12,
+    intern: 0,
+  },
+  {
+    id: 21,
+    title: "Technology Consultant",
+    date: "2026 - PRESENT",
+    description: "Advised and built out tech stack for agency",
+    category: "entrepreneurship",
+    icon: "Usb",
+    coy: "Phoenix Immersion",
+    logo: "./coylogo/phoenix.png",
+    startMonth: 2,
+    endMonth: 12,
+    intern: 0,
   },
   {
     id: 55,
     title: "Computer Science Teacher",
-    date: "2024 - Present",
+    date: "2024 - 2025",
     description: "Taught Computer Science for Cambridge AS and A Levels Examinations.",
     category: "teaching",
     icon: "BookOpen",
     coy: "Furen International School",
-    logo: "./coylogo/furen.jpg"
+    logo: "./coylogo/furen.jpg",
+    startMonth: 7,
+    endMonth: 4,
+    intern: 0,
   },
   {
     id: 9,
@@ -41,17 +68,23 @@ export const timelineData: TimelineItemType[] = [
     category: ["f&b", "entrepreneurship"],
     icon: "IceCreamBowl",
     coy: "WhiteHatOne Pte Ltd",
-    logo: "./coylogo/cbs.svg"
+    logo: "./coylogo/cbs.svg",
+    startMonth: 3,
+    endMonth: 10,
+    intern: 0,
   },
   {
     id: 49,
     title: "CSIRT Member",
-    date: "2023 - Present",
+    date: "2023 - 2025",
     description: "Conducted incident response, malware analysis, and forensic investigations under military service.",
     category: "cybersecurity",
     icon: "Radar",
     coy: "Digital Intelligence Services",
-    logo: "./coylogo/dis.png"
+    logo: "./coylogo/dis.png",
+    startMonth: 1,
+    endMonth: 12,
+    intern: 0,
   },
   {
     id: 51,
@@ -61,7 +94,10 @@ export const timelineData: TimelineItemType[] = [
     category: "cybersecurity",
     icon: "Swords",
     coy: "Synack Red Team",
-    logo: "./coylogo/srt.png"
+    logo: "./coylogo/srt.png",
+    startMonth: 6,
+    endMonth: 8,
+    intern: 0,
   },
   {
     id: 52,
@@ -70,8 +106,11 @@ export const timelineData: TimelineItemType[] = [
     description: "Advised stealth gaming startup on security integration and best practices.",
     category: ["entrepreneurship", "cybersecurity"],
     icon: "BookOpen",
-    coy: "_______________________",
-    logo: "./coylogo/cres.png"
+    coy: "Cresmos",
+    logo: "./coylogo/cres.png",
+    startMonth: 2,
+    endMonth: 7,
+    intern: 0,
   },
   {
     id: 35,
@@ -81,7 +120,10 @@ export const timelineData: TimelineItemType[] = [
     category: "cybersecurity",
     icon: "Lock",
     coy: "ByteDance",
-    logo: "./coylogo/bd.jpg"
+    logo: "./coylogo/bd.jpg",
+    startMonth: 8,
+    endMonth: 1,
+    intern: 0,
   },
   {
     id: 13,
@@ -91,7 +133,10 @@ export const timelineData: TimelineItemType[] = [
     category: ["f&b", "entrepreneurship"],
     icon: "MoonStar",
     coy: "Moonshots",
-    logo: "./coylogo/moonshots.png"
+    logo: "./coylogo/moonshots.png",
+    startMonth: 2,
+    endMonth: 6,
+    intern: 0,
   },
   {
     id: 43,
@@ -101,7 +146,10 @@ export const timelineData: TimelineItemType[] = [
     category: "cybersecurity",
     icon: "Swords",
     coy: "ITSEC Asia Pte Ltd",
-    logo: "./coylogo/itsec.png"
+    logo: "./coylogo/itsec.png",
+    startMonth: 7,
+    endMonth: 8,
+    intern: 0,
   },
   {
     id: 61,
@@ -111,7 +159,10 @@ export const timelineData: TimelineItemType[] = [
     category: "cybersecurity",
     icon: "Shield",
     coy: "Defense Science and Technology Agency",
-    logo: "./coylogo/dsta.png"
+    logo: "./coylogo/dsta.png",
+    startMonth: 9,
+    endMonth: 7,
+    intern: 0,
   },
   {
     id: 38,
@@ -121,27 +172,36 @@ export const timelineData: TimelineItemType[] = [
     category: "f&b",
     icon: "Martini",
     coy: "La Maison Du Whisky Singapore",
-    logo: "./coylogo/lmdw.png"
+    logo: "./coylogo/lmdw.png",
+    startMonth: 5,
+    endMonth: 8,
+    intern: 0,
   },
   {
     id: 27,
-    title: "Red Team Intern",
+    title: "Red Team",
     date: "2018 - 2019",
     description: "NFC card cloning research and Machine Learning for Cybersecurity.",
     category: "cybersecurity",
     icon: "BugPlay",
     coy: "Government Technology Agency of Singapore",
-    logo: "./coylogo/govtech.png"
+    logo: "./coylogo/govtech.png",
+    startMonth: 12,
+    endMonth: 4,
+    intern: 1,
   },
   {
     id: 63,
-    title: "Penetration Tester Intern",
+    title: "Penetration Tester",
     date: "2018 - 2018",
     description: "Cleaned Data for automated analysis of attacks, and analysed malware samples on clients.",
     category: "cybersecurity",
     icon: "Sword",
     coy: "InsiderSecurity",
-    logo: "./coylogo/is.png"
+    logo: "./coylogo/is.png",
+    startMonth: 5,
+    endMonth: 8,
+    intern: 1,
   },
   {
     id: 41,
@@ -151,27 +211,36 @@ export const timelineData: TimelineItemType[] = [
     category: ["cybersecurity", "teaching"],
     icon: "Trophy",
     coy: "0x1EA7BEEF",
-    logo: "./coylogo/beef.jpg"
+    logo: "./coylogo/beef.jpg",
+    startMonth: 12,
+    endMonth: 4,
+    intern: 0,
   },
   {
     id: 39,
     title: "Co-Founder",
-    date: "2017 - 2017",
+    date: "2017 - 2018",
     description: "Created a startup and got first funding round to build the application.",
     category: "entrepreneurship",
     icon: "Banana",
     coy: "JAYEO",
-    logo: "./coylogo/jayeo.png"
+    logo: "./coylogo/jayeo.png",
+    startMonth: 6,
+    endMonth: 5,
+    intern: 0,
   },
   {
     id: 59,
-    title: "Fullstack Software Engineer Intern",
+    title: "Fullstack Software Engineer",
     date: "2017 - 2017",
     description: "Built web interfaces using React/Redux and Laravel for ShopBack's internal platforms.",
     category: "cybersecurity",
     icon: "Code",
     coy: "Shopback Singapore",
-    logo: "./coylogo/shopback.png"
+    logo: "./coylogo/shopback.png",
+    startMonth: 5,
+    endMonth: 10,
+    intern: 1,
   },
   {
     id: 73,
@@ -181,7 +250,10 @@ export const timelineData: TimelineItemType[] = [
     category: ["cybersecurity", "teaching"],
     icon: "Bot",
     coy: "TinkerTanker",
-    logo: "./coylogo/tinkertanker.jpeg"
+    logo: "./coylogo/tinkertanker.jpeg",
+    startMonth: 2,
+    endMonth: 5,
+    intern: 0,
   },
   {
     id: 44,
@@ -191,7 +263,10 @@ export const timelineData: TimelineItemType[] = [
     category: "teaching",
     icon: "University",
     coy: "National University of Singapore",
-    logo: "./coylogo/nus.png"
+    logo: "./coylogo/nus.png",
+    startMonth: 8,
+    endMonth: 4,
+    intern: 0,
   },
   {
     id: 84,
@@ -201,6 +276,9 @@ export const timelineData: TimelineItemType[] = [
     category: "teaching",
     icon: "School",
     coy: "Ministry of Education, Singapore",
-    logo: "./coylogo/moe.jpg"
+    logo: "./coylogo/moe.jpg",
+    startMonth: 1,
+    endMonth: 5,
+    intern: 0,
   }
 ];

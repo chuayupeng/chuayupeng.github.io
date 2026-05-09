@@ -1,7 +1,5 @@
-
 import React from 'react';
-import { Trophy, X, ArrowLeft, ArrowRight } from 'lucide-react';
-import { CategoryType } from '@/data/timelineData';
+import { X, ArrowLeft, ArrowRight, Shield, Rocket, Wine } from 'lucide-react';
 
 interface CharacterStatsProps {
   level: number;
@@ -12,81 +10,78 @@ interface CharacterStatsProps {
   togglePosition: () => void;
 }
 
+const FOCUS_SKILLS = [
+  { key: 'cybersecurity',    label: 'Security',         icon: Shield, bar: 'from-blue-500 to-blue-400',     pct: 75 },
+  { key: 'entrepreneurship', label: 'Entrepreneurship', icon: Rocket, bar: 'from-purple-500 to-purple-400', pct: 35 },
+  { key: 'f&b',              label: 'F&B',              icon: Wine,   bar: 'from-amber-500 to-amber-400',   pct: 20 },
+] as const;
+
 const CharacterStats: React.FC<CharacterStatsProps> = ({
   level,
   currentLevelXP,
-  skills,
   statsPosition,
   toggleStats,
-  togglePosition
+  togglePosition,
 }) => {
-  // Find the maximum skill value to calculate relative percentages
-  const maxSkillValue = Math.max(...Object.values(skills));
-  
-  // Format category names for display
-  const formatCategoryName = (category: string): string => {
-    if (category === 'f&b') return 'F&B';
-    return category.charAt(0).toUpperCase() + category.slice(1);
-  };
-  
+
   return (
-    <div className="bg-card/90 backdrop-blur-sm border rounded-lg p-4 w-64 shadow-lg">
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="font-bold">Character Stats</h3>
-        <div className="flex gap-2">
-          <button 
-            className="text-muted-foreground hover:text-foreground"
+    <div className="card-surface bg-card/90 backdrop-blur-md p-4 w-72 shadow-2xl">
+      <div className="flex items-center justify-between mb-4">
+        <div className="font-mono text-xs uppercase tracking-widest text-muted-foreground">
+          character.json
+        </div>
+        <div className="flex gap-1">
+          <button
+            className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary"
             onClick={togglePosition}
-            aria-label="Change position"
+            aria-label="Switch side"
           >
-            {statsPosition === 'right' ? <ArrowLeft size={14} /> : <ArrowRight size={14} />}
+            {statsPosition === 'right' ? <ArrowLeft size={12} /> : <ArrowRight size={12} />}
           </button>
-          <button 
-            className="text-muted-foreground hover:text-foreground"
+          <button
+            className="w-6 h-6 rounded flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary"
             onClick={toggleStats}
-            aria-label="Close stats"
+            aria-label="Close"
           >
-            <X size={14} />
+            <X size={12} />
           </button>
         </div>
       </div>
-      
-      <div className="mb-4">
-        <div className="flex justify-between text-xs mb-1">
-          <span>Level {level}</span>
-          <div className="flex items-center gap-1">
-            <Trophy size={14} className="text-amber-500" />
-            <span>{currentLevelXP}/500 XP</span>
-          </div>
-        </div>
-        <div className="w-full bg-muted rounded-full h-2">
-          <div 
-            className="h-2 rounded-full bg-gradient-to-r from-cyan-500 to-primary animate-pulse-light" 
-            style={{ width: `${(currentLevelXP / 500) * 100}%` }} 
-          />
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 gap-3 text-sm">
-        {Object.entries(skills).map(([skill, value]) => (
-          <div key={skill} className="flex flex-col">
-            <div className="flex justify-between mb-1">
-              <span className="capitalize">{formatCategoryName(skill)}</span>
-              <span>{Math.round(value)}</span>
-            </div>
-            <div className="w-full bg-muted rounded-full h-1.5">
-              <div 
-                className={`h-1.5 rounded-full ${
-                  skill === 'cybersecurity' ? 'bg-blue-500' :
-                  skill === 'teaching' ? 'bg-green-500' :
-                  skill === 'f&b' ? 'bg-amber-500' :
-                  'bg-purple-500'
-                }`}
-                style={{ width: `${(value / maxSkillValue) * 100}%` }}
-              />
+
+      <div className="font-mono text-sm space-y-4">
+        <div className="flex items-baseline justify-between">
+          <div>
+            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">years_in_security</div>
+            <div className="text-2xl font-bold tabular-nums">
+              {String(level).padStart(2, '0')}
+              <span className="text-sm font-normal text-muted-foreground ml-1">yrs</span>
             </div>
           </div>
-        ))}
+          <div className="text-right">
+            <div className="text-[10px] text-muted-foreground uppercase tracking-wider">since</div>
+            <div className="tabular-nums">{new Date().getFullYear() - level}</div>
+          </div>
+        </div>
+
+        <div className="space-y-2.5 pt-3 border-t border-white/[0.06]">
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+            focus_areas
+          </div>
+          {FOCUS_SKILLS.map(({ key, label, icon: Icon, bar, pct }) => (
+            <div key={key}>
+              <div className="flex items-center justify-between text-xs mb-1">
+                <span className="flex items-center gap-1.5 text-foreground/85">
+                  <Icon size={12} className="text-muted-foreground" />
+                  {label}
+                </span>
+                <span className="text-muted-foreground tabular-nums">{pct}%</span>
+              </div>
+              <div className="w-full bg-secondary rounded-full h-1 overflow-hidden">
+                <div className={`h-1 rounded-full bg-gradient-to-r ${bar}`} style={{ width: `${pct}%` }} />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

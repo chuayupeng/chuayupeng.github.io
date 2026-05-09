@@ -1,8 +1,6 @@
-
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Zap, VenetianMask, Shield, GraduationCap, Wine, Flame, Trophy, Star } from 'lucide-react';
-import { TimelineItemType } from '@/data/timelineData';
+import { ArrowRight, Github, Linkedin, Mail, Shield, Wine, Rocket } from 'lucide-react';
 
 interface HeroSectionProps {
   level: number;
@@ -11,119 +9,120 @@ interface HeroSectionProps {
   skills: Record<string, number>;
 }
 
-const HeroSection = ({ level, currentLevelXP, xpToNextLevel, skills }: HeroSectionProps) => {
+// Self-reported focus levels — kept manual so they reflect intent, not item counts.
+const FOCUS_SKILLS = [
+  { key: 'cybersecurity',    label: 'Security',         icon: Shield, color: 'text-blue-400',   gradient: 'from-blue-500 to-blue-400',     pct: 75 },
+  { key: 'entrepreneurship', label: 'Entrepreneurship', icon: Rocket, color: 'text-purple-400', gradient: 'from-purple-500 to-purple-400', pct: 35 },
+  { key: 'f&b',              label: 'F&B',              icon: Wine,   color: 'text-amber-400',  gradient: 'from-amber-500 to-amber-400',   pct: 20 },
+] as const;
+
+const HeroSection = ({ level }: HeroSectionProps) => {
   return (
-    <section className="pt-32 pb-20 px-4 bg-gradient-to-b from-cyber-blue to-cyber-dark-navy text-white">
-      <div className="container mx-auto max-w-6xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6 animate-fade-in">
-            <div className="flex items-center gap-2 text-sm font-medium px-3 py-1 w-fit rounded-full bg-accent/20 text-accent-foreground mb-3">
-              <Zap size={16} className="text-primary" />
-              <span>Level {level} Security Expert</span>
-              <Zap size={16} className="text-primary" />
+    <section className="relative pt-36 pb-24 px-4 overflow-hidden">
+      <div className="absolute inset-0 grid-bg pointer-events-none" />
+
+      <div className="container mx-auto max-w-6xl relative">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-7 space-y-7 animate-fade-in">
+            <div className="flex items-center gap-2">
+              <span className="chip">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyber-cyan animate-pulse" />
+                Available for new quests
+              </span>
             </div>
-            
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-white">
-              Leveling Up: From <span className="gradient-text">Elixirs</span> To <span className="gradient-text">Exploits</span>
+
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight">
+              From <span className="gradient-text">elixirs</span>
+              <br />
+              to <span className="gradient-text">exploits</span>.
             </h1>
-            <p className="text-lg text-white/80 max-w-lg">
-              Versatile cybersecurity professional with a wide range of passion projects.
+
+            <p className="text-lg text-muted-foreground max-w-xl leading-relaxed">
+              I'm <span className="text-foreground font-medium">Yu Peng</span> — a cybersecurity
+              engineer and entrepreneur, with side quests through F&amp;B. I break and harden systems
+              by day, and build the things I wish existed by night.
             </p>
-            
-            {/* XP Progress Bar */}
-            <div className="mt-4 mb-2">
-              <div className="flex justify-between text-xs mb-1">
-                <span>Level {level}</span>
-                <span>{currentLevelXP}/500 XP to Level {level + 1}</span>
-              </div>
-              <div className="w-full bg-muted/30 rounded-full h-2">
-                <div 
-                  className="rpg-progress" 
-                  style={{ width: `${(currentLevelXP / 500) * 100}%` }} 
-                />
-              </div>
-            </div>
-            
-            <div className="flex flex-wrap gap-4 pt-2">
-              <Button asChild size="lg" className="bg-cyber-cyan text-cyber-blue hover:bg-cyber-cyan/80">
-                <Link to="/timeline">View My Quest Log</Link>
+
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              <Button asChild size="lg" className="bg-cyber-cyan text-cyber-blue hover:bg-cyber-cyan/90 group">
+                <Link to="/timeline" className="inline-flex items-center">
+                  View timeline
+                  <ArrowRight size={16} className="ml-2 transition-transform group-hover:translate-x-0.5" />
+                </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-cyber-cyan text-cyber-navy hover:bg-gray-100/70">
-                <Link to="/about">Character Profile</Link>
+              <Button asChild size="lg" variant="outline" className="border-white/10 hover:bg-secondary text-foreground">
+                <Link to="/about">About me</Link>
               </Button>
+              <div className="flex items-center gap-1 ml-2">
+                <a href="https://github.com/chuayupeng" target="_blank" rel="noreferrer"
+                   className="w-10 h-10 rounded-lg flex items-center justify-center text-muted-foreground hover:text-cyber-cyan hover:bg-secondary transition-colors" aria-label="GitHub">
+                  <Github size={18} />
+                </a>
+                <a href="https://linkedin.com/in/chuayupeng" target="_blank" rel="noreferrer"
+                   className="w-10 h-10 rounded-lg flex items-center justify-center text-muted-foreground hover:text-cyber-cyan hover:bg-secondary transition-colors" aria-label="LinkedIn">
+                  <Linkedin size={18} />
+                </a>
+                <a href="mailto:yupeng@u.nus.edu"
+                   className="w-10 h-10 rounded-lg flex items-center justify-center text-muted-foreground hover:text-cyber-cyan hover:bg-secondary transition-colors" aria-label="Email">
+                  <Mail size={18} />
+                </a>
+              </div>
             </div>
           </div>
-          
-          <div className="relative hidden md:block">
-            <div className="w-full h-96 bg-cyber-navy rounded-lg border border-cyber-cyan/20 overflow-hidden relative rpg-card rpg-border">
-              {/* Character Sprite Container */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                {/* Base Character */}
-                <div className="relative w-56 h-56 animate-float">
-                  {/* Shared character base */}
-                  <div className="absolute w-full h-full top-4 flex items-center justify-center">
-                    <VenetianMask className="w-16 h-16 rounded-lg" />
-                  </div>
 
-                  {/* Cybersecurity Armor (Shield) */}
-                  <div className="absolute bottom-16 left-2 flex items-center justify-center">
-                    <Shield className="w-16 h-16 text-blue-400 rounded-full animate-pulse-glow" style={{animationDelay: "2s"}}/>
+          {/* Terminal-style stats card */}
+          <div className="lg:col-span-5">
+            <div className="card-surface overflow-hidden animate-fade-in" style={{ animationDelay: '120ms' }}>
+              {/* window chrome */}
+              <div className="flex items-center gap-2 px-4 py-3 border-b border-white/[0.06] bg-black/20">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500/70" />
+                <span className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500/70" />
+                <span className="ml-2 font-mono text-xs text-muted-foreground">~/character.json</span>
+              </div>
+
+              <div className="p-6 space-y-5 font-mono text-sm">
+                <div className="flex items-baseline justify-between">
+                  <div>
+                    <div className="text-xs text-muted-foreground">years_in_security</div>
+                    <div className="text-3xl font-bold text-foreground tabular-nums">
+                      {String(level).padStart(2, '0')}
+                      <span className="text-base font-normal text-muted-foreground ml-1">yrs</span>
+                    </div>
                   </div>
-                  
-                  {/* Teaching Armor (Cap) */}
-                  <div className="absolute bottom-32 left-20 flex items-center justify-center">
-                    <GraduationCap className="w-16 h-16 text-green-400 rounded-full animate-pulse-glow" style={{animationDelay: "0.5s"}} />
-                  </div>
-                  
-                  {/* F&B Armor (Wine) */}
-                  <div className="absolute bottom-16 right-2 flex items-center justify-center">
-                    <Wine className="w-16 h-16 text-amber-400 rounded-full animate-pulse-glow" style={{animationDelay: "1s"}} />
-                  </div>
-                  
-                  {/* Entrepreneurship Armor (Flame) */}
-                  <div className="absolute bottom-0 left-20 flex items-center justify-center">
-                    <Flame className="w-16 h-16 text-purple-400 rounded-full animate-pulse-glow" style={{animationDelay: "1.5s"}} />
+                  <div className="text-right">
+                    <div className="text-xs text-muted-foreground">since</div>
+                    <div className="text-foreground tabular-nums">
+                      {new Date().getFullYear() - level}
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              {/* Stats Display */}
-              <div className="absolute top-4 left-4 bg-cyber-navy/80 backdrop-blur-sm p-3 rounded border border-cyber-cyan/30">
-                <h3 className="text-xs font-bold text-white mb-2">Character Stats</h3>
-                <div className="space-y-2">
-                  {Object.entries(skills).map(([skill, value]) => (
-                    <div key={skill} className="flex justify-between items-center gap-2">
-                      <span className="text-xs capitalize text-white/80">
-                        {skill === 'f&b' ? 'F&B' : skill.charAt(0).toUpperCase() + skill.slice(1)}
-                      </span>
-                      <div className="w-16 bg-muted/30 rounded-full h-1">
-                        <div 
-                          className={`h-1 rounded-full ${
-                            skill === 'cybersecurity' ? 'bg-blue-500' :
-                            skill === 'teaching' ? 'bg-green-500' :
-                            skill === 'f&b' ? 'bg-amber-500' :
-                            'bg-purple-500'
-                          }`}
-                          style={{ width: `${Math.min(100, value / 2)}%` }}
+
+                <div className="space-y-3 pt-1 border-t border-white/[0.06]">
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground pt-3">
+                    focus_areas
+                  </div>
+                  {FOCUS_SKILLS.map(({ key, label, icon: Icon, color, gradient, pct }) => (
+                    <div key={key} className="space-y-1.5">
+                      <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-2">
+                          <Icon size={14} className={color} />
+                          <span className="text-foreground/90">{label}</span>
+                        </div>
+                        <span className="text-muted-foreground tabular-nums">{pct}%</span>
+                      </div>
+                      <div className="w-full bg-secondary rounded-full h-1 overflow-hidden">
+                        <div
+                          className={`h-1 rounded-full bg-gradient-to-r ${gradient}`}
+                          style={{ width: `${pct}%` }}
                         />
                       </div>
                     </div>
                   ))}
                 </div>
-              </div>
-              
-              {/* Equipment Rating */}
-              <div className="absolute bottom-4 right-4 bg-cyber-navy/80 backdrop-blur-sm p-2 rounded border border-cyber-cyan/30 flex items-center">
-                <Trophy size={14} className="text-yellow-400 mr-1" />
-                <span className="text-xs text-white">Legendary Gear</span>
-                <div className="flex ml-2">
-                  {[...Array(5)].map((_, i) => (
-                    <Star 
-                      key={i} 
-                      size={10} 
-                      className="text-yellow-400 fill-yellow-400" 
-                    />
-                  ))}
+
+                <div className="pt-3 text-xs text-muted-foreground border-t border-white/[0.06]">
+                  <span className="terminal-cursor">$ ready</span>
                 </div>
               </div>
             </div>
