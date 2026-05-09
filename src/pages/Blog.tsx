@@ -29,15 +29,21 @@ const Blog = () => {
     loadPosts();
   }, []);
   
-  const categories = Array.from(new Set(posts.map(post => post.category)));
-  
-  const filteredPosts = posts
-    .filter(post => 
-      (activeFilter === 'all' || post.category === activeFilter) &&
-      (searchQuery === '' || 
-        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()))
+  const categories = Array.from(
+    new Set(
+      posts.flatMap(post => (Array.isArray(post.category) ? post.category : [post.category]))
     )
+  );
+
+  const filteredPosts = posts
+    .filter(post => {
+      const cats = Array.isArray(post.category) ? post.category : [post.category];
+      const matchesFilter = activeFilter === 'all' || cats.includes(activeFilter as typeof cats[number]);
+      const matchesSearch = searchQuery === '' ||
+        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesFilter && matchesSearch;
+    })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   
   return (

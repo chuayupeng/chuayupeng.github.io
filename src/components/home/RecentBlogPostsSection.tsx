@@ -38,13 +38,15 @@ const RecentBlogPostsSection = ({ recentPosts }: RecentBlogPostsSectionProps) =>
             >
               <div className="aspect-[16/9] overflow-hidden bg-secondary">
                 <div
-                  className="w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                  className="w-full h-full bg-cover bg-left transition-transform duration-500 group-hover:scale-105"
                   style={{ backgroundImage: `url(${post.image})` }}
                 />
               </div>
               <div className="p-6 flex-1 flex flex-col">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3 font-mono">
-                  <span className="text-cyber-cyan">{post.category}</span>
+                  <span className="text-cyber-cyan">
+                    {(Array.isArray(post.category) ? post.category : [post.category]).join(' | ')}
+                  </span>
                   <span className="opacity-40">·</span>
                   <span>{post.date}</span>
                 </div>

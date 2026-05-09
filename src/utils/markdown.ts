@@ -15,13 +15,16 @@ const md = new MarkdownIt({
   typographer: true,
 });
 
+export type MarkdownCategory = "cybersecurity" | "teaching" | "f&b" | "entrepreneurship";
+
 export interface MarkdownPost {
   id: number;
   title: string;
   excerpt: string;
   content: string;
   date: string;
-  category: "cybersecurity" | "teaching" | "f&b" | "entrepreneurship";
+  // YAML frontmatter may provide a single category string or an array.
+  category: MarkdownCategory | MarkdownCategory[];
   author: string;
   image: string;
   slug: string;

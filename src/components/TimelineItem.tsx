@@ -29,11 +29,12 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
     <article
       className={cn(
         'group relative w-full rounded-lg border border-white/[0.06] bg-card/70 backdrop-blur-sm',
-        'px-3 py-2 transition-all duration-200',
+        'px-3 py-2 transition-[border-color,background-color,transform] duration-200',
         'hover:border-white/[0.14] hover:bg-card/95 hover:translate-x-0.5',
         isCurrent &&
           'border-cyber-cyan/40 shadow-[0_0_28px_-4px_rgba(139,92,246,0.32)] hover:border-cyber-cyan/60',
-        isByteDance && 'cursor-pointer'
+        isByteDance &&
+          'cursor-pointer shadow-[0_0_16px_-2px_rgba(96,165,250,0.35)] hover:border-blue-400/50 hover:shadow-[0_0_22px_-4px_rgba(96,165,250,0.55)]'
       )}
       onClick={() => isByteDance && setIsByteDanceRevealed((v) => !v)}
     >

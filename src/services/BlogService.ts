@@ -37,12 +37,17 @@ export class BlogService {
   }
   
   /**
-   * Gets related posts (same category, excluding the given post)
+   * Gets related posts (any overlapping category, excluding the given post).
    */
   static async getRelatedPosts(post: MarkdownPost, limit: number = 3): Promise<MarkdownPost[]> {
     const posts = await this.getPosts();
+    const target = new Set(Array.isArray(post.category) ? post.category : [post.category]);
     return posts
-      .filter(p => p.category === post.category && p.id !== post.id)
+      .filter(p => {
+        if (p.id === post.id) return false;
+        const pcats = Array.isArray(p.category) ? p.category : [p.category];
+        return pcats.some(c => target.has(c));
+      })
       .slice(0, limit);
   }
 }

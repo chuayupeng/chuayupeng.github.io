@@ -1,15 +1,15 @@
 
 import { Card } from '@/components/ui/card';
 import { Link } from 'react-router-dom';
-import { Calendar, ArrowRight, BookOpen, Star } from 'lucide-react';
-import { BlogPostType } from '@/data/blogData';
+import { Calendar, ArrowRight, BookOpen } from 'lucide-react';
+import { BlogPostType, BlogCategory, postCategories } from '@/data/blogData';
 import { cn } from '@/lib/utils';
 
 interface BlogCardProps {
   post: BlogPostType;
 }
 
-const getBgColor = (category: BlogPostType['category']) => {
+const getBgColor = (category: BlogCategory) => {
   switch (category) {
     case 'cybersecurity':
       return 'from-blue-500 to-blue-600';
@@ -24,17 +24,8 @@ const getBgColor = (category: BlogPostType['category']) => {
   }
 };
 
-// Calculate "rarity" based on blog post id
-const getPostRarity = (id: number) => {
-  if (id <= 2) return { stars: 5, label: 'Legendary' };
-  if (id <= 4) return { stars: 4, label: 'Epic' };
-  if (id <= 6) return { stars: 3, label: 'Rare' };
-  return { stars: 2, label: 'Common' };
-};
-
 const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
-  const gradientColors = getBgColor(post.category);
-  const rarity = getPostRarity(post.id);
+  const cats = postCategories(post);
   
   return (
     <Link to={`/blog/${post.slug}`} className="block h-full group">
@@ -51,22 +42,18 @@ const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
 
             <div className="absolute left-0 bottom-0 p-3 w-full">
-              {/* Category badge */}
-              <span className={cn(
-                "inline-block px-3 py-1 text-xs font-medium rounded-full bg-gradient-to-r text-white shadow-md",
-                gradientColors
-              )}>
-                {post.category.charAt(0).toUpperCase() + post.category.slice(1)}
-              </span>
-
-              {/* Rarity indicator with stars */}
-              <div className="absolute right-3 bottom-3 flex items-center gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    size={12}
-                    className={i < rarity.stars ? 'text-yellow-400 fill-yellow-400' : 'text-gray-400'}
-                  />
+              {/* Category badges — one pill per tagged category. */}
+              <div className="flex flex-wrap gap-1.5">
+                {cats.map((cat) => (
+                  <span
+                    key={cat}
+                    className={cn(
+                      'inline-block px-3 py-1 text-xs font-medium rounded-full bg-gradient-to-r text-white shadow-md',
+                      getBgColor(cat)
+                    )}
+                  >
+                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  </span>
                 ))}
               </div>
             </div>
@@ -94,8 +81,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post }) => {
           <h3 className="font-bold text-xl mb-2 line-clamp-2 group-hover:text-primary transition-colors">{post.title}</h3>
           <p className="text-muted-foreground line-clamp-3 mb-4 flex-grow">{post.excerpt}</p>
           
-          <div className="flex justify-between items-center pt-2 border-t border-muted">
-            <span className="text-xs text-muted-foreground">{rarity.label} Article</span>
+          <div className="flex justify-end items-center pt-2 border-t border-muted">
             <span className="inline-flex items-center text-cyber-cyan hover:text-cyber-cyan/80 transition-colors font-medium text-sm">
               Read Quest <ArrowRight size={14} className="ml-1" />
             </span>

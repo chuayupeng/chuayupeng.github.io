@@ -159,8 +159,8 @@ const BlogPost = () => {
                     to={`/blog/${related.slug}`}
                     className="bg-white dark:bg-cyber-navy rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
                   >
-                    <div 
-                      className="h-40 bg-cover bg-center"
+                    <div
+                      className="h-40 bg-cover bg-left"
                       style={{ backgroundImage: `url(${related.image})` }}
                     ></div>
                     <div className="p-4">
