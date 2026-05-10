@@ -1,17 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
-
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 24);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const close = () => setIsOpen(false);
 
@@ -23,12 +16,9 @@ const Navbar = () => {
   ];
 
   return (
+    <>
     <header
-      className={`fixed top-0 inset-x-0 z-50 h-20 transition-colors duration-300 ${
-        scrolled
-          ? 'bg-background/95 backdrop-blur-xl border-b border-white/[0.08] shadow-[0_2px_20px_-8px_rgba(0,0,0,0.6)]'
-          : 'bg-transparent'
-      }`}
+      className="fixed top-0 inset-x-0 z-50 h-20 bg-cyber-blue/85 backdrop-blur-xl border-b border-cyber-cyan/25 shadow-[0_4px_24px_-6px_rgba(0,0,0,0.6)]"
     >
       <div className="container mx-auto px-4 h-full flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 group" onClick={close}>
@@ -78,11 +68,10 @@ const Navbar = () => {
         </button>
       </div>
 
-      <div
-        className={`md:hidden fixed inset-0 top-20 bg-background/95 backdrop-blur-xl transition-all duration-300 ${
-          isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
-        }`}
-      >
+    </header>
+
+    {isOpen && (
+      <div className="md:hidden fixed left-0 right-0 top-20 bottom-0 z-[60] bg-cyber-blue overflow-y-auto">
         <div className="flex flex-col p-6 gap-2">
           {navItems.map((item) => {
             const active = location.pathname === item.path;
@@ -103,7 +92,8 @@ const Navbar = () => {
           })}
         </div>
       </div>
-    </header>
+    )}
+    </>
   );
 };
 
