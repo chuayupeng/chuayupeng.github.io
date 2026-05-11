@@ -176,6 +176,7 @@
   .prose blockquote { @apply border-l-2 border-cyber-cyan pl-4 italic my-4 text-foreground/70; }
   .prose code { @apply bg-secondary px-1.5 py-0.5 rounded text-sm font-mono text-cyber-cyan; }
   .prose pre { @apply bg-secondary p-4 rounded-lg mb-4 overflow-x-auto border border-white/5; }
+  .prose pre code { @apply bg-transparent p-0 text-inherit rounded-none; }
   .prose img { @apply max-w-full rounded-lg my-6 border border-white/5; }
   .prose hr { @apply my-8 border-t border-border; }
   .prose table { @apply w-full border-collapse mb-6; }
