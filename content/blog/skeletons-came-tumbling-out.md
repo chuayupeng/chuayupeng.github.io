@@ -106,10 +106,10 @@ And of course, it was.
 It was right there in the JavaScript bundle. Four lines of variable assignment, in a file with an innocuous name, sitting in plain text:
 
 ```js
-AWSDomain        = "https://s3.amazonaws.com";
+AWSDomain = "https://s3.amazonaws.com";
 AWSFileAccessKey = "AKIA...REDACTED...";
 AWSFileSecretKey = "REDACTED";
-AWSBucket        = "[redacted]";
+AWSBucket = "[redacted]";
 ```
 
 A hardcoded AWS access key and secret. Real keys. Not a placeholder. Not a development credential. The production keys, shipped to every single logged-in browser, loaded into the same memory page as my session cookie. Drop them into `~/.aws/credentials`, point `aws s3 ls` at the bucket, and the entire tenant tree opens up.
