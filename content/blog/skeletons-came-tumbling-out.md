@@ -4,7 +4,7 @@ excerpt: "A curious employee, a dated HR portal, and five bugs that should not e
 date: "2026-05-10"
 category: "cybersecurity"
 author: "yup.eng"
-image: "/blogBanner/secBanner.png"
+image: "/blogBanner/skellyBanner.png"
 ---
 
 ## The Background
