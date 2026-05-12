@@ -29,8 +29,11 @@ const TimelineItem: React.FC<TimelineItemProps> = ({ item }) => {
     <article
       className={cn(
         'group relative w-full rounded-lg border border-white/[0.06] bg-card/70 backdrop-blur-sm',
-        'px-3 py-2 transition-[border-color,background-color,transform] duration-200',
+        'px-3 py-2 transition-[border-color,background-color,transform,opacity] duration-200',
         'hover:border-white/[0.14] hover:bg-card/95 hover:translate-x-0.5',
+        // Non-current roles dim back so currents read first. Hover restores
+        // full opacity so the card you're reading is always crisp.
+        !isCurrent && 'opacity-60 hover:opacity-100',
         isCurrent &&
           'border-cyber-cyan/40 shadow-[0_0_28px_-4px_rgba(139,92,246,0.32)] hover:border-cyber-cyan/60',
         isByteDance &&
