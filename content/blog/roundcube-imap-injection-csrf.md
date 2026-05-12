@@ -1,6 +1,6 @@
 ---
 title: "Single-Click Email Planting: IMAP CRLF Injection + CSRF in Roundcube"
-excerpt: "How a forgotten 'skip empty requests' branch in Roundcube's CSRF check let one crafted link delete or plant emails in a logged-in user's mailbox — found over a weekend pair-programming run with Claude Opus 4.6."
+excerpt: "A forgotten CSRF branch in Roundcube, and what one link could do to an inbox."
 date: "2026-02-23"
 category: "cybersecurity"
 author: "yup.eng"

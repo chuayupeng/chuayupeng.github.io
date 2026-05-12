@@ -1,6 +1,6 @@
 ---
 title: "A Calendar That Lies: ICS Injection, OAuth Laundering, and a Fake Teams Button"
-excerpt: "Four trust signals compounding into one click — how a phishing simulation chained calendar auto-add, a fake Teams button, OAuth redirect laundering, and a Microsoft-branded credential page to walk past every instinct the user had."
+excerpt: "Four trust signals stacked into one phishing click nobody questioned."
 date: "2026-03-26"
 category: ["cybersecurity", "teaching"]
 author: "yup.eng"

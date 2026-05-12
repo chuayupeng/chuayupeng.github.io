@@ -1,6 +1,6 @@
 ---
 title: "The More I Dug, The More Skeletons Came Tumbling Out"
-excerpt: "A curious employee, a dated HR portal, and five bugs that should not exist in 2025."
+excerpt: "A curious employee, a dated HR portal, and five bugs that shouldn't exist."
 date: "2026-05-10"
 category: "cybersecurity"
 author: "yup.eng"
@@ -15,7 +15,7 @@ The portal in question this time felt like it had been forged in 2014 and never 
 
 I'm going to call it **FrostLeave** from here on, with the vendor as **GlacierHR**. The actual product is still serving most of these vulnerabilities live, and the patched one was patched silently. Anything specific in this post (endpoint shapes, payloads, key prefixes, anything you could meaningfully reproduce from) has been filed off. The story is the point.
 
-This isn't a writeup. It's a story about logging in to check my leave balance, pulling on a thread, and watching the rest of the sweater come apart.
+This isn't a writeup. It's a story about logging in to check my leave balance and finding five different ways the portal had decided it didn't need to check who I was.
 
 ## The First Thread: A Magic Link That Wouldn't Die
 
@@ -69,7 +69,7 @@ There was a rule forming in the back of my head, the one anyone who has built a 
 
 ## A Detour Through File IDs
 
-Around this point I should have stopped, written it up, sent the email. I didn't. The portal was a buffet by now and I wanted to know what else was on offer.
+Around this point I should have stopped, written it up, sent the email. I didn't. There was clearly more wrong here than I'd found so far, and I wanted to see how much.
 
 The next thing I found was a document download endpoint. You request a document (your payslip, say) by an encrypted document path, and the server returns a pre-signed AWS URL that lets your browser fetch the file directly from S3. Reasonable, on the surface.
 
@@ -138,7 +138,7 @@ I want to write a paragraph here about the legal exposure, and how I felt about 
 
 So I stopped digging. I didn't monetise anything. I didn't escalate further. I asked, through an appropriate internal channel, to have my own data purged from the bucket. I made a small effort to confirm that purge had actually happened. I wrote down what I had seen, in enough detail to make the case, and not a comma more.
 
-I want to be clear that this isn't moral heroism. This is what *"I would prefer not to be sued"* looks like when you write it down in good faith. The two things rhyme, but they're not the same thing, and the post would be dishonest if I let them blur.
+I want to be clear that this isn't moral heroism. This is what *"I would prefer not to be sued"* looks like when you write it down in good faith. Acting ethically and acting in self-preservation produce identical behaviour here, but they aren't the same thing, and the post would be dishonest if I let them blur.
 
 And then I tried to tell the vendor.
 
@@ -150,9 +150,9 @@ GlacierHR had a "contact us" form on every product page. I filled it out. No res
 
 You will have noticed by now that I'm not naming the vendor, and you may have guessed that I'm also not naming the endpoints, the path prefixes, the subdomains, the exact key prefix, or any of the other shapes you'd need to reproduce any of this. That's deliberate. The hardcoded key was eventually patched. As of the last time I checked, the rest of it was not. **The redactions in this post aren't laziness. They're the only reason I can publish it at all.**
 
-What broke the silence, and this is the part of the story I'm fondest of: I'd met Emil at BlackHat Asia, and during one of those between-talks conversations I mentioned what I had on my hands. He routed the disclosure through the right channels at Singapore's national CERT (SingCERT) via [Div0](https://www.div0.sg/), the local security community. Three months of contact forms had achieved nothing. One email from a national CERT got a response within a week. The vendor patched the AWS keypair quietly, did not acknowledge the rest, and did not say thank you.
+What broke the silence was a conversation at BlackHat Asia. I had chanced upon Emil at the [Div0](https://www.div0.sg/) booth there and was catching up, when I mentioned what I was sitting on. He helped me get in touch with the right channels at Singapore's national CERT (SingCERT). Three months of contact forms had achieved nothing. One email from a national CERT got a response within a week. The vendor patched the AWS keypair quietly, did not acknowledge the rest, and did not say thank you.
 
-Div0 deserves a proper thanks here. The reason this story has a (partial) ending isn't that I'm clever. It's that Singapore has SingCERT, a national CERT that sits between researchers and the vendors they're reporting against. Vendors get embarrassed when you find their bugs, and embarrassed vendors do retributive things. SingCERT is the buffer that lets disclosure happen without that retribution landing on the researcher. Div0 is the community that helped me find my way to it. Without either of them I'd be sitting on a folder of evidence and no safe way to publish any of this. Both are public goods and they deserve to be named for what they are.
+The reason this story has a (partial) ending isn't that I'm clever. It's through the efforts of the local cybersecurity community, that channels were set up to allow for responsible vulnerability disclosure even when vendors are uncooperative. Vendors get embarrassed when you find their bugs, and embarrassed vendors do retributive things. SingCERT is the buffer that lets disclosure happen without that retribution landing on the researcher. Div0 is the community that helped me find my way to it. Without either of them I'd be sitting on a folder of evidence and no safe way to publish any of this. Both are public goods and they deserve to be named for what they are.
 
 ## The Conclusion
 
@@ -174,7 +174,7 @@ Somewhere in the middle of the document there's a line where they say, more or l
 
 The certifications and the encryption table on a security page aren't the thing that matters. None of those things would have stopped this. Encryption at rest is irrelevant when the key is shipped to the browser. The thing that mattered was whether the vendor would reply when a curious employee emailed them, and the answer to that was: no, not for three months, and not without national-CERT involvement.
 
-If you're buying SaaS, for HR or for anything else, that's the due diligence question worth asking. Not *"are you SOC 2."* Not *"do you have a SIEM."* The question is: *would you reply if my employee found a bug in your portal?* That question has a real answer for every vendor on earth, and most procurement teams never ask it.
+If you're buying SaaS, for HR or for anything else, that's the due diligence question worth asking. Not *"Are you SOC 2?"* Not *"Do you have a SIEM?"* The question is: *How would you repond to valid bugs found?* That question has a real answer for every vendor on earth, and most procurement teams never ask it.
 
 It's almost funny when you frame it like that. Funny in that drained, hollow way you laugh at a meeting that was clearly going to be an email.
 
