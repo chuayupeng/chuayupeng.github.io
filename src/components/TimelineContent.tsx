@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Shield } from 'lucide-react';
 import TimelineItem from '@/components/TimelineItem';
 import { TimelineItemType, CategoryType } from '@/data/timelineData';
@@ -85,6 +85,17 @@ const CORNER_H = 14;
 const MAIN_TAIL = 64;
 // Minimum visible branch length so 2-3 month roles aren't reduced to a blip.
 const MIN_BRANCH_H = Math.round(ROW_HEIGHT * 0.7);
+
+// Mobile geometry — narrower main line on the left, cards on the right.
+const M_NOW_HEIGHT = 32;
+const M_ROW_HEIGHT = 96;
+const M_LANE_WIDTH = 14;
+const M_EDGE_PAD = 10;
+const M_YEAR_COL_WIDTH = 32;
+const M_DOT_R = 4;
+const M_CORNER_H = 10;
+const M_MAIN_TAIL = 32;
+const M_MIN_BRANCH_H = Math.round(M_ROW_HEIGHT * 0.55);
 
 const LANE_COLORS: Record<CategoryType, string> = {
   cybersecurity:    '#60a5fa',
@@ -188,12 +199,28 @@ const TimelineContent: React.FC<TimelineContentProps> = ({ filteredData }) => {
       r.depth = lane + 1;
     });
 
+    // Mobile layout — single-sided lane packing, chronological card order
+    // (no currents-pinned-to-top reshuffling). Phantoms still occupy row slots
+    // for merge alignment but render no branch.
+    const mobileLaneEnds: number[] = [];
+    const mobileLaneById = new Map<number, number>();
+    enriched.forEach((r) => {
+      if (r.isPhantom) return;
+      let lane = 0;
+      while (lane < mobileLaneEnds.length && mobileLaneEnds[lane] >= r.topIdx) lane++;
+      mobileLaneEnds[lane] = r.rowIdx;
+      mobileLaneById.set(r.id, lane + 1);
+    });
+    const mobileMaxDepth = Math.max(1, mobileLaneEnds.length);
+
     return {
       rows: enriched,
       cardOrder,
       cardRowIdxById,
       maxLeftDepth: Math.max(1, leftLaneEnds.length),
       maxRightDepth: Math.max(1, rightLaneEnds.length),
+      mobileLaneById,
+      mobileMaxDepth,
     };
   }, [filteredData]);
 
@@ -210,7 +237,304 @@ const TimelineContent: React.FC<TimelineContentProps> = ({ filteredData }) => {
     );
   }
 
-  const { rows, cardOrder, cardRowIdxById, maxLeftDepth, maxRightDepth } = data;
+  const { rows, cardRowIdxById, maxLeftDepth, maxRightDepth, mobileLaneById, mobileMaxDepth } = data;
+
+  return (
+    <div className="relative mt-10">
+      <MobileTimeline
+        rows={rows}
+        mobileLaneById={mobileLaneById}
+        mobileMaxDepth={mobileMaxDepth}
+      />
+      <DesktopTimeline
+        rows={rows}
+        cardRowIdxById={cardRowIdxById}
+        maxLeftDepth={maxLeftDepth}
+        maxRightDepth={maxRightDepth}
+      />
+    </div>
+  );
+};
+
+interface MobileTimelineProps {
+  rows: LaidOutItem[];
+  mobileLaneById: Map<number, number>;
+  mobileMaxDepth: number;
+}
+
+// Mobile uses natural-flow cards on the right and measures each row's actual
+// Y center to place the graph dot. This way, the dotted leader stays short
+// and straight without forcing cards into fixed-height slots.
+const MobileTimeline: React.FC<MobileTimelineProps> = ({ rows, mobileLaneById, mobileMaxDepth }) => {
+  const rowRefs = useRef<Record<string, HTMLElement | null>>({});
+  const [rowYs, setRowYs] = useState<Record<string, number>>({});
+  const [contentHeight, setContentHeight] = useState(0);
+
+  // Re-measure whenever the row set or window width changes. The graph dots
+  // depend on this so the leader from dot to card is always pixel-aligned.
+  useLayoutEffect(() => {
+    const measure = () => {
+      const ys: Record<string, number> = {};
+      let maxBottom = 0;
+      for (const [key, el] of Object.entries(rowRefs.current)) {
+        if (!el) continue;
+        ys[key] = el.offsetTop + el.offsetHeight / 2;
+        maxBottom = Math.max(maxBottom, el.offsetTop + el.offsetHeight);
+      }
+      setRowYs(ys);
+      setContentHeight(maxBottom);
+    };
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [rows]);
+
+  const mGraphWidth = M_EDGE_PAD + mobileMaxDepth * M_LANE_WIDTH;
+  const mMainX = M_EDGE_PAD - 2;
+  const mYMainTop = M_NOW_HEIGHT / 2;
+  const totalHeight = M_NOW_HEIGHT + contentHeight + M_MAIN_TAIL;
+  const mYMainBottom = totalHeight - 10;
+
+  const yearChanges = rows.filter(
+    (r, i) => i === 0 || rows[i - 1].startYear !== r.startYear
+  );
+
+  const realRows = rows.filter((r) => !r.isPhantom);
+  const hasMeasured = Object.keys(rowYs).length > 0;
+
+  return (
+    <div className="md:hidden flex items-start">
+      {/* Year axis */}
+      <div
+        className="shrink-0 relative"
+        style={{ width: M_YEAR_COL_WIDTH, height: totalHeight }}
+        aria-hidden
+      >
+        <div
+          className="absolute right-1.5 flex items-center justify-end"
+          style={{ top: 0, height: M_NOW_HEIGHT }}
+        >
+          <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-cyber-cyan">
+            Now
+          </span>
+        </div>
+        {yearChanges.map((r) => {
+          const y = rowYs[r.id];
+          if (y === undefined) return null;
+          return (
+            <div
+              key={`my-${r.startYear}-${r.id}`}
+              className="absolute right-1.5 font-mono text-xs tabular-nums font-medium text-foreground/80"
+              style={{ top: M_NOW_HEIGHT + y, transform: 'translateY(-50%)' }}
+            >
+              {r.startYear}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Graph */}
+      <div
+        className="shrink-0 relative"
+        style={{ width: mGraphWidth, height: totalHeight }}
+        aria-hidden
+      >
+        <div
+          className="absolute left-0 right-0 border-t border-cyber-cyan/25"
+          style={{ top: M_NOW_HEIGHT }}
+        />
+        <svg
+          width={mGraphWidth}
+          height={totalHeight}
+          className="absolute inset-0 pointer-events-none"
+        >
+          {hasMeasured && (
+            <>
+              <line
+                x1={mMainX}
+                y1={mYMainTop}
+                x2={mMainX}
+                y2={mYMainBottom}
+                stroke="white"
+                strokeOpacity={0.85}
+                strokeWidth={2.5}
+                strokeLinecap="round"
+              />
+
+              <g>
+                <circle cx={mMainX} cy={mYMainTop} r={8} fill="#8b5cf6" fillOpacity={0.12} />
+                <circle cx={mMainX} cy={mYMainTop} r={5} fill="#8b5cf6" fillOpacity={0.28} />
+                <circle cx={mMainX} cy={mYMainTop} r={3.5} fill="#8b5cf6">
+                  <animate
+                    attributeName="opacity"
+                    values="0.6;1;0.6"
+                    dur="2.2s"
+                    repeatCount="indefinite"
+                  />
+                </circle>
+              </g>
+
+              <g>
+                <circle cx={mMainX} cy={mYMainBottom} r={7} fill="white" fillOpacity={0.1} />
+                <circle cx={mMainX} cy={mYMainBottom} r={4.5} fill="white" fillOpacity={0.25} />
+                <circle cx={mMainX} cy={mYMainBottom} r={3} fill="white" fillOpacity={0.9} />
+              </g>
+
+              {realRows.map((r) => {
+                const yMeasured = rowYs[r.id];
+                if (yMeasured === undefined) return null;
+
+                const topRow = rows[r.topIdx];
+                const yTopMeasured = topRow ? rowYs[topRow.id] : undefined;
+                const lane = mobileLaneById.get(r.id) ?? 1;
+                const xBranch = mMainX + lane * M_LANE_WIDTH;
+
+                const yStart = M_NOW_HEIGHT + yMeasured;
+                let yMerge = r.isCurrent
+                  ? mYMainTop
+                  : yTopMeasured !== undefined
+                  ? M_NOW_HEIGHT + yTopMeasured
+                  : yStart - M_MIN_BRANCH_H;
+
+                if (!r.isCurrent && yStart - yMerge < M_MIN_BRANCH_H) {
+                  yMerge = yStart - M_MIN_BRANCH_H;
+                }
+
+                const color = laneColorFor(r.category);
+                const yStraightTop = yMerge + M_CORNER_H;
+                const mergePath =
+                  `M ${xBranch} ${yMerge + M_CORNER_H} ` +
+                  `C ${xBranch} ${yMerge}, ${mMainX} ${yMerge + M_CORNER_H}, ${mMainX} ${yMerge}`;
+
+                return (
+                  <g key={`m-${r.id}`}>
+                    {r.isCurrent && (
+                      <>
+                        <line
+                          x1={xBranch}
+                          y1={yStart}
+                          x2={xBranch}
+                          y2={yStraightTop}
+                          stroke={color}
+                          strokeOpacity={0.18}
+                          strokeWidth={6}
+                          strokeLinecap="round"
+                        />
+                        <path
+                          d={mergePath}
+                          fill="none"
+                          stroke={color}
+                          strokeOpacity={0.18}
+                          strokeWidth={6}
+                          strokeLinecap="round"
+                        />
+                        <circle cx={xBranch} cy={yStart} r={9} fill={color} fillOpacity={0.1} />
+                        <circle cx={xBranch} cy={yStart} r={6} fill={color} fillOpacity={0.22} />
+                      </>
+                    )}
+                    <line
+                      x1={xBranch}
+                      y1={yStart}
+                      x2={xBranch}
+                      y2={yStraightTop}
+                      stroke={color}
+                      strokeOpacity={0.9}
+                      strokeWidth={1.5}
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d={mergePath}
+                      fill="none"
+                      stroke={color}
+                      strokeOpacity={0.9}
+                      strokeWidth={1.5}
+                      strokeLinecap="round"
+                    />
+                    {/* Dashed leader to the card on the right */}
+                    <line
+                      x1={xBranch + M_DOT_R}
+                      y1={yStart}
+                      x2={mGraphWidth}
+                      y2={yStart}
+                      stroke={color}
+                      strokeOpacity={0.35}
+                      strokeWidth={1}
+                      strokeDasharray="2 3"
+                      strokeLinecap="round"
+                    />
+                    <circle
+                      cx={xBranch}
+                      cy={yStart}
+                      r={M_DOT_R}
+                      fill={color}
+                      stroke="hsl(222 47% 5%)"
+                      strokeWidth={1}
+                    >
+                      {r.isCurrent && (
+                        <animate
+                          attributeName="opacity"
+                          values="0.7;1;0.7"
+                          dur="2.4s"
+                          repeatCount="indefinite"
+                        />
+                      )}
+                    </circle>
+                  </g>
+                );
+              })}
+            </>
+          )}
+        </svg>
+      </div>
+
+      {/* Cards — natural flow. Phantom rows are tiny spacers so end-year
+          merges have a measurable Y anchor without taking real space. */}
+      <div
+        className="flex-1 flex flex-col gap-2 min-w-0 pl-2"
+        style={{ paddingTop: M_NOW_HEIGHT, paddingBottom: M_MAIN_TAIL }}
+      >
+        {rows.map((r) => {
+          if (r.isPhantom) {
+            return (
+              <div
+                key={r.id}
+                ref={(el) => {
+                  rowRefs.current[String(r.id)] = el;
+                }}
+                className="h-1"
+                aria-hidden
+              />
+            );
+          }
+          return (
+            <div
+              key={r.id}
+              ref={(el) => {
+                rowRefs.current[String(r.id)] = el;
+              }}
+            >
+              <TimelineItem item={r} />
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+interface DesktopTimelineProps {
+  rows: LaidOutItem[];
+  cardRowIdxById: Map<number, number>;
+  maxLeftDepth: number;
+  maxRightDepth: number;
+}
+
+const DesktopTimeline: React.FC<DesktopTimelineProps> = ({
+  rows,
+  cardRowIdxById,
+  maxLeftDepth,
+  maxRightDepth,
+}) => {
   const cardYTop = (id: number, fallbackRowIdx: number) =>
     NOW_HEIGHT + (cardRowIdxById.get(id) ?? fallbackRowIdx) * ROW_HEIGHT;
   const cardYMid = (id: number, fallbackRowIdx: number) =>
@@ -224,39 +548,15 @@ const TimelineContent: React.FC<TimelineContentProps> = ({ filteredData }) => {
   const graphWidth = leftWidth + rightWidth;
   const MAIN_X = leftWidth;
 
-  // Terminal dots ARE the endpoints of the white line — keep them in lockstep.
   const yMainTop = NOW_HEIGHT / 2;
   const yMainBottom = totalHeight - 14;
 
-  // Year axis labels — only show on year boundaries (months don't surface here).
-  const yearChanges = rows.filter((r, i) => i === 0 || rows[i - 1].startYear !== r.startYear);
+  const yearChanges = rows.filter(
+    (r, i) => i === 0 || rows[i - 1].startYear !== r.startYear
+  );
 
   return (
-    <div className="relative mt-10">
-      {/* Mobile: single-column list with year section headers. The graph
-          metaphor doesn't fit narrow screens — readability wins. */}
-      <div className="md:hidden space-y-2">
-        {cardOrder.map((r, i) => {
-          const prev = cardOrder[i - 1];
-          const isYearChange = i === 0 || (prev && prev.startYear !== r.startYear);
-          return (
-            <React.Fragment key={r.id}>
-              {isYearChange && (
-                <div className="flex items-center gap-3 pt-3 first:pt-0">
-                  <span className="font-mono text-sm tabular-nums font-semibold text-foreground/80">
-                    {r.startYear}
-                  </span>
-                  <div className="flex-1 h-px bg-white/[0.06]" />
-                </div>
-              )}
-              <TimelineItem item={r} />
-            </React.Fragment>
-          );
-        })}
-      </div>
-
-      {/* Desktop / tablet: bilateral git-style graph */}
-      <div className="hidden md:flex items-stretch">
+    <div className="hidden md:flex items-stretch">
         {/* Year axis */}
         <div
           className="shrink-0 relative"
@@ -498,7 +798,6 @@ const TimelineContent: React.FC<TimelineContentProps> = ({ filteredData }) => {
             ))}
         </div>
       </div>
-    </div>
   );
 };
 
