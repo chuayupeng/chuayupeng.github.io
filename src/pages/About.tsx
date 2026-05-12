@@ -93,7 +93,7 @@ const About = () => {
                 Get in touch
               </h2>
               <p className="text-muted-foreground mb-8">
-                Email is the surest way to reach me. I read everything.
+                Email or LinkedIn are the surest ways to reach me. I read everything.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
