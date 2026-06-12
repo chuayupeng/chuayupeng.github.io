@@ -765,6 +765,7 @@ const CSS = `
 
 .affluent .grid{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start;}
 .affluent .readout{display:flex;flex-direction:column;gap:18px;}
+.affluent .grid>*,.affluent .readout,.affluent .panel,.affluent .cpf-main{min-width:0;}
 @media(max-width:820px){.affluent .grid{grid-template-columns:1fr;}}
 
 .affluent .panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;}
