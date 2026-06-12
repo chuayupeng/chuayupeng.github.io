@@ -150,6 +150,7 @@ const TimelineContent: React.FC<TimelineContentProps> = ({ filteredData }) => {
       start: year * 12,
       end: year * 12 + 11,
       isCurrent: false,
+      intern: 0,
       isPhantom: true,
     }));
 
