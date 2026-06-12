@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect } from 'react';
+import { Suspense, lazy, useEffect, useRef, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, MousePointerClick } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -9,6 +9,83 @@ import { getProjectBySlug, statusStyles, type ProjectDemo } from '@/data/project
 const demoComponents: Record<ProjectDemo, React.LazyExoticComponent<React.ComponentType>> = {
   affluent: lazy(() => import('@/components/affluent/AffluentApp')),
 };
+
+const CARD_MAX = 1152; // px — matches max-w-6xl
+const CARD_RADIUS = 16; // px — matches rounded-2xl
+
+/**
+ * Frames the embedded demo as a contained card that smoothly expands to a
+ * full-bleed, edge-to-edge panel as it scrolls up through the viewport, and
+ * contracts back into a card on scroll up. Scroll-linked (not autoplay), so a
+ * hard card→full-width breakpoint switch never jars. Honors reduced-motion by
+ * staying a static card. The demo's own CSS is untouched.
+ */
+function ExpandingDemoFrame({ children }: { children: ReactNode }) {
+  const stageRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    const frame = frameRef.current;
+    if (!stage || !frame) return;
+
+    // p: 0 = card, 1 = full-bleed.
+    const apply = (p: number) => {
+      const stageW = stage.clientWidth;
+      const cardW = Math.min(CARD_MAX, stageW - 32); // 16px resting gutter each side
+      const w = cardW + (stageW - cardW) * p;
+      frame.style.width = `${w}px`;
+      frame.style.maxWidth = 'none';
+      frame.style.borderRadius = `${CARD_RADIUS * (1 - p)}px`;
+      frame.style.borderColor = `rgba(255,255,255,${0.1 * (1 - p)})`;
+    };
+
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      apply(0);
+      const onResize = () => apply(0);
+      window.addEventListener('resize', onResize);
+      return () => window.removeEventListener('resize', onResize);
+    }
+
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const rect = frame.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      // Card while the panel sits low in the viewport; fully expanded once its
+      // top rises into the upper portion of the screen.
+      const start = vh * 0.85;
+      const end = vh * 0.4;
+      const p = Math.max(0, Math.min(1, (start - rect.top) / (start - end)));
+      apply(p);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return (
+    <div ref={stageRef} className="w-full">
+      <div
+        ref={frameRef}
+        className="mx-auto w-full max-w-[72rem] overflow-hidden bg-[#EEEFE8] shadow-2xl border border-white/10"
+        style={{ borderRadius: `${CARD_RADIUS}px`, willChange: 'width' }}
+      >
+        <div className="overflow-x-auto">{children}</div>
+      </div>
+    </div>
+  );
+}
 
 const ProjectDetail = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -116,8 +193,9 @@ const ProjectDetail = () => {
 
         {/* Live demo */}
         {Demo && (
-          <section className="px-4 pb-24">
-            <div className="container mx-auto max-w-6xl">
+          <section className="pb-24">
+            {/* Label + note — kept inset/aligned with the page content. */}
+            <div className="container mx-auto max-w-6xl px-4">
               <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
                 <div className="flex items-center gap-2">
                   <MousePointerClick size={16} className="text-cyber-cyan" />
@@ -129,24 +207,24 @@ const ProjectDetail = () => {
                   Nothing you type is stored.
                 </span>
               </div>
+            </div>
 
-              {/* Outer frame rounds + clips; inner scrolls horizontally so the
-                  demo is never clipped on narrow screens (it has its own min
-                  content width below ~400px). */}
-              <div className="rounded-2xl border border-white/10 overflow-hidden shadow-2xl bg-[#EEEFE8]">
-                <div className="overflow-x-auto">
-                  <Suspense
-                    fallback={
-                      <div className="py-32 text-center text-[#5A6B6D] font-mono text-sm">
-                        Loading the calculator…
-                      </div>
-                    }
-                  >
-                    <Demo />
-                  </Suspense>
-                </div>
-              </div>
+            {/* Starts contained as a card, smoothly expands to full-bleed as it
+                scrolls up through the viewport, contracts back on scroll up. */}
+            <ExpandingDemoFrame>
+              <Suspense
+                fallback={
+                  <div className="py-32 text-center text-[#5A6B6D] font-mono text-sm">
+                    Loading the calculator…
+                  </div>
+                }
+              >
+                <Demo />
+              </Suspense>
+            </ExpandingDemoFrame>
 
+            {/* Caption — inset/aligned with the page content. */}
+            <div className="container mx-auto max-w-6xl px-4">
               <p className="text-xs text-muted-foreground/70 mt-4 text-center max-w-2xl mx-auto leading-relaxed">
                 Figures are illustrative estimates computed from your inputs against published 2026
                 Singapore methodology. af.fluent computes and compares; it never tells you what to buy.
