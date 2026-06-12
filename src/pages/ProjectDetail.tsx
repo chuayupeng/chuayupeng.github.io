@@ -1,13 +1,15 @@
 import { Suspense, lazy, useEffect, useRef, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, MousePointerClick } from 'lucide-react';
+import { ArrowLeft, ArrowRight, MousePointerClick, ExternalLink } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { getProjectBySlug, statusStyles, type ProjectDemo } from '@/data/projectsData';
 
-// Lazy so the calculator (and its fonts/CSS) only load on a project page that uses it.
+// Lazy so each demo (and its fonts/CSS) only loads on the project page that uses it.
 const demoComponents: Record<ProjectDemo, React.LazyExoticComponent<React.ComponentType>> = {
   affluent: lazy(() => import('@/components/affluent/AffluentApp')),
+  suzaku: lazy(() => import('@/components/suzaku/SuzakuApp')),
+  finrpg: lazy(() => import('@/components/finrpg/FinrpgApp')),
 };
 
 const CARD_MAX = 1152; // px — matches max-w-6xl
@@ -179,6 +181,35 @@ const ProjectDetail = () => {
                 </span>
               ))}
             </div>
+
+            {project.links && project.links.length > 0 && (
+              <div className="flex flex-wrap items-center gap-3 mt-7">
+                {project.links.map((l) => {
+                  const external = /^https?:/.test(l.href);
+                  return external ? (
+                    <a
+                      key={l.href}
+                      href={l.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-cyber-cyan text-cyber-blue font-medium text-sm hover:bg-cyber-cyan/90 transition-colors"
+                    >
+                      {l.label}
+                      <ExternalLink size={15} />
+                    </a>
+                  ) : (
+                    <Link
+                      key={l.href}
+                      to={l.href}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 bg-secondary/60 text-foreground font-medium text-sm hover:border-cyber-cyan/30 hover:bg-secondary transition-colors"
+                    >
+                      {l.label}
+                      <ArrowRight size={15} />
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </section>
 
@@ -200,12 +231,14 @@ const ProjectDetail = () => {
                 <div className="flex items-center gap-2">
                   <MousePointerClick size={16} className="text-cyber-cyan" />
                   <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
-                    Live demo · public-education mode · fully interactive
+                    {project.demoLabel ?? 'Live demo · interactive'}
                   </span>
                 </div>
-                <span className="font-mono text-[11px] text-muted-foreground/70">
-                  Nothing you type is stored.
-                </span>
+                {project.demoNote && (
+                  <span className="font-mono text-[11px] text-muted-foreground/70">
+                    {project.demoNote}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -215,7 +248,7 @@ const ProjectDetail = () => {
               <Suspense
                 fallback={
                   <div className="py-32 text-center text-[#5A6B6D] font-mono text-sm">
-                    Loading the calculator…
+                    Loading the demo…
                   </div>
                 }
               >
@@ -225,10 +258,11 @@ const ProjectDetail = () => {
 
             {/* Caption — inset/aligned with the page content. */}
             <div className="container mx-auto max-w-6xl px-4">
-              <p className="text-xs text-muted-foreground/70 mt-4 text-center max-w-2xl mx-auto leading-relaxed">
-                Figures are illustrative estimates computed from your inputs against published 2026
-                Singapore methodology. af.fluent computes and compares; it never tells you what to buy.
-              </p>
+              {project.demoCaption && (
+                <p className="text-xs text-muted-foreground/70 mt-4 text-center max-w-2xl mx-auto leading-relaxed">
+                  {project.demoCaption}
+                </p>
+              )}
             </div>
           </section>
         )}
