@@ -14,8 +14,10 @@ function healthScore(d: ReturnType<typeof useDerived>) {
   const save = clamp(d.bud.savingsRate / 0.2, 0, 1);              // 20% = full
   const emerg = clamp(d.bud.emergencyMonths / 6, 0, 1);          // 6 mo = full
   const retire = d.retire.onTrack ? 1 : clamp(d.retire.current.monthly / Math.max(1, d.retire.required.monthly), 0, 1);
-  const protect = d.checklist.length ? d.checklist.filter((c) => c.status === "covered").length / d.checklist.length : 1;
-  const insLoad = d.bud.insuranceRate <= 0.15 ? 1 : clamp(1 - (d.bud.insuranceRate - 0.15) / 0.15, 0, 1);
+  const protect = d.protectionApplicable ? d.protectionCovered / d.protectionApplicable : 1;
+  // "premium load ≤ 15%" only scores once there's take-home to measure against — a blank
+  // slate with no income/insurance shouldn't earn points for "not over-paying".
+  const insLoad = d.takeHome <= 0 ? 0 : d.bud.insuranceRate <= 0.15 ? 1 : clamp(1 - (d.bud.insuranceRate - 0.15) / 0.15, 0, 1);
   const score = Math.round((save * 25 + emerg * 15 + retire * 30 + protect * 22 + insLoad * 8));
   return { score, parts: { save, emerg, retire, protect, insLoad } };
 }
@@ -40,12 +42,13 @@ export default function Dashboard({ go }: { go: (v: string) => void }) {
   const d = useDerived();
   const { score } = healthScore(d);
   const onTrack = d.retire.onTrack;
+  const blank = d.annualEmployment === 0 && d.netWorth === 0;   // nothing entered yet
 
   // prioritized actions across modules
   const actions: { tone: "do" | "warn" | "good"; icon: React.ReactNode; title: string; body: React.ReactNode; to: string; cta: string }[] = [];
   if (!onTrack) actions.push({ tone: "do", icon: <Target size={16} />, title: `Invest ${sgd(d.retire.gapMonthly)}/mo more for retirement`, body: <>Raise ETF investing to <b>{sgd(d.retire.required.monthly)}/mo</b> to fund {sgd(state.retirement.desiredMonthlyIncome)}/mo in retirement.</>, to: "retirement", cta: "Open plan" });
   if (d.bud.emergencyMonths < 6) actions.push({ tone: "warn", icon: <Wallet size={16} />, title: `Build emergency fund to 6 months`, body: <>You hold <b>{d.bud.emergencyMonths.toFixed(1)}×</b> expenses. Park {sgdShort(Math.max(0, (6 - d.bud.emergencyMonths) * (d.bud.outflow)))} more in cash.</>, to: "cashflow", cta: "Cashflow" });
-  d.checklist.filter((c) => c.status !== "covered").slice(0, 2).forEach((c) =>
+  d.checklist.filter((c) => c.status === "short" || c.status === "missing").slice(0, 2).forEach((c) =>
     actions.push({ tone: "do", icon: <ShieldCheck size={16} />, title: c.need == null ? `Add ${c.key.toLowerCase()}` : `${c.key} short by ${sgdShort(c.gap)}`, body: c.note, to: "insurance", cta: "Protection" }));
   if (d.goalsOffTrack > 0) actions.push({ tone: "warn", icon: <Flag size={16} />, title: `${d.goalsOffTrack} goal${d.goalsOffTrack > 1 ? "s" : ""} behind schedule`, body: <>At your current pace {d.goalsOffTrack === 1 ? "one goal won't" : "some goals won't"} hit the deadline. Bump the monthly amount or stretch the date.</>, to: "goals", cta: "Goals" });
   if (d.bud.savingsRate < 0.2) actions.push({ tone: "warn", icon: <PiggyBank size={16} />, title: `Lift savings rate to 20%`, body: <>Currently <b>{pct(d.bud.savingsRate, 0)}</b>. Trim lifestyle or grow income to free up cash to invest.</>, to: "cashflow", cta: "Cashflow" });
@@ -76,7 +79,7 @@ export default function Dashboard({ go }: { go: (v: string) => void }) {
     { key: "cashflow", icon: <Wallet size={15} />, label: "Net worth", value: sgd(d.netWorth), sub: `${sgdShort(d.liquidInvest)} invested · ${sgdShort(d.cpfTotalNow)} CPF`, tone: "" },
     { key: "cashflow", icon: <PiggyBank size={15} />, label: "Monthly surplus", value: sgd(d.bud.surplus), sub: `${pct(d.bud.savingsRate, 0)} savings rate`, tone: d.bud.surplus >= 0 ? "" : "neg" },
     { key: "retirement", icon: <Target size={15} />, label: "Invest for retirement", value: `${sgd(onTrack ? d.retire.current.monthly : d.retire.required.monthly)}/mo`, sub: onTrack ? "on track" : `${sgd(d.retire.gapMonthly)}/mo short`, tone: onTrack ? "pos" : "neg" },
-    { key: "insurance", icon: <ShieldCheck size={15} />, label: "Protection", value: `${d.checklist.filter((c) => c.status === "covered").length}/${d.checklist.length} covered`, sub: d.protectionGaps ? `${d.protectionGaps} gap${d.protectionGaps > 1 ? "s" : ""}` : "fully covered", tone: d.protectionGaps ? "neg" : "pos" },
+    { key: "insurance", icon: <ShieldCheck size={15} />, label: "Protection", value: d.protectionApplicable ? `${d.protectionCovered}/${d.protectionApplicable} covered` : "—", sub: d.protectionGaps ? `${d.protectionGaps} gap${d.protectionGaps > 1 ? "s" : ""}` : d.protectionApplicable ? "fully covered" : "add your details", tone: d.protectionGaps ? "neg" : "pos" },
   ];
 
   return (
@@ -89,10 +92,12 @@ export default function Dashboard({ go }: { go: (v: string) => void }) {
             <div>
               <div className="eyebrow"><Sparkles size={14} /> Financial health</div>
               <div style={{ fontSize: 20, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700 }}>
-                {score >= 75 ? "Strong and on course" : score >= 50 ? "Solid, a few gaps to close" : "Needs attention"}
+                {blank ? "Let's get you set up" : score >= 75 ? "Strong and on course" : score >= 50 ? "Solid, a few gaps to close" : "Needs attention"}
               </div>
               <p className="muted" style={{ margin: "6px 0 0", maxWidth: "46ch", fontSize: 12.5 }}>
-                A blend of your savings rate, emergency fund, retirement funding, protection and premium load. Work the actions below to lift it.
+                {blank
+                  ? "Add your income and accounts in the tabs and your score fills in — it blends savings rate, emergency fund, retirement funding, protection and premium load."
+                  : "A blend of your savings rate, emergency fund, retirement funding, protection and premium load. Work the actions below to lift it."}
               </p>
             </div>
           </div>
@@ -100,7 +105,7 @@ export default function Dashboard({ go }: { go: (v: string) => void }) {
             {[
               { l: "Retirement funding", v: onTrack ? 1 : clamp(d.retire.current.monthly / Math.max(1, d.retire.required.monthly), 0, 1) },
               { l: "Savings rate", v: clamp(d.bud.savingsRate / 0.2, 0, 1) },
-              { l: "Protection", v: d.checklist.filter((c) => c.status === "covered").length / Math.max(1, d.checklist.length) },
+              { l: "Protection", v: d.protectionApplicable ? d.protectionCovered / d.protectionApplicable : 1 },
               { l: "Emergency fund", v: clamp(d.bud.emergencyMonths / 6, 0, 1) },
             ].map((x) => (
               <div key={x.l} style={{ marginBottom: 9 }}>

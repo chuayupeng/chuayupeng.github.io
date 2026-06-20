@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { User, Download, Upload, RotateCcw, BookOpen, Database, Wallet, Landmark, PiggyBank, Lock, Eye, EyeOff } from "lucide-react";
+import { User, Download, Upload, RotateCcw, BookOpen, Database, Wallet, Landmark, PiggyBank, Lock, Eye, EyeOff, Trash2 } from "lucide-react";
 import { useStore } from "../store";
 import { Field, Slider, Select, TextField, Working } from "../ui";
 import { CPF } from "../calc/cpf";
@@ -7,13 +7,17 @@ import { sgd, pct } from "../format";
 import { encryptJSON, decryptJSON, isEncrypted, cryptoAvailable } from "../crypto";
 
 export default function Settings({ onToast }: { onToast: (s: string) => void }) {
-  const { state, set, reset, exportJSON, importJSON } = useStore();
+  const { state, set, reset, clear, exportJSON, importJSON } = useStore();
   const p = state.profile;
   const fileRef = useRef<HTMLInputElement>(null);
-  const [confirming, setConfirming] = useState(false);
+  const [confirm, setConfirm] = useState<"reset" | "clear" | null>(null);
   const [pw, setPw] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [busy, setBusy] = useState(false);
+  // an encrypted file waiting for its password (prompted after the file is picked)
+  const [pendingEncrypted, setPendingEncrypted] = useState<string | null>(null);
+  const [importPw, setImportPw] = useState("");
+  const [importError, setImportError] = useState<string | null>(null);
 
   const download = (content: string, name: string) => {
     const blob = new Blob([content], { type: "application/json" });
@@ -36,20 +40,30 @@ export default function Settings({ onToast }: { onToast: (s: string) => void }) 
     finally { setBusy(false); }
   };
 
+  // Pick the file first; only prompt for a password if it turns out to be encrypted.
   const doImport = (file: File) => {
     const reader = new FileReader();
-    reader.onload = async () => {
-      let text = String(reader.result);
+    reader.onload = () => {
+      const text = String(reader.result);
       if (isEncrypted(text)) {
-        if (!pw.trim()) { onToast("This backup is encrypted — enter its password above, then import"); return; }
-        setBusy(true);
-        try { text = await decryptJSON(text, pw); }
-        catch { onToast("Wrong password — couldn't unlock the backup"); setBusy(false); return; }
-        setBusy(false);
+        setPendingEncrypted(text); setImportPw(""); setImportError(null);
+      } else {
+        onToast(importJSON(text) ? "Data imported" : "Import failed — invalid file");
       }
-      onToast(importJSON(text) ? "Data imported" : "Import failed — invalid file");
     };
     reader.readAsText(file);
+  };
+
+  const doUnlock = async () => {
+    if (!pendingEncrypted || busy) return;
+    setBusy(true); setImportError(null);
+    try {
+      const text = await decryptJSON(pendingEncrypted, importPw);
+      if (importJSON(text)) { onToast("Backup imported"); setPendingEncrypted(null); setImportPw(""); }
+      else setImportError("That backup file is invalid.");
+    } catch {
+      setImportError("Wrong password — try again.");
+    } finally { setBusy(false); }
   };
 
   return (
@@ -119,23 +133,47 @@ export default function Settings({ onToast }: { onToast: (s: string) => void }) 
           <button className="btn" disabled={busy} onClick={doExport}>
             {pw.trim() ? <><Lock size={14} /> Export encrypted</> : <><Download size={14} /> Export backup</>}
           </button>
-          <button className="btn" disabled={busy} onClick={() => fileRef.current?.click()}><Upload size={14} /> Import</button>
+          <button className="btn" disabled={busy} onClick={() => fileRef.current?.click()}><Upload size={14} /> Import backup</button>
           <input ref={fileRef} type="file" accept="application/json,.json" style={{ display: "none" }}
             onChange={(e) => { const f = e.target.files?.[0]; if (f) doImport(f); e.target.value = ""; }} />
         </div>
+
+        {pendingEncrypted && (
+          <div className="card tight" style={{ marginTop: 10, borderLeft: "3px solid var(--coral)" }}>
+            <div className="row" style={{ gap: 8, marginBottom: 6 }}><Lock size={14} /><b style={{ fontSize: 13 }}>This backup is encrypted</b></div>
+            <p className="note" style={{ margin: "0 0 9px" }}>Enter the password it was exported with to unlock it.</p>
+            <span className="field-box text" style={{ marginBottom: importError ? 6 : 9 }}>
+              <input type="password" value={importPw} autoFocus placeholder="Backup password" autoComplete="off" maxLength={128}
+                onChange={(e) => { setImportPw(e.target.value); setImportError(null); }}
+                onKeyDown={(e) => { if (e.key === "Enter") doUnlock(); }} />
+            </span>
+            {importError && <p className="note" style={{ color: "var(--bad)", margin: "0 0 9px" }}>{importError}</p>}
+            <div className="row wrap" style={{ gap: 8 }}>
+              <button className="btn primary sm" disabled={busy || !importPw} onClick={doUnlock}><Lock size={13} /> {busy ? "Unlocking…" : "Unlock & import"}</button>
+              <button className="btn sm" disabled={busy} onClick={() => { setPendingEncrypted(null); setImportPw(""); setImportError(null); }}>Cancel</button>
+            </div>
+          </div>
+        )}
+
         <p className="note" style={{ marginTop: 10, fontSize: 11.5 }}>
           {pw.trim()
-            ? <>Your backup will be encrypted (AES-256) with this password — keep it safe, there's no recovery. Enter the same password here before importing an encrypted file.</>
-            : <>Set a password to encrypt the file so only you can open it. The password encrypts the exported file only — your data stays unencrypted in this browser so the app can use it.</>}
+            ? <>Your backup will be encrypted (AES-256) with this password — keep it safe, there's no recovery. You'll be asked for it when you import the file.</>
+            : <>Set a password to encrypt the export so only you can open it. It encrypts the file only — your data stays unencrypted in this browser so the app can use it.</>}
         </p>
         <div className="hr" />
-        {!confirming
-          ? <button className="btn ghost" onClick={() => setConfirming(true)}><RotateCcw size={14} /> Reset to sample data</button>
-          : <div className="row wrap" style={{ gap: 8 }}>
-              <span className="note">This wipes your entries. Sure?</span>
-              <button className="btn primary sm" onClick={() => { reset(); setConfirming(false); onToast("Reset to sample data"); }}>Yes, reset</button>
-              <button className="btn sm" onClick={() => setConfirming(false)}>Cancel</button>
-            </div>}
+        <div className="row wrap" style={{ gap: 8 }}>
+          <button className="btn ghost" onClick={() => setConfirm("reset")}><RotateCcw size={14} /> Reset to sample data</button>
+          <button className="btn ghost" onClick={() => setConfirm("clear")}><Trash2 size={14} /> Clear all data</button>
+        </div>
+        {confirm && (
+          <div className="row wrap" style={{ gap: 8, marginTop: 10 }}>
+            <span className="note">{confirm === "reset" ? "Replace everything with the sample data?" : "Erase everything and start from a blank slate? This can't be undone."}</span>
+            <button className="btn primary sm" onClick={() => { const c = confirm; if (c === "reset") reset(); else clear(); setConfirm(null); onToast(c === "reset" ? "Reset to sample data" : "All data cleared"); }}>
+              {confirm === "reset" ? "Yes, reset" : "Yes, clear all"}
+            </button>
+            <button className="btn sm" onClick={() => setConfirm(null)}>Cancel</button>
+          </div>
+        )}
       </section>
 
       <section className="card span2">

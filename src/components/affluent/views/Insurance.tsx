@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ShieldCheck, Plus, Trash2, Activity, CheckCircle2, XCircle, AlertTriangle, HeartPulse } from "lucide-react";
+import { ShieldCheck, Plus, Trash2, Activity, CheckCircle2, XCircle, AlertTriangle, HeartPulse, Minus } from "lucide-react";
 import { useStore, uid, Policy, PolicyType } from "../store";
 import { useDerived } from "../derive";
 import { sgd, sgdShort, pct } from "../format";
@@ -17,7 +17,8 @@ const PTYPES: { value: PolicyType; label: string }[] = [
 const statusChip = (s: string) =>
   s === "covered" ? <Chip tone="ok"><CheckCircle2 size={12} /> Covered</Chip>
     : s === "short" ? <Chip tone="warn"><AlertTriangle size={12} /> Short</Chip>
-      : <Chip tone="bad"><XCircle size={12} /> Missing</Chip>;
+      : s === "none" ? <Chip tone="neutral"><Minus size={12} /> No need</Chip>
+        : <Chip tone="bad"><XCircle size={12} /> Missing</Chip>;
 
 export default function Insurance() {
   const { state, set } = useStore();
@@ -158,7 +159,7 @@ export default function Insurance() {
       <section className="card span2">
         <div className="eyebrow"><CheckCircle2 size={14} /> Close the gaps</div>
         <div className="grid g2" style={{ gap: 10 }}>
-          {d.checklist.filter((c) => c.status !== "covered").map((c) => (
+          {d.checklist.filter((c) => c.status === "short" || c.status === "missing").map((c) => (
             <Action key={c.key} tone={c.status === "missing" ? "do" : "warn"} icon={<ShieldCheck size={16} />}
               title={c.need == null ? `Add ${c.key.toLowerCase()}` : `${c.key}: top up by ${sgdShort(c.gap)}`}>
               {c.need == null
@@ -166,8 +167,10 @@ export default function Insurance() {
                 : `You hold ${sgdShort(c.have)} against a ${sgdShort(c.need)} need. Term cover is the cheapest way to close a death/TPD gap; standalone CI plans cover critical illness.`}
             </Action>
           ))}
-          {d.checklist.every((c) => c.status === "covered") &&
+          {d.protectionGaps === 0 && (d.annualIncomeForCover > 0 || d.cov.annualPremium > 0) &&
             <Action tone="good" icon={<CheckCircle2 size={16} />} title="Every risk line is covered">Review annually and whenever life changes (marriage, child, mortgage). Avoid over-insuring — keep premiums within {sgd(d.needs.premiumBudget)}/yr.</Action>}
+          {d.protectionGaps === 0 && d.annualIncomeForCover === 0 && d.cov.annualPremium === 0 &&
+            <Action tone="good" icon={<HeartPulse size={16} />} title="Add your income to size your protection">Enter your salary and family situation and I'll work out how much death, TPD and critical-illness cover you actually need.</Action>}
           {premiumOverBudget && <Action tone="warn" icon={<AlertTriangle size={16} />} title={`Premiums are ${pct(d.cov.annualPremium / Math.max(1, d.takeHome * 12), 0)} of take-home`}>You're paying {sgd(d.cov.annualPremium)}/yr vs a {sgd(d.needs.premiumBudget)}/yr ceiling. If much of this is bundled (whole life / ILP), term cover frees cash to invest.</Action>}
         </div>
         <Working>

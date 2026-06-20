@@ -91,7 +91,9 @@ export function useDerived() {
       takeHomeAnnual: takeHome * 12,
     });
     const checklist = coverageChecklist(needs, cov, insurance.inputs);
-    const protectionGaps = checklist.filter((c) => c.status !== "covered").length;
+    const protectionGaps = checklist.filter((c) => c.status === "short" || c.status === "missing").length;
+    const protectionCovered = checklist.filter((c) => c.status === "covered").length;
+    const protectionApplicable = checklist.filter((c) => c.status !== "none").length;   // excludes zero-need lines
 
     /* ---- budget ---- */
     const bud = computeBudget({
@@ -119,7 +121,7 @@ export function useDerived() {
       tax, autoTakeHome, takeHome,
       liquidInvest, cashHoldings, otherHoldings, propertyEquity, liabilities, netWorth,
       investContribMonthly, allocation,
-      cov, needs, checklist, protectionGaps,
+      cov, needs, checklist, protectionGaps, protectionCovered, protectionApplicable,
       bud, retire,
       goalsMonthly, goalsOffTrack,
     };

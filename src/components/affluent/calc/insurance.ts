@@ -70,7 +70,7 @@ export function rollupCoverage(policies: Policy[]): Coverage {
   };
 }
 
-export type CheckStatus = "covered" | "short" | "missing";
+export type CheckStatus = "covered" | "short" | "missing" | "none";
 
 export interface CoverageLine {
   key: string;
@@ -84,7 +84,8 @@ export interface CoverageLine {
 export function coverageChecklist(needs: ProtectionNeeds, cov: Coverage, inputs: InsuranceInputs): CoverageLine[] {
   const line = (key: string, need: number, have: number, note: string): CoverageLine => {
     const gap = Math.max(0, need - have);
-    const status: CheckStatus = need <= 0 ? "covered" : have <= 0 ? "missing" : gap > need * 0.1 ? "short" : "covered";
+    // zero need (e.g. no income/dependants yet) is "none" — neither a gap nor "covered"
+    const status: CheckStatus = need <= 0 ? "none" : have <= 0 ? "missing" : gap > need * 0.1 ? "short" : "covered";
     return { key, need, have, status, gap, note };
   };
   const presence = (key: string, ok: boolean, note: string): CoverageLine => ({

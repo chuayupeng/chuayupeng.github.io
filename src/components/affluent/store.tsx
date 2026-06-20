@@ -228,6 +228,22 @@ const SEED: AffluentState = {
   meta: { created: today(), updated: today() },
 };
 
+/* A blank slate: the structure with sensible default assumptions, but no personal
+   data — empty lists, zero balances/income. Used by "Clear all data". */
+function blankState(): AffluentState {
+  const b = structuredClone(SEED);
+  b.profile = { name: "You", age: 30, retireAge: 65, lifeExpectancy: 90, residency: "citizen" };
+  b.income = { monthlySalary: 0, annualBonus: 0, salaryGrowth: 0.03, otherMonthly: 0 };
+  b.cpf = { oa: 0, sa: 0, ma: 0, ra: 0, oaDrawMonthly: 0, annualTopUp: 0 };
+  b.budget = { takeHomeMode: "auto", manualTakeHome: 0, expenses: [] };
+  b.investments = { holdings: [], snapshots: [] };
+  b.insurance = { inputs: { dependents: 0, incomeYearsToReplace: 10, eduPerChild: 70000, finalExpenses: 0, ipWard: "B2" }, policies: [] };
+  b.goals = [];
+  b.taxReliefs = structuredClone(SEED.taxReliefs);   // seed reliefs are already all zero/none
+  b.meta = { created: today(), updated: today() };
+  return b;
+}
+
 /* ------------------------------- persistence ------------------------------ */
 
 const KEY = "affluent.state";   // versioning handled by the `v` field + migrate()
@@ -281,6 +297,7 @@ interface StoreApi {
   num: <K extends SectionKey>(key: K, field: keyof AffluentState[K]) =>
     { value: number; onChange: (n: number) => void };
   reset: () => void;
+  clear: () => void;
   exportJSON: () => string;
   importJSON: (raw: string) => boolean;
   snapshotNow: (s: Omit<NetWorthSnapshot, "date">) => void;
@@ -315,6 +332,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         setState((prev) => ({ ...prev, [key]: { ...(prev[key] as any), [field]: n } })),
     }),
     reset: () => setState(structuredClone(SEED)),
+    clear: () => setState(blankState()),
     exportJSON: () => JSON.stringify(state, null, 2),
     importJSON: (raw) => {
       try {
