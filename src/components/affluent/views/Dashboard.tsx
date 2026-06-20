@@ -46,14 +46,18 @@ export default function Dashboard({ go }: { go: (v: string) => void }) {
 
   // prioritized actions across modules
   const actions: { tone: "do" | "warn" | "good"; icon: React.ReactNode; title: string; body: React.ReactNode; to: string; cta: string }[] = [];
-  if (!onTrack) actions.push({ tone: "do", icon: <Target size={16} />, title: `Invest ${sgd(d.retire.gapMonthly)}/mo more for retirement`, body: <>Raise ETF investing to <b>{sgd(d.retire.required.monthly)}/mo</b> to fund {sgd(state.retirement.desiredMonthlyIncome)}/mo in retirement.</>, to: "retirement", cta: "Open plan" });
-  if (d.bud.emergencyMonths < 6) actions.push({ tone: "warn", icon: <Wallet size={16} />, title: `Build emergency fund to 6 months`, body: <>You hold <b>{d.bud.emergencyMonths.toFixed(1)}×</b> expenses. Park {sgdShort(Math.max(0, (6 - d.bud.emergencyMonths) * (d.bud.outflow)))} more in cash.</>, to: "cashflow", cta: "Cashflow" });
-  d.checklist.filter((c) => c.status === "short" || c.status === "missing").slice(0, 2).forEach((c) =>
-    actions.push({ tone: "do", icon: <ShieldCheck size={16} />, title: c.need == null ? `Add ${c.key.toLowerCase()}` : `${c.key} short by ${sgdShort(c.gap)}`, body: c.note, to: "insurance", cta: "Protection" }));
-  if (d.goalsOffTrack > 0) actions.push({ tone: "warn", icon: <Flag size={16} />, title: `${d.goalsOffTrack} goal${d.goalsOffTrack > 1 ? "s" : ""} behind schedule`, body: <>At your current pace {d.goalsOffTrack === 1 ? "one goal won't" : "some goals won't"} hit the deadline. Bump the monthly amount or stretch the date.</>, to: "goals", cta: "Goals" });
-  if (d.bud.savingsRate < 0.2) actions.push({ tone: "warn", icon: <PiggyBank size={16} />, title: `Lift savings rate to 20%`, body: <>Currently <b>{pct(d.bud.savingsRate, 0)}</b>. Trim lifestyle or grow income to free up cash to invest.</>, to: "cashflow", cta: "Cashflow" });
-  if (d.tax.marginal >= 0.115 && d.tax.srsHeadroom > 0) actions.push({ tone: "good", icon: <Landmark size={16} />, title: `Cut tax with SRS`, body: <>In the {pct(d.tax.marginal, 1)} bracket with {sgd(d.tax.srsHeadroom)} SRS headroom — contributing saves roughly {sgd(d.tax.srsHeadroom * d.tax.marginal)} in tax.</>, to: "retirement", cta: "Retirement" });
-  if (!actions.length) actions.push({ tone: "good", icon: <CheckCircle2 size={16} />, title: "You're in great shape", body: "Savings, protection and retirement are all on track. Keep contributions automatic and review quarterly.", to: "investments", cta: "Investments" });
+  if (blank) {
+    actions.push({ tone: "do", icon: <Sparkles size={16} />, title: "Add your income to begin", body: <>Enter your salary in <b>Cashflow</b> (or Settings), then your accounts in <b>Investments</b> and <b>CPF</b> — your plan and score build from there.</>, to: "cashflow", cta: "Cashflow" });
+  } else {
+    if (!onTrack) actions.push({ tone: "do", icon: <Target size={16} />, title: `Invest ${sgd(d.retire.gapMonthly)}/mo more for retirement`, body: <>Raise ETF investing to <b>{sgd(d.retire.required.monthly)}/mo</b> to fund {sgd(state.retirement.desiredMonthlyIncome)}/mo in retirement.</>, to: "retirement", cta: "Open plan" });
+    if (d.bud.emergencyMonths < 6) actions.push({ tone: "warn", icon: <Wallet size={16} />, title: `Build emergency fund to 6 months`, body: <>You hold <b>{d.bud.emergencyMonths.toFixed(1)}×</b> expenses. Park {sgdShort(Math.max(0, (6 - d.bud.emergencyMonths) * (d.bud.outflow)))} more in cash.</>, to: "cashflow", cta: "Cashflow" });
+    d.checklist.filter((c) => c.status === "short" || c.status === "missing").slice(0, 2).forEach((c) =>
+      actions.push({ tone: "do", icon: <ShieldCheck size={16} />, title: c.need == null ? `Add ${c.key.toLowerCase()}` : `${c.key} short by ${sgdShort(c.gap)}`, body: c.note, to: "insurance", cta: "Protection" }));
+    if (d.goalsOffTrack > 0) actions.push({ tone: "warn", icon: <Flag size={16} />, title: `${d.goalsOffTrack} goal${d.goalsOffTrack > 1 ? "s" : ""} behind schedule`, body: <>At your current pace {d.goalsOffTrack === 1 ? "one goal won't" : "some goals won't"} hit the deadline. Bump the monthly amount or stretch the date.</>, to: "goals", cta: "Goals" });
+    if (d.bud.savingsRate < 0.2) actions.push({ tone: "warn", icon: <PiggyBank size={16} />, title: `Lift savings rate to 20%`, body: <>Currently <b>{pct(d.bud.savingsRate, 0)}</b>. Trim lifestyle or grow income to free up cash to invest.</>, to: "cashflow", cta: "Cashflow" });
+    if (d.tax.marginal >= 0.115 && d.tax.srsHeadroom > 0) actions.push({ tone: "good", icon: <Landmark size={16} />, title: `Cut tax with SRS`, body: <>In the {pct(d.tax.marginal, 1)} bracket with {sgd(d.tax.srsHeadroom)} SRS headroom — contributing saves roughly {sgd(d.tax.srsHeadroom * d.tax.marginal)} in tax.</>, to: "retirement", cta: "Retirement" });
+    if (!actions.length) actions.push({ tone: "good", icon: <CheckCircle2 size={16} />, title: "You're in great shape", body: "Savings, protection and retirement are all on track. Keep contributions automatic and review quarterly.", to: "investments", cta: "Investments" });
+  }
 
   const monthBuckets = [
     { label: "Needs", value: d.bud.essential, color: "#0F3138" },
@@ -78,7 +82,7 @@ export default function Dashboard({ go }: { go: (v: string) => void }) {
   const tiles = [
     { key: "cashflow", icon: <Wallet size={15} />, label: "Net worth", value: sgd(d.netWorth), sub: `${sgdShort(d.liquidInvest)} invested · ${sgdShort(d.cpfTotalNow)} CPF`, tone: "" },
     { key: "cashflow", icon: <PiggyBank size={15} />, label: "Monthly surplus", value: sgd(d.bud.surplus), sub: `${pct(d.bud.savingsRate, 0)} savings rate`, tone: d.bud.surplus >= 0 ? "" : "neg" },
-    { key: "retirement", icon: <Target size={15} />, label: "Invest for retirement", value: `${sgd(onTrack ? d.retire.current.monthly : d.retire.required.monthly)}/mo`, sub: onTrack ? "on track" : `${sgd(d.retire.gapMonthly)}/mo short`, tone: onTrack ? "pos" : "neg" },
+    { key: "retirement", icon: <Target size={15} />, label: "Invest for retirement", value: blank ? "—" : `${sgd(onTrack ? d.retire.current.monthly : d.retire.required.monthly)}/mo`, sub: blank ? "add your income" : onTrack ? "on track" : `${sgd(d.retire.gapMonthly)}/mo short`, tone: blank ? "" : onTrack ? "pos" : "neg" },
     { key: "insurance", icon: <ShieldCheck size={15} />, label: "Protection", value: d.protectionApplicable ? `${d.protectionCovered}/${d.protectionApplicable} covered` : "—", sub: d.protectionGaps ? `${d.protectionGaps} gap${d.protectionGaps > 1 ? "s" : ""}` : d.protectionApplicable ? "fully covered" : "add your details", tone: d.protectionGaps ? "neg" : "pos" },
   ];
 
@@ -187,11 +191,17 @@ export default function Dashboard({ go }: { go: (v: string) => void }) {
 
       <section className="card">
         <div className="eyebrow"><TrendingUp size={14} /> Retirement at a glance</div>
-        <div className="between" style={{ fontSize: 13, marginBottom: 6 }}><span className="muted">Nest egg at {state.profile.retireAge}</span>
-          <b className="num"><Money value={(onTrack ? d.retire.current.sim : d.retire.required.sim).nestEgg} render={sgdShort} /></b></div>
-        <div className="between" style={{ fontSize: 13, marginBottom: 6 }}><span className="muted">CPF LIFE from 65</span><b className="num">{sgd(d.cpfProj.lifeMonthly)}/mo</b></div>
-        <div className="between" style={{ fontSize: 13 }}><span className="muted">Money lasts to</span>
-          <b className="num">{(onTrack ? d.retire.current.sim : d.retire.required.sim).depletionAge ? `age ${Math.floor((onTrack ? d.retire.current.sim : d.retire.required.sim).depletionAge!)}` : `${state.profile.lifeExpectancy}+`}</b></div>
+        {blank ? (
+          <div className="empty" style={{ padding: "6px 0 10px", textAlign: "left" }}>Add your income and set a target in the Retirement tab to project your nest egg, CPF LIFE and drawdown.</div>
+        ) : (
+          <>
+            <div className="between" style={{ fontSize: 13, marginBottom: 6 }}><span className="muted">Nest egg at {state.profile.retireAge}</span>
+              <b className="num"><Money value={(onTrack ? d.retire.current.sim : d.retire.required.sim).nestEgg} render={sgdShort} /></b></div>
+            <div className="between" style={{ fontSize: 13, marginBottom: 6 }}><span className="muted">CPF LIFE from 65</span><b className="num">{sgd(d.cpfProj.lifeMonthly)}/mo</b></div>
+            <div className="between" style={{ fontSize: 13 }}><span className="muted">Money lasts to</span>
+              <b className="num">{(onTrack ? d.retire.current.sim : d.retire.required.sim).depletionAge ? `age ${Math.floor((onTrack ? d.retire.current.sim : d.retire.required.sim).depletionAge!)}` : `${state.profile.lifeExpectancy}+`}</b></div>
+          </>
+        )}
         <button className="btn sm" style={{ marginTop: 12 }} onClick={() => go("retirement")}>Open retirement plan <ArrowRight size={13} /></button>
       </section>
     </div>
