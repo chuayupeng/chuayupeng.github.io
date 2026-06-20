@@ -6,7 +6,7 @@ if (typeof window !== 'undefined' && !window.Buffer) {
   window.Buffer = Buffer;
 }
 
-import matter from 'gray-matter';
+import yaml from 'js-yaml';
 import MarkdownIt from 'markdown-it';
 
 const md = new MarkdownIt({
@@ -14,6 +14,20 @@ const md = new MarkdownIt({
   linkify: true,
   typographer: true,
 });
+
+// Minimal frontmatter parser (replaces gray-matter, which pinned a vulnerable
+// js-yaml 3.x). Splits a leading `---` YAML block from the markdown body.
+const FRONTMATTER = /^﻿?---[ \t]*\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
+function parseFrontmatter(raw: string): { data: Record<string, any>; content: string } {
+  const m = FRONTMATTER.exec(raw);
+  if (!m) return { data: {}, content: raw };
+  let data: Record<string, any> = {};
+  try {
+    const parsed = yaml.load(m[1]);
+    if (parsed && typeof parsed === 'object') data = parsed as Record<string, any>;
+  } catch { /* malformed frontmatter — treat as none */ }
+  return { data, content: raw.slice(m[0].length) };
+}
 
 export type MarkdownCategory = "cybersecurity" | "teaching" | "f&b" | "entrepreneurship";
 
@@ -49,7 +63,7 @@ export const getMarkdownPosts = async (): Promise<MarkdownPost[]> => {
       const slug = filePath.split('/').pop()?.replace(/\.md$/, '') || '';
       
       // Parse frontmatter and content
-      const { data, content: markdownContent } = matter(content as string);
+      const { data, content: markdownContent } = parseFrontmatter(content as string);
       
       return {
         id: index + 1,
