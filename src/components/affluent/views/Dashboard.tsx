@@ -52,6 +52,13 @@ export default function Dashboard({ go }: { go: (v: string) => void }) {
   if (d.tax.marginal >= 0.115 && d.tax.srsHeadroom > 0) actions.push({ tone: "good", icon: <Landmark size={16} />, title: `Cut tax with SRS`, body: <>In the {pct(d.tax.marginal, 1)} bracket with {sgd(d.tax.srsHeadroom)} SRS headroom — contributing saves roughly {sgd(d.tax.srsHeadroom * d.tax.marginal)} in tax.</>, to: "retirement", cta: "Retirement" });
   if (!actions.length) actions.push({ tone: "good", icon: <CheckCircle2 size={16} />, title: "You're in great shape", body: "Savings, protection and retirement are all on track. Keep contributions automatic and review quarterly.", to: "investments", cta: "Investments" });
 
+  const monthBuckets = [
+    { label: "Needs", value: d.bud.essential, color: "#0F3138" },
+    { label: "Insurance", value: d.bud.insurance, color: "#DD5C36" },
+    { label: "Wants", value: d.bud.discretionary, color: "#B7BDB0" },
+    { label: "Save", value: Math.max(0, d.bud.surplus), color: "#1C4D45" },
+  ];
+
   // combined wealth trajectory: CPF + investment portfolio + cash/property/other − debt, now → retirement.
   // "other" folds in everything else so the t0 total reconciles with the Net worth tile.
   const wealth = useMemo(() => {
@@ -159,14 +166,17 @@ export default function Dashboard({ go }: { go: (v: string) => void }) {
       {/* this month + retirement snapshot */}
       <section className="card">
         <div className="eyebrow"><Wallet size={14} /> This month</div>
+        <div className="between" style={{ fontSize: 13, marginBottom: 8 }}><span className="muted">Take-home</span><b className="num">{sgd(d.bud.takeHome)}</b></div>
         <div className="bar tall" style={{ marginBottom: 10 }}>
-          <div className="bar-seg" style={{ width: `${pctOf(d.bud.essential, d.bud.takeHome)}%`, background: "#0F3138" }}>needs</div>
-          <div className="bar-seg" style={{ width: `${pctOf(d.bud.insurance, d.bud.takeHome)}%`, background: "#DD5C36" }}>ins</div>
-          <div className="bar-seg" style={{ width: `${pctOf(d.bud.discretionary, d.bud.takeHome)}%`, background: "#B7BDB0" }}>wants</div>
-          <div className="bar-seg" style={{ width: `${pctOf(Math.max(0, d.bud.surplus), d.bud.takeHome)}%`, background: "#1C4D45" }}>save</div>
+          {monthBuckets.map((s) => s.value > 0 && (
+            <div key={s.label} className="bar-seg" style={{ width: `${pctOf(s.value, d.bud.takeHome)}%`, background: s.color }} title={`${s.label}: ${sgd(s.value)}`} />
+          ))}
         </div>
-        <div className="between" style={{ fontSize: 13 }}><span className="muted">Take-home</span><b className="num">{sgd(d.bud.takeHome)}</b></div>
-        <div className="between" style={{ fontSize: 13, marginTop: 4 }}><span className="muted">Surplus to invest</span><b className="num pos">{sgd(d.bud.surplus)}</b></div>
+        <div className="legend" style={{ rowGap: 5 }}>
+          {monthBuckets.map((s) => (
+            <span key={s.label}><i style={{ background: s.color }} /> {s.label} <b className="num" style={{ color: "var(--ink)" }}>{sgd(s.value)}</b></span>
+          ))}
+        </div>
         <button className="btn sm" style={{ marginTop: 12 }} onClick={() => go("cashflow")}>Open cashflow <ArrowRight size={13} /></button>
       </section>
 

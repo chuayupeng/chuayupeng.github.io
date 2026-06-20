@@ -1,27 +1,54 @@
 import React, { useRef, useState } from "react";
-import { User, Download, Upload, RotateCcw, BookOpen, Database, Wallet, Landmark, PiggyBank } from "lucide-react";
+import { User, Download, Upload, RotateCcw, BookOpen, Database, Wallet, Landmark, PiggyBank, Lock, Eye, EyeOff } from "lucide-react";
 import { useStore } from "../store";
 import { Field, Slider, Select, TextField, Working } from "../ui";
 import { CPF } from "../calc/cpf";
 import { sgd, pct } from "../format";
+import { encryptJSON, decryptJSON, isEncrypted, cryptoAvailable } from "../crypto";
 
 export default function Settings({ onToast }: { onToast: (s: string) => void }) {
   const { state, set, reset, exportJSON, importJSON } = useStore();
   const p = state.profile;
   const fileRef = useRef<HTMLInputElement>(null);
   const [confirming, setConfirming] = useState(false);
+  const [pw, setPw] = useState("");
+  const [showPw, setShowPw] = useState(false);
+  const [busy, setBusy] = useState(false);
 
-  const doExport = () => {
-    const blob = new Blob([exportJSON()], { type: "application/json" });
+  const download = (content: string, name: string) => {
+    const blob = new Blob([content], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
-    a.href = url; a.download = "affluent-data.json"; a.click();
+    a.href = url; a.download = name; a.click();
     URL.revokeObjectURL(url);
-    onToast("Data exported");
   };
+
+  const doExport = async () => {
+    const raw = exportJSON();
+    const usePw = pw.trim().length > 0;
+    if (!usePw) { download(raw, "affluent-data.json"); onToast("Backup exported (unencrypted)"); return; }
+    setBusy(true);
+    try {
+      const encrypted = await encryptJSON(raw, pw);
+      download(encrypted, "affluent-data.encrypted.json");
+      onToast("Encrypted backup exported");
+    } catch { onToast("Couldn't encrypt — try again"); }
+    finally { setBusy(false); }
+  };
+
   const doImport = (file: File) => {
     const reader = new FileReader();
-    reader.onload = () => { onToast(importJSON(String(reader.result)) ? "Data imported" : "Import failed — invalid file"); };
+    reader.onload = async () => {
+      let text = String(reader.result);
+      if (isEncrypted(text)) {
+        if (!pw.trim()) { onToast("This backup is encrypted — enter its password above, then import"); return; }
+        setBusy(true);
+        try { text = await decryptJSON(text, pw); }
+        catch { onToast("Wrong password — couldn't unlock the backup"); setBusy(false); return; }
+        setBusy(false);
+      }
+      onToast(importJSON(text) ? "Data imported" : "Import failed — invalid file");
+    };
     reader.readAsText(file);
   };
 
@@ -73,14 +100,34 @@ export default function Settings({ onToast }: { onToast: (s: string) => void }) 
       <section className="card">
         <div className="eyebrow"><Database size={14} /> Your data</div>
         <p className="note" style={{ marginBottom: 14 }}>
-          Everything you enter is stored only in this browser — nothing leaves your device. Export a backup or move it to another device.
+          Everything you enter is stored only in this browser — nothing leaves your device. Export a backup to move it to another device or keep it safe.
         </p>
+
+        {cryptoAvailable() && (
+          <label className="field">
+            <span className="field-label"><span className="row" style={{ gap: 6 }}><Lock size={12} /> Backup password</span><em>optional — encrypts the file</em></span>
+            <span className="field-box text">
+              <input type={showPw ? "text" : "password"} value={pw} onChange={(e) => setPw(e.target.value)} placeholder="Leave blank for a plain backup" autoComplete="off" maxLength={128} />
+              <button className="icon-btn ghost-icon" style={{ border: 0, marginRight: 4 }} onClick={() => setShowPw((s) => !s)} type="button" aria-label="Show or hide password">
+                {showPw ? <EyeOff size={14} /> : <Eye size={14} />}
+              </button>
+            </span>
+          </label>
+        )}
+
         <div className="row wrap" style={{ gap: 8 }}>
-          <button className="btn" onClick={doExport}><Download size={14} /> Export backup</button>
-          <button className="btn" onClick={() => fileRef.current?.click()}><Upload size={14} /> Import</button>
-          <input ref={fileRef} type="file" accept="application/json" style={{ display: "none" }}
+          <button className="btn" disabled={busy} onClick={doExport}>
+            {pw.trim() ? <><Lock size={14} /> Export encrypted</> : <><Download size={14} /> Export backup</>}
+          </button>
+          <button className="btn" disabled={busy} onClick={() => fileRef.current?.click()}><Upload size={14} /> Import</button>
+          <input ref={fileRef} type="file" accept="application/json,.json" style={{ display: "none" }}
             onChange={(e) => { const f = e.target.files?.[0]; if (f) doImport(f); e.target.value = ""; }} />
         </div>
+        <p className="note" style={{ marginTop: 10, fontSize: 11.5 }}>
+          {pw.trim()
+            ? <>Your backup will be encrypted (AES-256) with this password — keep it safe, there's no recovery. Enter the same password here before importing an encrypted file.</>
+            : <>Set a password to encrypt the file so only you can open it. The password encrypts the exported file only — your data stays unencrypted in this browser so the app can use it.</>}
+        </p>
         <div className="hr" />
         {!confirming
           ? <button className="btn ghost" onClick={() => setConfirming(true)}><RotateCcw size={14} /> Reset to sample data</button>
