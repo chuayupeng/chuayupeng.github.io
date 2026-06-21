@@ -197,6 +197,21 @@ export const CSS = `
 .affluent .action h4{font-size:13.5px; margin-bottom:3px;}
 .affluent .action p{margin:0; font-size:12.5px; color:var(--muted); line-height:1.5;}
 .affluent .action b{color:var(--ink);}
+@media(max-width:760px){.affluent .gaps-grid{grid-template-columns:1fr;}}
+
+/* ---------------- policy editor (type-aware cards) ---------------- */
+.affluent .pol-list{display:flex; flex-direction:column; gap:10px;}
+.affluent .pol-card{border:1px solid var(--line); border-radius:12px; padding:12px 14px; background:var(--card2);}
+.affluent .pol-head{display:flex; gap:10px; align-items:center;}
+.affluent .pol-name{flex:1; min-width:0; padding:6px 8px; font-family:inherit; font-weight:600; font-size:13.5px;}
+.affluent .pol-head select.bare{flex-shrink:0;}
+.affluent .pol-body{display:flex; flex-wrap:wrap; gap:10px 14px; margin-top:11px;}
+.affluent .pol-field{display:flex; flex-direction:column; gap:5px; flex:1 1 130px; min-width:118px;}
+.affluent .pol-flabel{font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); font-weight:600;}
+.affluent .pol-flabel em{text-transform:none; letter-spacing:0; font-style:normal; color:var(--faint);}
+.affluent .pol-note{font-size:12px; margin-top:10px; line-height:1.5;}
+.affluent .pol-totals{display:flex; flex-wrap:wrap; gap:8px 18px; margin-top:12px; padding-top:11px; border-top:1px solid var(--line); font-size:12.5px; color:var(--muted);}
+.affluent .pol-totals b{color:var(--ink); margin-left:3px;}
 
 /* ---------------- charts ---------------- */
 .affluent .chart{width:100%; height:auto; display:block; overflow:visible;}

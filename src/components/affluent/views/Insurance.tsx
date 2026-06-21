@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { ShieldCheck, Plus, Trash2, Activity, CheckCircle2, XCircle, AlertTriangle, HeartPulse, Minus } from "lucide-react";
 import { useStore, uid, Policy, PolicyType } from "../store";
 import { useDerived } from "../derive";
 import { sgd, sgdShort, pct } from "../format";
 import { Field, Slider, Select, Working, Action, Chip } from "../ui";
-import { MSL, mslPremium, mslOutOfPocket, wardDeductible } from "../calc/insurance";
+import { MSL, mslPremium, mslOutOfPocket, wardDeductible, POLICY_BENEFITS, BenefitKey } from "../calc/insurance";
 
 const PTYPES: { value: PolicyType; label: string }[] = [
   { value: "term_life", label: "Term life" }, { value: "whole_life", label: "Whole life" },
@@ -13,6 +13,24 @@ const PTYPES: { value: PolicyType; label: string }[] = [
   { value: "personal_accident", label: "Personal accident" }, { value: "mortgage", label: "Mortgage" },
   { value: "endowment", label: "Endowment" }, { value: "ilp", label: "ILP" }, { value: "other", label: "Other" },
 ];
+
+// the amount field(s) each policy type asks you to enter (besides name + premium)
+const BENEFIT_FIELDS: Record<BenefitKey, { key: keyof Policy; label: string; hint?: string; step: number }> = {
+  death: { key: "deathBenefit", label: "Death benefit", step: 10000 },
+  tpd: { key: "tpdBenefit", label: "TPD benefit", step: 10000 },
+  ci: { key: "ciBenefit", label: "CI benefit", step: 10000 },
+  monthly: { key: "monthlyBenefit", label: "Monthly benefit", hint: "/mo", step: 500 },
+};
+
+// plain-English guidance on what to enter, for the products that aren't obvious
+const TYPE_NOTE: Partial<Record<PolicyType, string>> = {
+  hospitalisation: "Reimburses your hospital bills up to the plan's limits — pick your ward above. Just record the annual premium.",
+  personal_accident: "Pays out for accidents on a per-injury schedule — record the annual premium (payouts vary by plan).",
+  disability_income: "Replaces a monthly income (insurers cap around 75% of salary) if illness or injury stops you working.",
+  endowment: "A savings plan that also pays a death benefit — enter the sum assured.",
+  ilp: "Investment-linked — enter the death benefit; the investment value belongs in the Investments tab.",
+  mortgage: "Decreasing-term cover that clears your home loan — enter the outstanding sum assured.",
+};
 
 const statusChip = (s: string) =>
   s === "covered" ? <Chip tone="ok"><CheckCircle2 size={12} /> Covered</Chip>
@@ -30,10 +48,36 @@ export default function Insurance() {
   const oop = mslOutOfPocket(bill, ded);
   const premium = mslPremium(d.age + 1);
 
+  const policiesRef = useRef<HTMLElement>(null);
+  const polRef = useRef(ins.policies);
+  polRef.current = ins.policies;   // always the latest list, for post-render focus lookups
+  const blankPolicy = (id: string, name: string, type: PolicyType): Policy =>
+    ({ id, name, insurer: "—", type, deathBenefit: 0, tpdBenefit: 0, ciBenefit: 0, monthlyBenefit: 0, annualPremium: 0 });
   const setPolicy = (id: string, patch: Partial<Policy>) =>
     set("insurance", (p) => ({ ...p, policies: p.policies.map((x) => x.id === id ? { ...x, ...patch } : x) }));
-  const addPolicy = () =>
-    set("insurance", (p) => ({ ...p, policies: [...p.policies, { id: uid(), name: "New policy", insurer: "—", type: "term_life", deathBenefit: 0, tpdBenefit: 0, ciBenefit: 0, annualPremium: 0 }] }));
+  // scroll the row into view and focus its first amount field, so the user lands on what to type
+  const focusPolicy = (id: string) => setTimeout(() => {
+    const row = policiesRef.current?.querySelector(`[data-pid="${id}"]`) as HTMLElement | null;
+    row?.scrollIntoView({ behavior: "smooth", block: "center" });
+    (row?.querySelector('input[type="number"]') as HTMLInputElement | null)?.focus();
+  }, 80);
+  const addPolicy = () => { const id = uid(); set("insurance", (p) => ({ ...p, policies: [...p.policies, blankPolicy(id, "New policy", "term_life")] })); focusPolicy(id); };
+  const isBlankPolicy = (p: Policy) => !p.deathBenefit && !p.tpdBenefit && !p.ciBenefit && !p.monthlyBenefit && !p.annualPremium;
+  // create a correctly-typed policy straight from a coverage gap, reusing an empty draft of that
+  // type if one already exists so repeated clicks can't pile up duplicates. The decision runs
+  // inside the updater (against the latest state, race-free); focus resolves after the re-render.
+  const addPolicyOfType = (type: PolicyType, name: string) => {
+    set("insurance", (p) => p.policies.some((x) => x.type === type && isBlankPolicy(x))
+      ? p
+      : { ...p, policies: [...p.policies, blankPolicy(uid(), name, type)] });
+    setTimeout(() => {
+      const target = polRef.current.find((p) => p.type === type && isBlankPolicy(p));
+      if (!target) return;
+      const row = policiesRef.current?.querySelector(`[data-pid="${target.id}"]`) as HTMLElement | null;
+      row?.scrollIntoView({ behavior: "smooth", block: "center" });
+      (row?.querySelector('input[type="number"]') as HTMLInputElement | null)?.focus();
+    }, 90);
+  };
   const rmPolicy = (id: string) =>
     set("insurance", (p) => ({ ...p, policies: p.policies.filter((x) => x.id !== id) }));
   const setInput = (patch: Partial<typeof ins.inputs>) =>
@@ -115,56 +159,83 @@ export default function Insurance() {
       </section>
 
       {/* policies */}
-      <section className="card span2">
+      <section className="card span2" ref={policiesRef}>
         <div className="between" style={{ marginBottom: 12 }}>
           <div className="eyebrow" style={{ margin: 0 }}><ShieldCheck size={14} /> Your policies</div>
           <button className="btn sm" onClick={addPolicy}><Plus size={14} /> Add policy</button>
         </div>
-        <div className="tbl-wrap">
-          <table className="tbl compact" style={{ minWidth: 760 }}>
-            <thead><tr><th>Policy</th><th>Type</th><th>Death</th><th>TPD</th><th>CI</th><th>Premium/yr</th><th></th></tr></thead>
-            <tbody>
-              {ins.policies.map((p) => (
-                <tr key={p.id}>
-                  <td style={{ textAlign: "left" }}>
-                    <input className="bare" maxLength={48} style={{ width: "100%", minWidth: 180, padding: "6px 8px", fontFamily: "inherit" }}
+        {ins.policies.length === 0 ? (
+          <div className="empty" style={{ padding: "20px 0", textAlign: "center" }}>No policies yet — add your cover here or from “Close the gaps” below, and I'll size each one and only ask for the fields that apply.</div>
+        ) : (
+          <div className="pol-list">
+            {ins.policies.map((p) => {
+              const benefits = POLICY_BENEFITS[p.type] ?? [];   // tolerate an unknown/corrupt type
+              // amounts stored on the policy that its current type doesn't count — surfaced so a
+              // type switch never silently drops a number from the coverage totals
+              const SHORT: Record<BenefitKey, string> = { death: "death", tpd: "TPD", ci: "CI", monthly: "income" };
+              const orphaned = (Object.keys(BENEFIT_FIELDS) as BenefitKey[])
+                .filter((b) => !benefits.includes(b) && ((p[BENEFIT_FIELDS[b].key] as number) || 0) > 0)
+                .map((b) => SHORT[b]);
+              return (
+                <div className="pol-card" key={p.id} data-pid={p.id}>
+                  <div className="pol-head">
+                    <input className="bare pol-name" aria-label="Policy name" maxLength={48} placeholder="Policy name"
                       value={p.name} onChange={(e) => setPolicy(p.id, { name: e.target.value })} />
-                  </td>
-                  <td style={{ textAlign: "left" }}><Select value={p.type} onChange={(v) => setPolicy(p.id, { type: v })} options={PTYPES} /></td>
-                  <td><PCell value={p.deathBenefit} onChange={(n) => setPolicy(p.id, { deathBenefit: n })} /></td>
-                  <td><PCell value={p.tpdBenefit} onChange={(n) => setPolicy(p.id, { tpdBenefit: n })} /></td>
-                  <td><PCell value={p.ciBenefit} onChange={(n) => setPolicy(p.id, { ciBenefit: n })} /></td>
-                  <td><PCell value={p.annualPremium} onChange={(n) => setPolicy(p.id, { annualPremium: n })} step={50} /></td>
-                  <td><button className="icon-btn" onClick={() => rmPolicy(p.id)} aria-label="Remove"><Trash2 size={14} /></button></td>
-                </tr>
-              ))}
-              {ins.policies.length === 0 && (
-                <tr><td colSpan={7} className="empty" style={{ textAlign: "center" }}>No policies yet — add your life, CI, hospitalisation and other cover to see your gaps.</td></tr>
-              )}
-            </tbody>
-            <tfoot>
-              <tr style={{ fontWeight: 700 }}>
-                <td>Totals</td><td></td>
-                <td className="num" style={{ borderTop: "2px solid var(--line2)" }}>{sgdShort(d.cov.life)}</td>
-                <td className="num" style={{ borderTop: "2px solid var(--line2)" }}>{sgdShort(d.cov.tpd)}</td>
-                <td className="num" style={{ borderTop: "2px solid var(--line2)" }}>{sgdShort(d.cov.ci)}</td>
-                <td className="num" style={{ borderTop: "2px solid var(--line2)" }}>{sgd(d.cov.annualPremium)}</td><td></td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
+                    <Select value={p.type} ariaLabel={`Policy type for ${p.name || "this policy"}`} onChange={(v) => setPolicy(p.id, { type: v })} options={PTYPES} />
+                    <button className="icon-btn" onClick={() => rmPolicy(p.id)} aria-label="Remove policy"><Trash2 size={14} /></button>
+                  </div>
+                  <div className="pol-body">
+                    {benefits.map((b) => {
+                      const f = BENEFIT_FIELDS[b];
+                      return (
+                        <label className="pol-field" key={b}>
+                          <span className="pol-flabel">{f.label}{f.hint && <em> {f.hint}</em>}</span>
+                          <PCell value={(p[f.key] as number) || 0} step={f.step} onChange={(n) => setPolicy(p.id, { [f.key]: n })} />
+                        </label>
+                      );
+                    })}
+                    <label className="pol-field">
+                      <span className="pol-flabel">Premium <em>/yr</em></span>
+                      <PCell value={p.annualPremium} step={50} onChange={(n) => setPolicy(p.id, { annualPremium: n })} />
+                    </label>
+                  </div>
+                  {TYPE_NOTE[p.type] && <div className="pol-note muted">{TYPE_NOTE[p.type]}</div>}
+                  {orphaned.length > 0 && (
+                    <div className="pol-note" style={{ color: "var(--warn)" }}>
+                      Holds {orphaned.join(" + ")} cover that this type doesn't count — switch the type back to include {orphaned.length > 1 ? "them" : "it"}.
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            <div className="pol-totals">
+              <span>Coverage totals</span>
+              <span>Death <b className="num">{sgdShort(d.cov.life)}</b></span>
+              <span>TPD <b className="num">{sgdShort(d.cov.tpd)}</b></span>
+              <span>CI <b className="num">{sgdShort(d.cov.ci)}</b></span>
+              {d.cov.disabilityMonthly > 0 && <span>Disability <b className="num">{sgdShort(d.cov.disabilityMonthly)}/mo</b></span>}
+              <span>Premiums <b className="num">{sgd(d.cov.annualPremium)}/yr</b></span>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* actions */}
       <section className="card span2">
         <div className="eyebrow"><CheckCircle2 size={14} /> Close the gaps</div>
-        <div className="grid g2" style={{ gap: 10 }}>
+        <div className="grid g2 gaps-grid" style={{ gap: 10 }}>
           {d.checklist.filter((c) => c.status === "short" || c.status === "missing").map((c) => (
             <Action key={c.key} tone={c.status === "missing" ? "do" : "warn"} icon={<ShieldCheck size={16} />}
-              title={c.need == null ? `Add ${c.key.toLowerCase()}` : `${c.key}: top up by ${sgdShort(c.gap)}`}>
+              title={c.need == null
+                ? `Add ${c.key.toLowerCase()}`
+                : c.status === "missing"
+                  ? `Add ${c.key.toLowerCase()} — ${sgdShort(c.need)} needed`
+                  : `${c.key}: top up by ${sgdShort(c.gap)}`}
+              cta={c.status === "missing" ? "Add" : "Top up"}
+              onCta={() => addPolicyOfType(c.addType, c.addName)}>
               {c.need == null
                 ? c.note
-                : `You hold ${sgdShort(c.have)} against a ${sgdShort(c.need)} need. Term cover is the cheapest way to close a death/TPD gap; standalone CI plans cover critical illness.`}
+                : `You hold ${sgdShort(c.have)} against a ${sgdShort(c.need)} need. I'll start the policy and jump you to it — just enter the cover amount and premium.`}
             </Action>
           ))}
           {d.protectionGaps === 0 && (d.annualIncomeForCover > 0 || d.cov.annualPremium > 0) &&
@@ -183,9 +254,9 @@ export default function Insurance() {
 
 function PCell({ value, onChange, step = 10000 }: { value: number; onChange: (n: number) => void; step?: number }) {
   return (
-    <span className="field-box" style={{ display: "inline-flex", width: 104 }}>
+    <span className="field-box" style={{ display: "inline-flex", width: "100%" }}>
       <span className="field-pre">S$</span>
-      <input type="number" value={value} min={0} step={step} onChange={(e) => onChange(Math.max(0, Number(e.target.value)))} />
+      <input type="number" value={Number.isFinite(value) ? value : 0} min={0} step={step} onChange={(e) => onChange(Math.max(0, Number(e.target.value) || 0))} />
     </span>
   );
 }

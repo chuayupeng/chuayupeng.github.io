@@ -1,6 +1,6 @@
 /* Shared presentational primitives. All styling comes from styles.ts. */
 import React, { useState } from "react";
-import { ChevronDown, Info } from "lucide-react";
+import { ChevronDown, Info, Plus } from "lucide-react";
 import { useCountUp } from "./format";
 
 export function Field({
@@ -72,10 +72,10 @@ export function Segmented<T extends string>({
 }
 
 export function Select<T extends string>({
-  value, onChange, options,
-}: { value: T; onChange: (v: T) => void; options: { value: T; label: string }[] }) {
+  value, onChange, options, ariaLabel,
+}: { value: T; onChange: (v: T) => void; options: { value: T; label: string }[]; ariaLabel?: string }) {
   return (
-    <select className="bare" value={value} onChange={(e) => onChange(e.target.value as T)}>
+    <select className="bare" aria-label={ariaLabel} value={value} onChange={(e) => onChange(e.target.value as T)}>
       {options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
     </select>
   );
@@ -125,8 +125,8 @@ export function Progress({ value, tone = "jade" }: { value: number; tone?: "jade
   return <div className="prog"><div className={`prog-fill ${cls}`} style={{ width: `${Math.max(0, Math.min(100, value))}%` }} /></div>;
 }
 
-export function Action({ tone = "good", icon, title, children }:
-  { tone?: "good" | "do" | "warn"; icon: React.ReactNode; title: React.ReactNode; children?: React.ReactNode }) {
+export function Action({ tone = "good", icon, title, children, cta, onCta }:
+  { tone?: "good" | "do" | "warn"; icon: React.ReactNode; title: React.ReactNode; children?: React.ReactNode; cta?: string; onCta?: () => void }) {
   const cls = tone === "good" ? "" : tone;
   return (
     <div className={`action ${cls}`}>
@@ -135,6 +135,11 @@ export function Action({ tone = "good", icon, title, children }:
         <h4>{title}</h4>
         {children && <p>{children}</p>}
       </div>
+      {cta && onCta && (
+        <button className="btn sm" onClick={onCta} style={{ alignSelf: "center", flexShrink: 0, whiteSpace: "nowrap" }}>
+          <Plus size={13} /> {cta}
+        </button>
+      )}
     </div>
   );
 }

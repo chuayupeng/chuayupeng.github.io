@@ -7,7 +7,7 @@
      tells you exactly which risks are covered, short, or missing.
    • MediShield Life: actual premiums + a worked out-of-pocket example.
    ========================================================================== */
-import type { Policy, InsuranceInputs } from "../store";
+import type { Policy, InsuranceInputs, PolicyType } from "../store";
 
 const BFPG = { deathTpdMult: 9, ciMult: 4, premiumPct: 0.15 };
 
@@ -43,8 +43,34 @@ export function protectionNeeds(a: NeedsArgs): ProtectionNeeds {
   };
 }
 
+export type BenefitKey = "death" | "tpd" | "ci" | "monthly";
+
+/* Which benefits each policy type actually provides. This is the single source of
+   truth: it drives both the editor fields shown for a policy AND the coverage
+   roll-up, so a stored amount only counts toward a line its type really covers.
+   (A death amount left on a policy later switched to "hospitalisation" is ignored,
+   not silently dropped — switch back and it counts again.) */
+export const POLICY_BENEFITS: Record<PolicyType, BenefitKey[]> = {
+  term_life: ["death", "tpd"],
+  whole_life: ["death", "tpd", "ci"],
+  ci: ["ci"],
+  early_ci: ["ci"],
+  tpd: ["tpd"],
+  mortgage: ["death"],
+  ilp: ["death"],
+  endowment: ["death"],
+  disability_income: ["monthly"],
+  hospitalisation: [],
+  personal_accident: [],
+  other: ["death", "tpd", "ci"],
+};
+
+// `?? []` keeps a corrupt/unknown type (from a hand-edited import) from crashing the app
+const provides = (p: Policy, b: BenefitKey) => (POLICY_BENEFITS[p.type] ?? []).includes(b);
+
 export interface Coverage {
   life: number; tpd: number; ci: number;
+  disabilityMonthly: number;
   hasHospitalisation: boolean;
   hasPersonalAccident: boolean;
   hasDisabilityIncome: boolean;
@@ -58,9 +84,10 @@ export function rollupCoverage(policies: Policy[]): Coverage {
   const has = (t: Policy["type"]) => policies.some((p) => p.type === t);
   const annualPremium = sum((p) => p.annualPremium);
   return {
-    life: sum((p) => p.deathBenefit),
-    tpd: sum((p) => p.tpdBenefit),
-    ci: sum((p) => p.ciBenefit),
+    life: sum((p) => provides(p, "death") ? p.deathBenefit : 0),
+    tpd: sum((p) => provides(p, "tpd") ? p.tpdBenefit : 0),
+    ci: sum((p) => provides(p, "ci") ? p.ciBenefit : 0),
+    disabilityMonthly: sum((p) => provides(p, "monthly") ? (p.monthlyBenefit || 0) : 0),
     hasHospitalisation: has("hospitalisation"),
     hasPersonalAccident: has("personal_accident"),
     hasDisabilityIncome: has("disability_income"),
@@ -79,29 +106,31 @@ export interface CoverageLine {
   status: CheckStatus;
   gap: number;
   note: string;
+  addType: PolicyType;       // policy type created when you "Add" this cover
+  addName: string;           // sensible default name for that policy
 }
 
 export function coverageChecklist(needs: ProtectionNeeds, cov: Coverage, inputs: InsuranceInputs): CoverageLine[] {
-  const line = (key: string, need: number, have: number, note: string): CoverageLine => {
+  const line = (key: string, need: number, have: number, note: string, addType: PolicyType, addName: string): CoverageLine => {
     const gap = Math.max(0, need - have);
     // zero need (e.g. no income/dependants yet) is "none" — neither a gap nor "covered"
     const status: CheckStatus = need <= 0 ? "none" : have <= 0 ? "missing" : gap > need * 0.1 ? "short" : "covered";
-    return { key, need, have, status, gap, note };
+    return { key, need, have, status, gap, note, addType, addName };
   };
-  const presence = (key: string, ok: boolean, note: string): CoverageLine => ({
-    key, need: null, have: ok ? 1 : 0, status: ok ? "covered" : "missing", gap: 0, note,
+  const presence = (key: string, ok: boolean, note: string, addType: PolicyType, addName: string): CoverageLine => ({
+    key, need: null, have: ok ? 1 : 0, status: ok ? "covered" : "missing", gap: 0, note, addType, addName,
   });
 
   return [
-    line("Death", needs.death, cov.life, "Clears debts + mortgage + replaces income for dependants."),
-    line("Total & permanent disability", needs.tpd, cov.tpd, "Same magnitude as death — income is gone permanently."),
-    line("Critical illness", needs.ci, cov.ci, "~4× income to fund recovery and lost earnings while you heal."),
+    line("Death", needs.death, cov.life, "Clears debts + mortgage + replaces income for dependants.", "term_life", "Term life"),
+    line("Total & permanent disability", needs.tpd, cov.tpd, "Same magnitude as death — income is gone permanently.", "tpd", "TPD cover"),
+    line("Critical illness", needs.ci, cov.ci, "~4× income to fund recovery and lost earnings while you heal.", "ci", "Critical illness"),
     presence("Hospitalisation (Integrated Shield)", cov.hasHospitalisation,
-      `MediShield Life is automatic; an IP tops up to your preferred ward (you chose ${inputs.ipWard}).`),
+      `MediShield Life is automatic; an IP tops up to your preferred ward (you chose ${inputs.ipWard}).`, "hospitalisation", "Integrated Shield plan"),
     presence("Disability income", cov.hasDisabilityIncome,
-      "Replaces a % of income if illness/injury stops you working but isn't total disability."),
+      "Replaces a % of income if illness/injury stops you working but isn't total disability.", "disability_income", "Disability income"),
     presence("Personal accident", cov.hasPersonalAccident,
-      "Lump sum + medical reimbursement for accidents. Optional; no official benchmark."),
+      "Lump sum + medical reimbursement for accidents. Optional; no official benchmark.", "personal_accident", "Personal accident"),
   ];
 }
 

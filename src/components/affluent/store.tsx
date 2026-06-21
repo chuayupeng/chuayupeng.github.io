@@ -102,6 +102,7 @@ export interface Policy {
   deathBenefit: number;
   tpdBenefit: number;
   ciBenefit: number;
+  monthlyBenefit?: number;   // disability-income monthly payout
   annualPremium: number;
   notes?: string;
 }
