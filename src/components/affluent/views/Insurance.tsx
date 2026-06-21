@@ -4,7 +4,10 @@ import { useStore, uid, Policy, PolicyType } from "../store";
 import { useDerived } from "../derive";
 import { sgd, sgdShort, pct } from "../format";
 import { Field, Slider, Select, Working, Action, Chip } from "../ui";
-import { MSL, mslPremium, mslOutOfPocket, wardDeductible, POLICY_BENEFITS, BenefitKey } from "../calc/insurance";
+import { MSL, mslPremium, mslOutOfPocket, wardDeductible, EXTRA_BENEFITS, BenefitKey } from "../calc/insurance";
+
+// death / TPD / CI are offered on every policy; products add their extras on top
+const UNIVERSAL: BenefitKey[] = ["death", "tpd", "ci"];
 
 const PTYPES: { value: PolicyType; label: string }[] = [
   { value: "term_life", label: "Term life" }, { value: "whole_life", label: "Whole life" },
@@ -24,12 +27,12 @@ const BENEFIT_FIELDS: Record<BenefitKey, { key: keyof Policy; label: string; hin
 
 // plain-English guidance on what to enter, for the products that aren't obvious
 const TYPE_NOTE: Partial<Record<PolicyType, string>> = {
-  hospitalisation: "Reimburses your hospital bills up to the plan's limits — pick your ward above. Just record the annual premium.",
-  personal_accident: "Pays out for accidents on a per-injury schedule — record the annual premium (payouts vary by plan).",
-  disability_income: "Replaces a monthly income (insurers cap around 75% of salary) if illness or injury stops you working.",
-  endowment: "A savings plan that also pays a death benefit — enter the sum assured.",
-  ilp: "Investment-linked — enter the death benefit; the investment value belongs in the Investments tab.",
-  mortgage: "Decreasing-term cover that clears your home loan — enter the outstanding sum assured.",
+  hospitalisation: "Reimburses your hospital bills up to the plan's limits — pick your ward above. Most IPs pay no lump sum, so leave Death/TPD/CI at 0 unless a rider adds them.",
+  personal_accident: "Pays for accidents on a per-injury schedule — enter any accidental death/TPD lump sum it carries (payouts vary by plan).",
+  disability_income: "Replaces a monthly income (insurers cap around 75% of salary) if illness or injury stops you working. Add any bundled death/TPD/CI too.",
+  endowment: "A savings plan that also pays a death benefit — enter the sum assured here, and add the maturity payout in the Retirement tab.",
+  ilp: "Investment-linked — enter the death and any CI-rider benefit; the fund value belongs in the Investments tab.",
+  mortgage: "Decreasing-term cover for your home loan — enter the outstanding loan as the death benefit.",
 };
 
 const statusChip = (s: string) =>
@@ -169,7 +172,7 @@ export default function Insurance() {
         ) : (
           <div className="pol-list">
             {ins.policies.map((p) => {
-              const benefits = POLICY_BENEFITS[p.type] ?? [];   // tolerate an unknown/corrupt type
+              const benefits: BenefitKey[] = [...UNIVERSAL, ...(EXTRA_BENEFITS[p.type] ?? [])];
               // amounts stored on the policy that its current type doesn't count — surfaced so a
               // type switch never silently drops a number from the coverage totals
               const SHORT: Record<BenefitKey, string> = { death: "death", tpd: "TPD", ci: "CI", monthly: "income" };

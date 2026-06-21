@@ -47,28 +47,13 @@ export function protectionNeeds(a: NeedsArgs): ProtectionNeeds {
 
 export type BenefitKey = "death" | "tpd" | "ci" | "monthly";
 
-/* Which benefits each policy type actually provides. This is the single source of
-   truth: it drives both the editor fields shown for a policy AND the coverage
-   roll-up, so a stored amount only counts toward a line its type really covers.
-   (A death amount left on a policy later switched to "hospitalisation" is ignored,
-   not silently dropped — switch back and it counts again.) */
-export const POLICY_BENEFITS: Record<PolicyType, BenefitKey[]> = {
-  term_life: ["death", "tpd"],
-  whole_life: ["death", "tpd", "ci"],
-  ci: ["ci"],
-  early_ci: ["ci"],
-  tpd: ["tpd"],
-  mortgage: ["death"],
-  ilp: ["death"],
-  endowment: ["death"],
+/* Death / TPD / CI are universal optional benefits — any policy can carry them
+   (a CI plan with a death rider, an ILP with a CI rider, etc.), so they always
+   show and always count. EXTRA_BENEFITS only adds the type-specific fields a
+   product needs on top (today, the monthly income benefit for disability cover). */
+export const EXTRA_BENEFITS: Partial<Record<PolicyType, BenefitKey[]>> = {
   disability_income: ["monthly"],
-  hospitalisation: [],
-  personal_accident: [],
-  other: ["death", "tpd", "ci"],
 };
-
-// `?? []` keeps a corrupt/unknown type (from a hand-edited import) from crashing the app
-const provides = (p: Policy, b: BenefitKey) => (POLICY_BENEFITS[p.type] ?? []).includes(b);
 
 export interface Coverage {
   life: number; tpd: number; ci: number;
@@ -86,10 +71,10 @@ export function rollupCoverage(policies: Policy[]): Coverage {
   const has = (t: Policy["type"]) => policies.some((p) => p.type === t);
   const annualPremium = sum((p) => p.annualPremium);
   return {
-    life: sum((p) => provides(p, "death") ? p.deathBenefit : 0),
-    tpd: sum((p) => provides(p, "tpd") ? p.tpdBenefit : 0),
-    ci: sum((p) => provides(p, "ci") ? p.ciBenefit : 0),
-    disabilityMonthly: sum((p) => provides(p, "monthly") ? (p.monthlyBenefit || 0) : 0),
+    life: sum((p) => p.deathBenefit),       // universal — bundled death riders count too
+    tpd: sum((p) => p.tpdBenefit),
+    ci: sum((p) => p.ciBenefit),
+    disabilityMonthly: sum((p) => p.type === "disability_income" ? (p.monthlyBenefit || 0) : 0),
     hasHospitalisation: has("hospitalisation"),
     hasPersonalAccident: has("personal_accident"),
     hasDisabilityIncome: has("disability_income"),
