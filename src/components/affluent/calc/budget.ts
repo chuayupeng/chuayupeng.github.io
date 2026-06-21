@@ -10,6 +10,7 @@ export interface BudgetArgs {
   expenses: Expense[];
   insuranceMonthly: number;    // pulled from the insurance module
   cashReserves: number;        // liquid cash for emergency-fund test
+  contributions?: number;      // monthly money already committed to savings (CPF top-up + SRS + investing)
 }
 
 export interface BudgetResult {
@@ -18,7 +19,9 @@ export interface BudgetResult {
   discretionary: number;
   insurance: number;
   outflow: number;             // essential + discretionary + insurance
-  surplus: number;             // what's left to invest
+  surplus: number;             // take-home minus living costs (savings capacity)
+  contributions: number;       // already committed to savings each month
+  freeSurplus: number;         // surplus minus contributions = uncommitted cash
   savingsRate: number;
   insuranceRate: number;
   emergencyMonths: number;
@@ -34,6 +37,8 @@ export function computeBudget(a: BudgetArgs): BudgetResult {
   const insurance = a.insuranceMonthly;
   const outflow = essential + discretionary + insurance;
   const surplus = a.takeHome - outflow;
+  const contributions = a.contributions ?? 0;
+  const freeSurplus = surplus - contributions;
   const savingsRate = a.takeHome > 0 ? surplus / a.takeHome : 0;
   const insuranceRate = a.takeHome > 0 ? insurance / a.takeHome : 0;
   // emergency fund covers essential burn (needs + insurance) — wants get cut in a crisis
@@ -58,6 +63,7 @@ export function computeBudget(a: BudgetArgs): BudgetResult {
 
   return {
     takeHome: a.takeHome, essential, discretionary, insurance, outflow, surplus,
+    contributions, freeSurplus,
     savingsRate, insuranceRate, emergencyMonths, byCategory, checks,
     recommend: { needs: a.takeHome * 0.50, wants: a.takeHome * 0.30, future: a.takeHome * 0.20 },
   };

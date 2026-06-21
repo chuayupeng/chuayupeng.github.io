@@ -96,9 +96,15 @@ export function useDerived() {
     const protectionApplicable = checklist.filter((c) => c.status !== "none").length;   // excludes zero-need lines
 
     /* ---- budget ---- */
+    // voluntary savings already leaving take-home each month: CPF top-up + SRS + family top-up + investing
+    const monthlyContributions =
+      (cpfEligible ? cpf.annualTopUp : 0) / 12 +
+      (state.taxReliefs.srsContribution + state.taxReliefs.cashTopUpFamily) / 12 +
+      investContribMonthly;
     const bud = computeBudget({
       takeHome, expenses: budget.expenses,
       insuranceMonthly: cov.monthlyPremium, cashReserves: cashHoldings,
+      contributions: monthlyContributions,
     });
 
     /* ---- retirement ---- */
@@ -108,7 +114,11 @@ export function useDerived() {
       desiredMonthlyToday: retirement.desiredMonthlyIncome,
       inflation: retirement.inflation, returnPre: retirement.returnPre, returnPost: retirement.returnPost,
       cpfLifeMonthly: cpfProj.lifeMonthly, cpfLifeStartAge: 65,
+      otherIncome: retirement.otherIncome, lumpSums: retirement.lumpSums,
     }, investContribMonthly);
+    const otherIncomeAtRetire = retirement.otherIncome
+      .filter((s) => profile.retireAge >= s.fromAge && (s.toAge == null || profile.retireAge <= s.toAge))
+      .reduce((sum, s) => sum + s.monthly, 0);
 
     /* ---- goals ---- */
     const goalsMonthly = totalGoalMonthly(state.goals);
@@ -122,7 +132,7 @@ export function useDerived() {
       liquidInvest, cashHoldings, otherHoldings, propertyEquity, liabilities, netWorth,
       investContribMonthly, allocation,
       cov, needs, checklist, protectionGaps, protectionCovered, protectionApplicable,
-      bud, retire,
+      bud, retire, otherIncomeAtRetire,
       goalsMonthly, goalsOffTrack,
     };
   }, [state]);

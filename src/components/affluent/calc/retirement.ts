@@ -8,6 +8,8 @@
    All figures nominal unless deflated for "today's dollars" display.
    ========================================================================== */
 
+import type { IncomeStream, LumpSum } from "../store";
+
 export interface RetireParams {
   age: number;
   retireAge: number;
@@ -19,6 +21,8 @@ export interface RetireParams {
   returnPost: number;            // nominal return in drawdown
   cpfLifeMonthly: number;        // CPF LIFE payout from cpfLifeStartAge (nominal, level)
   cpfLifeStartAge?: number;      // default 65
+  otherIncome?: IncomeStream[];  // extra retirement income streams (today's $, inflated)
+  lumpSums?: LumpSum[];          // one-off payouts added to the portfolio at an age (nominal)
 }
 
 export interface YearPoint {
@@ -62,15 +66,23 @@ export function simulate(p: RetireParams, monthlyContribution: number): SimResul
   for (let y = 0; y < totalYears; y++) {
     const yearStartAge = p.age + y;
     const accumulating = yearStartAge < p.retireAge;
+    // maturities/one-offs land in the portfolio the year they're received
+    for (const ls of p.lumpSums ?? []) {
+      if (ls.atAge >= p.age && Math.floor(ls.atAge) === yearStartAge) balance += ls.amount;
+    }
     // inflate today's desired income to this calendar year
     const needMonthly = p.desiredMonthlyToday * Math.pow(1 + p.inflation, y);
+    // recurring retirement income active this year (today's $, inflated like the need)
+    const otherMonthly = (p.otherIncome ?? [])
+      .filter((s) => yearStartAge >= s.fromAge && (s.toAge == null || yearStartAge <= s.toAge))
+      .reduce((sum, s) => sum + s.monthly, 0) * Math.pow(1 + p.inflation, y);
 
     for (let m = 0; m < 12; m++) {
       if (accumulating) {
         balance = balance * (1 + rPre) + monthlyContribution;
       } else {
         const cpfActive = yearStartAge >= cpfStart ? p.cpfLifeMonthly : 0;
-        const gap = Math.max(0, needMonthly - cpfActive);
+        const gap = Math.max(0, needMonthly - cpfActive - otherMonthly);
         if (!firstGapSeen) { firstGapMonthly = gap; firstGapSeen = true; }
         balance = balance * (1 + rPost) - gap;
         if (balance <= 0 && depletionAge === null) {

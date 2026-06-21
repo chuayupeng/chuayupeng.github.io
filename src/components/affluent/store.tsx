@@ -81,12 +81,30 @@ export interface Investments {
   snapshots: NetWorthSnapshot[];
 }
 
+// recurring income in retirement (annuity, rental, part-time, endowment cashback)
+export interface IncomeStream {
+  id: string;
+  label: string;
+  monthly: number;               // today's dollars; inflated alongside the income need
+  fromAge: number;
+  toAge: number | null;          // null = for life
+}
+// one-off payout added to the nest egg at an age (endowment/savings maturity, downsizing)
+export interface LumpSum {
+  id: string;
+  label: string;
+  amount: number;                // nominal payout at maturity
+  atAge: number;
+}
+
 export interface Retirement {
   desiredMonthlyIncome: number;  // in today's dollars
   inflation: number;             // decimal
   returnPre: number;             // expected nominal return while accumulating
   returnPost: number;            // expected nominal return in drawdown
   swr: number;                   // safe withdrawal rate reference, decimal
+  otherIncome: IncomeStream[];   // extra income streams in retirement
+  lumpSums: LumpSum[];           // maturities/one-offs added to the nest egg
 }
 
 export type PolicyType =
@@ -204,7 +222,11 @@ const SEED: AffluentState = {
     ],
     snapshots: [],
   },
-  retirement: { desiredMonthlyIncome: 5000, inflation: 0.025, returnPre: 0.065, returnPost: 0.04, swr: 0.04 },
+  retirement: {
+    desiredMonthlyIncome: 5000, inflation: 0.025, returnPre: 0.065, returnPost: 0.04, swr: 0.04,
+    otherIncome: [{ id: uid(), label: "Rental income", monthly: 800, fromAge: 65, toAge: null }],
+    lumpSums: [{ id: uid(), label: "Endowment maturity", amount: 60000, atAge: 65 }],
+  },
   insurance: {
     inputs: { dependents: 1, incomeYearsToReplace: 10, eduPerChild: 70000, finalExpenses: 20000, ipWard: "B2" },
     policies: [
@@ -238,6 +260,7 @@ function blankState(): AffluentState {
   b.cpf = { oa: 0, sa: 0, ma: 0, ra: 0, oaDrawMonthly: 0, annualTopUp: 0 };
   b.budget = { takeHomeMode: "auto", manualTakeHome: 0, expenses: [] };
   b.investments = { holdings: [], snapshots: [] };
+  b.retirement = { ...b.retirement, otherIncome: [], lumpSums: [] };   // keep assumptions, drop sample income
   b.insurance = { inputs: { dependents: 0, incomeYearsToReplace: 10, eduPerChild: 70000, finalExpenses: 0, ipWard: "B2" }, policies: [] };
   b.goals = [];
   b.taxReliefs = structuredClone(SEED.taxReliefs);   // seed reliefs are already all zero/none
@@ -282,6 +305,8 @@ function migrate(old: any): AffluentState {
   if (!Array.isArray(base.insurance.policies)) base.insurance.policies = structuredClone(SEED.insurance.policies);
   if (!base.insurance.inputs || typeof base.insurance.inputs !== "object" || Array.isArray(base.insurance.inputs)) base.insurance.inputs = structuredClone(SEED.insurance.inputs);
   if (!Array.isArray(base.goals)) base.goals = structuredClone(SEED.goals);
+  if (!Array.isArray(base.retirement.otherIncome)) base.retirement.otherIncome = [];
+  if (!Array.isArray(base.retirement.lumpSums)) base.retirement.lumpSums = [];
   base.v = SEED.v;
   return base;
 }

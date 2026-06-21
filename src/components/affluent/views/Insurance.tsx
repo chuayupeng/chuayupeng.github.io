@@ -100,9 +100,9 @@ export default function Insurance() {
                     <div className="lr-name">{c.key}</div>
                     <div className="lr-sub">{c.note}</div>
                   </td>
-                  <td className="num">{c.need == null ? "—" : sgdShort(c.need)}</td>
-                  <td className="num">{c.need == null ? (c.have ? "Yes" : "No") : sgdShort(c.have)}</td>
-                  <td className="num" style={{ color: c.gap > 0 ? "var(--coral)" : "var(--muted)" }}>{c.gap > 0 ? sgdShort(c.gap) : "—"}</td>
+                  <td className="num">{c.need == null ? "—" : sgdShort(c.need) + (c.monthly ? "/mo" : "")}</td>
+                  <td className="num">{c.need == null ? (c.have ? "Yes" : "No") : sgdShort(c.have) + (c.monthly ? "/mo" : "")}</td>
+                  <td className="num" style={{ color: c.gap > 0 ? "var(--coral)" : "var(--muted)" }}>{c.gap > 0 ? sgdShort(c.gap) + (c.monthly ? "/mo" : "") : "—"}</td>
                   <td style={{ textAlign: "right" }}>{statusChip(c.status)}</td>
                 </tr>
               ))}
@@ -229,13 +229,13 @@ export default function Insurance() {
               title={c.need == null
                 ? `Add ${c.key.toLowerCase()}`
                 : c.status === "missing"
-                  ? `Add ${c.key.toLowerCase()} — ${sgdShort(c.need)} needed`
-                  : `${c.key}: top up by ${sgdShort(c.gap)}`}
+                  ? `Add ${c.key.toLowerCase()} — ${sgdShort(c.need)}${c.monthly ? "/mo" : ""} needed`
+                  : `${c.key}: top up by ${sgdShort(c.gap)}${c.monthly ? "/mo" : ""}`}
               cta={c.status === "missing" ? "Add" : "Top up"}
               onCta={() => addPolicyOfType(c.addType, c.addName)}>
               {c.need == null
                 ? c.note
-                : `You hold ${sgdShort(c.have)} against a ${sgdShort(c.need)} need. I'll start the policy and jump you to it — just enter the cover amount and premium.`}
+                : `You hold ${sgdShort(c.have)}${c.monthly ? "/mo" : ""} against a ${sgdShort(c.need)}${c.monthly ? "/mo" : ""} need. I'll start the policy and jump you to it — just enter the ${c.monthly ? "monthly benefit" : "cover amount"} and premium.`}
             </Action>
           ))}
           {d.protectionGaps === 0 && (d.annualIncomeForCover > 0 || d.cov.annualPremium > 0) &&

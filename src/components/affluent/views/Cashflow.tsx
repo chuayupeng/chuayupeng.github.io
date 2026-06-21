@@ -27,11 +27,30 @@ export default function Cashflow() {
   const removeExpense = (id: string) =>
     set("budget", (p) => ({ ...p, expenses: p.expenses.filter((e) => e.id !== id) }));
 
+  // what's already leaving take-home each month as savings/contributions
+  const cpfTopUpMo = d.cpfEligible ? state.cpf.annualTopUp / 12 : 0;
+  const srsMo = state.taxReliefs.srsContribution / 12;
+  const familyMo = state.taxReliefs.cashTopUpFamily / 12;
+  const investMo = d.investContribMonthly;
+  const contribParts = [
+    { label: "CPF top-up", v: cpfTopUpMo },
+    { label: "SRS", v: srsMo },
+    { label: "Family top-up", v: familyMo },
+    { label: "Investing", v: investMo },
+  ].filter((p) => p.v > 0);
+  const contribSeg = Math.max(0, Math.min(bud.contributions, Math.max(0, bud.surplus)));
+  const freeSeg = Math.max(0, Math.max(0, bud.surplus) - contribSeg);
+
   const segs = [
     { label: "Housing & needs", value: bud.essential, color: "#0F3138" },
     { label: "Insurance", value: bud.insurance, color: CAT_COLOR.Insurance },
     { label: "Lifestyle", value: bud.discretionary, color: "#B7BDB0" },
-    { label: "Surplus to invest", value: Math.max(0, bud.surplus), color: CAT_COLOR.Savings },
+    ...(bud.contributions > 0
+      ? [
+          { label: "Contributions", value: contribSeg, color: CAT_COLOR.Savings },
+          { label: "Free", value: freeSeg, color: "#7AA6A0" },
+        ]
+      : [{ label: "Surplus to invest", value: Math.max(0, bud.surplus), color: CAT_COLOR.Savings }]),
   ];
 
   return (
@@ -48,6 +67,11 @@ export default function Cashflow() {
             <div className="stat-sub" style={{ color: "rgba(234,241,237,.7)" }}>
               take-home {sgd(bud.takeHome)} − spending {sgd(bud.essential + bud.discretionary)} − insurance {sgd(bud.insurance)}
             </div>
+            {bud.contributions > 0 && (
+              <div className="stat-sub" style={{ color: "rgba(234,241,237,.7)", marginTop: 4 }}>
+                of which <b style={{ color: "#fff" }}>{sgd(bud.contributions)}/mo</b> is already going to {contribParts.map((p) => `${p.label} ${sgd(p.v)}`).join(" · ")} — leaving <b style={{ color: bud.freeSurplus >= 0 ? "#8FD3B6" : "#FFB59B" }}>{sgd(bud.freeSurplus)}/mo</b> free.
+              </div>
+            )}
           </div>
           <div className="row wrap" style={{ gap: 8 }}>
             {bud.checks.map((c) => (

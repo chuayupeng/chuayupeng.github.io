@@ -25,7 +25,8 @@ export interface ProtectionNeeds {
   ci: number;
   incomeReplacement: number;
   benchmark9x: number;
-  premiumBudget: number;   // annual ceiling, 15% of est. take-home
+  premiumBudget: number;       // annual ceiling, 15% of est. take-home
+  disabilityMonthly: number;   // target monthly income-replacement cover (~70% of take-home)
 }
 
 export function protectionNeeds(a: NeedsArgs): ProtectionNeeds {
@@ -40,6 +41,7 @@ export function protectionNeeds(a: NeedsArgs): ProtectionNeeds {
     incomeReplacement,
     benchmark9x: a.annualIncome * BFPG.deathTpdMult,
     premiumBudget: takeHome * BFPG.premiumPct,
+    disabilityMonthly: (takeHome / 12) * 0.7,
   };
 }
 
@@ -108,14 +110,15 @@ export interface CoverageLine {
   note: string;
   addType: PolicyType;       // policy type created when you "Add" this cover
   addName: string;           // sensible default name for that policy
+  monthly?: boolean;         // need/have/gap are $/month (vs a lump sum)
 }
 
 export function coverageChecklist(needs: ProtectionNeeds, cov: Coverage, inputs: InsuranceInputs): CoverageLine[] {
-  const line = (key: string, need: number, have: number, note: string, addType: PolicyType, addName: string): CoverageLine => {
+  const line = (key: string, need: number, have: number, note: string, addType: PolicyType, addName: string, monthly = false): CoverageLine => {
     const gap = Math.max(0, need - have);
     // zero need (e.g. no income/dependants yet) is "none" — neither a gap nor "covered"
     const status: CheckStatus = need <= 0 ? "none" : have <= 0 ? "missing" : gap > need * 0.1 ? "short" : "covered";
-    return { key, need, have, status, gap, note, addType, addName };
+    return { key, need, have, status, gap, note, addType, addName, monthly };
   };
   const presence = (key: string, ok: boolean, note: string, addType: PolicyType, addName: string): CoverageLine => ({
     key, need: null, have: ok ? 1 : 0, status: ok ? "covered" : "missing", gap: 0, note, addType, addName,
@@ -127,8 +130,8 @@ export function coverageChecklist(needs: ProtectionNeeds, cov: Coverage, inputs:
     line("Critical illness", needs.ci, cov.ci, "~4× income to fund recovery and lost earnings while you heal.", "ci", "Critical illness"),
     presence("Hospitalisation (Integrated Shield)", cov.hasHospitalisation,
       `MediShield Life is automatic; an IP tops up to your preferred ward (you chose ${inputs.ipWard}).`, "hospitalisation", "Integrated Shield plan"),
-    presence("Disability income", cov.hasDisabilityIncome,
-      "Replaces a % of income if illness/injury stops you working but isn't total disability.", "disability_income", "Disability income"),
+    line("Disability income", needs.disabilityMonthly, cov.disabilityMonthly,
+      "A monthly income (insurers cap ~75% of salary) if illness/injury stops you working but isn't total disability.", "disability_income", "Disability income", true),
     presence("Personal accident", cov.hasPersonalAccident,
       "Lump sum + medical reimbursement for accidents. Optional; no official benchmark.", "personal_accident", "Personal accident"),
   ];
