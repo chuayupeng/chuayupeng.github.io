@@ -121,6 +121,8 @@ export interface Policy {
   tpdBenefit: number;
   ciBenefit: number;
   monthlyBenefit?: number;   // disability-income monthly payout
+  maturityValue?: number;    // endowment/savings maturity payout (feeds retirement)
+  maturityAge?: number;      // age the maturity pays out
   annualPremium: number;
   notes?: string;
 }
@@ -225,7 +227,7 @@ const SEED: AffluentState = {
   retirement: {
     desiredMonthlyIncome: 5000, inflation: 0.025, returnPre: 0.065, returnPost: 0.04, swr: 0.04,
     otherIncome: [{ id: uid(), label: "Rental income", monthly: 800, fromAge: 65, toAge: null }],
-    lumpSums: [{ id: uid(), label: "Endowment maturity", amount: 60000, atAge: 65 }],
+    lumpSums: [{ id: uid(), label: "Property downsizing", amount: 100000, atAge: 70 }],
   },
   insurance: {
     inputs: { dependents: 1, incomeYearsToReplace: 10, eduPerChild: 70000, finalExpenses: 20000, ipWard: "B2" },

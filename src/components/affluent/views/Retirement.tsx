@@ -191,6 +191,17 @@ export default function Retirement() {
                 </div>
               ))}
             </div>}
+        {d.endowmentLumps.length > 0 && (
+          <div style={{ marginTop: 10 }}>
+            {d.endowmentLumps.map((l) => (
+              <div key={l.id} className="readrow">
+                <span className="muted">{l.label} <Chip tone="neutral">from Insurance</Chip></span>
+                <b className="num">{sgd(l.amount)} at {l.atAge}</b>
+              </div>
+            ))}
+            <div className="note" style={{ marginTop: 4 }}>Endowment maturities you entered in Insurance are counted automatically — edit them there.</div>
+          </div>
+        )}
       </section>
 
       {/* actions */}

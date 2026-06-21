@@ -91,9 +91,11 @@ export function useDerived() {
       takeHomeAnnual: takeHome * 12,
     });
     const checklist = coverageChecklist(needs, cov, insurance.inputs);
-    const protectionGaps = checklist.filter((c) => c.status === "short" || c.status === "missing").length;
-    const protectionCovered = checklist.filter((c) => c.status === "covered").length;
-    const protectionApplicable = checklist.filter((c) => c.status !== "none").length;   // excludes zero-need lines
+    // optional cover (disability income, personal accident) is shown but not scored against health
+    const core = checklist.filter((c) => !c.optional);
+    const protectionGaps = core.filter((c) => c.status === "short" || c.status === "missing").length;
+    const protectionCovered = core.filter((c) => c.status === "covered").length;
+    const protectionApplicable = core.filter((c) => c.status !== "none").length;   // excludes zero-need + optional lines
 
     /* ---- budget ---- */
     // voluntary savings already leaving take-home each month: CPF top-up + SRS + family top-up + investing
@@ -108,13 +110,18 @@ export function useDerived() {
     });
 
     /* ---- retirement ---- */
+    // endowment / savings-plan maturities entered in Insurance flow in as one-off lump sums
+    const endowmentLumps = insurance.policies
+      .filter((p) => (p.maturityValue || 0) > 0)
+      .map((p) => ({ id: `pol-${p.id}`, label: p.name || "Policy maturity", amount: p.maturityValue!, atAge: p.maturityAge || profile.retireAge, fromPolicy: true as const }));
+    const lumpSums = [...retirement.lumpSums, ...endowmentLumps];
     const retire = analyzeRetirement({
       age, retireAge: profile.retireAge, life: profile.lifeExpectancy,
       startPortfolio: liquidInvest,
       desiredMonthlyToday: retirement.desiredMonthlyIncome,
       inflation: retirement.inflation, returnPre: retirement.returnPre, returnPost: retirement.returnPost,
       cpfLifeMonthly: cpfProj.lifeMonthly, cpfLifeStartAge: 65,
-      otherIncome: retirement.otherIncome, lumpSums: retirement.lumpSums,
+      otherIncome: retirement.otherIncome, lumpSums,
     }, investContribMonthly);
     const otherIncomeAtRetire = retirement.otherIncome
       .filter((s) => profile.retireAge >= s.fromAge && (s.toAge == null || profile.retireAge <= s.toAge))
@@ -132,7 +139,7 @@ export function useDerived() {
       liquidInvest, cashHoldings, otherHoldings, propertyEquity, liabilities, netWorth,
       investContribMonthly, allocation,
       cov, needs, checklist, protectionGaps, protectionCovered, protectionApplicable,
-      bud, retire, otherIncomeAtRetire,
+      bud, retire, otherIncomeAtRetire, endowmentLumps,
       goalsMonthly, goalsOffTrack,
     };
   }, [state]);

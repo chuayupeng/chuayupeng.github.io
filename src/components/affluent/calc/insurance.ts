@@ -96,17 +96,18 @@ export interface CoverageLine {
   addType: PolicyType;       // policy type created when you "Add" this cover
   addName: string;           // sensible default name for that policy
   monthly?: boolean;         // need/have/gap are $/month (vs a lump sum)
+  optional?: boolean;        // good-to-have cover — shown, but not scored against financial health
 }
 
 export function coverageChecklist(needs: ProtectionNeeds, cov: Coverage, inputs: InsuranceInputs): CoverageLine[] {
-  const line = (key: string, need: number, have: number, note: string, addType: PolicyType, addName: string, monthly = false): CoverageLine => {
+  const line = (key: string, need: number, have: number, note: string, addType: PolicyType, addName: string, opts: { monthly?: boolean; optional?: boolean } = {}): CoverageLine => {
     const gap = Math.max(0, need - have);
     // zero need (e.g. no income/dependants yet) is "none" — neither a gap nor "covered"
     const status: CheckStatus = need <= 0 ? "none" : have <= 0 ? "missing" : gap > need * 0.1 ? "short" : "covered";
-    return { key, need, have, status, gap, note, addType, addName, monthly };
+    return { key, need, have, status, gap, note, addType, addName, monthly: opts.monthly, optional: opts.optional };
   };
-  const presence = (key: string, ok: boolean, note: string, addType: PolicyType, addName: string): CoverageLine => ({
-    key, need: null, have: ok ? 1 : 0, status: ok ? "covered" : "missing", gap: 0, note, addType, addName,
+  const presence = (key: string, ok: boolean, note: string, addType: PolicyType, addName: string, optional = false): CoverageLine => ({
+    key, need: null, have: ok ? 1 : 0, status: ok ? "covered" : "missing", gap: 0, note, addType, addName, optional,
   });
 
   return [
@@ -116,9 +117,9 @@ export function coverageChecklist(needs: ProtectionNeeds, cov: Coverage, inputs:
     presence("Hospitalisation (Integrated Shield)", cov.hasHospitalisation,
       `MediShield Life is automatic; an IP tops up to your preferred ward (you chose ${inputs.ipWard}).`, "hospitalisation", "Integrated Shield plan"),
     line("Disability income", needs.disabilityMonthly, cov.disabilityMonthly,
-      "A monthly income (insurers cap ~75% of salary) if illness/injury stops you working but isn't total disability.", "disability_income", "Disability income", true),
+      "A monthly income (insurers cap ~75% of salary) if illness/injury stops you working. Good to have, not essential.", "disability_income", "Disability income", { monthly: true, optional: true }),
     presence("Personal accident", cov.hasPersonalAccident,
-      "Lump sum + medical reimbursement for accidents. Optional; no official benchmark.", "personal_accident", "Personal accident"),
+      "Lump sum + medical reimbursement for accidents. Optional; no official benchmark.", "personal_accident", "Personal accident", true),
   ];
 }
 

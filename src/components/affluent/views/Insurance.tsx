@@ -100,13 +100,13 @@ export default function Insurance() {
               {d.checklist.map((c) => (
                 <tr key={c.key}>
                   <td style={{ textAlign: "left" }}>
-                    <div className="lr-name">{c.key}</div>
+                    <div className="lr-name">{c.key}{c.optional && <span className="muted" style={{ fontWeight: 400, fontSize: 11 }}> · optional</span>}</div>
                     <div className="lr-sub">{c.note}</div>
                   </td>
                   <td className="num">{c.need == null ? "—" : sgdShort(c.need) + (c.monthly ? "/mo" : "")}</td>
                   <td className="num">{c.need == null ? (c.have ? "Yes" : "No") : sgdShort(c.have) + (c.monthly ? "/mo" : "")}</td>
-                  <td className="num" style={{ color: c.gap > 0 ? "var(--coral)" : "var(--muted)" }}>{c.gap > 0 ? sgdShort(c.gap) + (c.monthly ? "/mo" : "") : "—"}</td>
-                  <td style={{ textAlign: "right" }}>{statusChip(c.status)}</td>
+                  <td className="num" style={{ color: c.gap > 0 && !c.optional ? "var(--coral)" : "var(--muted)" }}>{c.gap > 0 ? sgdShort(c.gap) + (c.monthly ? "/mo" : "") : "—"}</td>
+                  <td style={{ textAlign: "right" }}>{c.optional && (c.status === "missing" || c.status === "short") ? <Chip tone="neutral"><Minus size={12} /> Optional</Chip> : statusChip(c.status)}</td>
                 </tr>
               ))}
             </tbody>
@@ -197,6 +197,21 @@ export default function Insurance() {
                         </label>
                       );
                     })}
+                    {p.type === "endowment" && (
+                      <>
+                        <label className="pol-field">
+                          <span className="pol-flabel">Maturity value <em>→ retirement</em></span>
+                          <PCell value={p.maturityValue || 0} step={5000} onChange={(n) => setPolicy(p.id, { maturityValue: n })} />
+                        </label>
+                        <label className="pol-field">
+                          <span className="pol-flabel">Matures at age</span>
+                          <span className="field-box" style={{ display: "inline-flex", width: "100%" }}>
+                            <input type="number" value={p.maturityAge ?? 65} min={40} max={100}
+                              onChange={(e) => setPolicy(p.id, { maturityAge: Math.min(100, Math.max(40, Math.round(Number(e.target.value) || 65))) })} />
+                          </span>
+                        </label>
+                      </>
+                    )}
                     <label className="pol-field">
                       <span className="pol-flabel">Premium <em>/yr</em></span>
                       <PCell value={p.annualPremium} step={50} onChange={(n) => setPolicy(p.id, { annualPremium: n })} />
@@ -227,16 +242,19 @@ export default function Insurance() {
       <section className="card span2">
         <div className="eyebrow"><CheckCircle2 size={14} /> Close the gaps</div>
         <div className="grid g2 gaps-grid" style={{ gap: 10 }}>
-          {d.checklist.filter((c) => c.status === "short" || c.status === "missing").map((c) => (
-            <Action key={c.key} tone={c.status === "missing" ? "do" : "warn"} icon={<ShieldCheck size={16} />}
-              title={c.need == null
-                ? `Add ${c.key.toLowerCase()}`
-                : c.status === "missing"
-                  ? `Add ${c.key.toLowerCase()} — ${sgdShort(c.need)}${c.monthly ? "/mo" : ""} needed`
-                  : `${c.key}: top up by ${sgdShort(c.gap)}${c.monthly ? "/mo" : ""}`}
+          {[...d.checklist.filter((c) => (c.status === "short" || c.status === "missing") && !c.optional),
+            ...d.checklist.filter((c) => (c.status === "short" || c.status === "missing") && c.optional)].map((c) => (
+            <Action key={c.key} tone={c.optional ? "good" : c.status === "missing" ? "do" : "warn"} icon={<ShieldCheck size={16} />}
+              title={c.optional
+                ? `${c.key} — optional, good to have`
+                : c.need == null
+                  ? `Add ${c.key.toLowerCase()}`
+                  : c.status === "missing"
+                    ? `Add ${c.key.toLowerCase()} — ${sgdShort(c.need)}${c.monthly ? "/mo" : ""} needed`
+                    : `${c.key}: top up by ${sgdShort(c.gap)}${c.monthly ? "/mo" : ""}`}
               cta={c.status === "missing" ? "Add" : "Top up"}
               onCta={() => addPolicyOfType(c.addType, c.addName)}>
-              {c.need == null
+              {c.optional || c.need == null
                 ? c.note
                 : `You hold ${sgdShort(c.have)}${c.monthly ? "/mo" : ""} against a ${sgdShort(c.need)}${c.monthly ? "/mo" : ""} need. I'll start the policy and jump you to it — just enter the ${c.monthly ? "monthly benefit" : "cover amount"} and premium.`}
             </Action>
