@@ -1,4 +1,5 @@
-import { Swords, Radar, Bug, ChefHat, ShieldCheck } from 'lucide-react';
+import { Radar, Bug, ChefHat, ShieldCheck } from 'lucide-react';
+import { KaliDragonIcon, SpiderIcon, ChainsIcon } from './offsecIcons';
 
 interface Certification {
   title: string;
@@ -11,9 +12,10 @@ interface Certification {
 }
 
 const certifications: Certification[] = [
-  { title: 'OSCP',     org: 'Offensive Security',         description: 'Offensive Security Certified Professional', year: '2019',      icon: Swords,      color: 'text-red-400',    active: true  },
-  { title: 'OSWE',     org: 'Offensive Security',         description: 'Offensive Security Web Expert',             year: '2020',      icon: Bug,         color: 'text-purple-400', active: true  },
-  { title: 'CRTO',     org: 'Zero-Point Security',        description: 'Certified Red Team Operator',               year: '2021',      icon: Radar,       color: 'text-rose-400',   active: true  },
+  { title: 'OSCP',     org: 'Offensive Security',         description: 'Offensive Security Certified Professional', year: '2019',      icon: KaliDragonIcon, color: 'text-red-400',    active: true  },
+  { title: 'OSWE',     org: 'Offensive Security',         description: 'Offensive Security Web Expert',             year: '2020',      icon: SpiderIcon,     color: 'text-purple-400', active: true  },
+  { title: 'OSEP',     org: 'Offensive Security',         description: 'Offensive Security Experienced Penetration Tester', year: '2026', icon: ChainsIcon,  color: 'text-orange-400', active: true  },
+  { title: 'CRTO',     org: 'Zero-Point Security',        description: 'Certified Red Team Operator',               year: '2021',      icon: Radar,          color: 'text-rose-400',   active: true  },
   { title: 'CPSA',     org: 'CREST',                      description: 'Practitioner Security Analyst',             year: '2019–2022', icon: ShieldCheck, color: 'text-blue-400',   active: false },
   { title: 'CRT',      org: 'CREST',                      description: 'Registered Penetration Tester',             year: '2019–2022', icon: Bug,         color: 'text-sky-400',    active: false },
   { title: 'WSQ FSC L3', org: 'SkillsFuture Singapore',   description: 'Food Safety & Hygiene Officer',             year: '2024',      icon: ChefHat,     color: 'text-amber-400',  active: true  },
