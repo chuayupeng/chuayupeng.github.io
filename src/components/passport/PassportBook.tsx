@@ -19,10 +19,48 @@ interface Placed {
   scale: number;
 }
 
-/** Guilloche-ish rosette lines, the fine engraving printed under passport pages. */
-const Guilloche = ({ seed = 0 }: { seed?: number }) => {
+const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a);
+
+/**
+ * One hypotrochoid — the curve a spirograph traces. A rosette closes after
+ * r/gcd(R,r) turns and shows R/gcd(R,r) lobes, so the ratio picks the shape.
+ */
+const rosette = (
+  cx: number, cy: number, R: number, r: number, d: number, steps: number,
+) => {
+  const turns = r / gcd(R, r);
+  const k = (R - r) / r;
+  const pts: string[] = [];
+  for (let i = 0; i <= steps; i++) {
+    const t = (i / steps) * Math.PI * 2 * turns;
+    const x = cx + (R - r) * Math.cos(t) + d * Math.cos(k * t);
+    const y = cy + (R - r) * Math.sin(t) - d * Math.sin(k * t);
+    pts.push(`${x.toFixed(2)} ${y.toFixed(2)}`);
+  }
+  return `M${pts.join(' L')}`;
+};
+
+/**
+ * The security print under each page. Real guilloche is a family of spirograph
+ * curves laid over each other with the pen offset stepped a little each pass,
+ * which is what braids them — so this draws nested rosette families rather
+ * than loose ellipses.
+ */
+const Guilloche = ({
+  seed = 0, color = INK_TEXT, opacity = 0.26,
+}: { seed?: number; color?: string; opacity?: number }) => {
   const id = useId().replace(/:/g, '');
-  const rings = Array.from({ length: 26 }, (_, i) => i);
+
+  // seed only nudges the geometry, so every page is a variation on one motif
+  const lobesA = 5 + (seed % 3);
+  const lobesB = 7 + ((seed + 1) % 4);
+  const spin = (seed * 13) % 360;
+
+  const familyA = Array.from({ length: 7 }, (_, i) =>
+    rosette(100, 70, lobesA * 9, 9, 15 + i * 2.6, 420));
+  const familyB = Array.from({ length: 5 }, (_, i) =>
+    rosette(100, 70, lobesB * 5, 5, 26 + i * 2.2, 420));
+
   return (
     <svg
       className="absolute inset-0 w-full h-full pointer-events-none"
@@ -32,23 +70,29 @@ const Guilloche = ({ seed = 0 }: { seed?: number }) => {
     >
       <defs>
         <radialGradient id={`fade${id}`}>
-          <stop offset="0%" stopColor="#fff" stopOpacity="0.75" />
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.9" />
+          <stop offset="55%" stopColor="#fff" stopOpacity="0.45" />
           <stop offset="100%" stopColor="#fff" stopOpacity="0" />
         </radialGradient>
         <mask id={`m${id}`}>
           <rect width="200" height="140" fill={`url(#fade${id})`} />
         </mask>
       </defs>
-      <g mask={`url(#m${id})`} stroke={INK_TEXT} fill="none" strokeWidth="0.18" opacity="0.2">
-        {rings.map((i) => (
-          <ellipse
-            key={i}
-            cx={100 + Math.sin(i * 0.7 + seed) * 16}
-            cy={70 + Math.cos(i * 0.9 + seed) * 10}
-            rx={12 + i * 3.1}
-            ry={9 + i * 2.2}
-            transform={`rotate(${i * 7 + seed * 20} 100 70)`}
-          />
+
+      <g mask={`url(#m${id})`} stroke={color} fill="none" opacity={opacity}>
+        <g transform={`rotate(${spin} 100 70)`}>
+          {familyA.map((d, i) => (
+            <path key={`a${i}`} d={d} strokeWidth="0.22" />
+          ))}
+        </g>
+        <g transform={`rotate(${-spin / 2} 100 70)`}>
+          {familyB.map((d, i) => (
+            <path key={`b${i}`} d={d} strokeWidth="0.18" opacity="0.8" />
+          ))}
+        </g>
+        {/* fine lathe rings tying the families together */}
+        {[18, 30, 44].map((rr) => (
+          <circle key={rr} cx="100" cy="70" r={rr} strokeWidth="0.14" opacity="0.55" />
         ))}
       </g>
     </svg>
@@ -193,20 +237,8 @@ const CoverPage = ({ back = false }: { back?: boolean }) => {
         style={{ border: `0.04em solid ${FOIL}`, opacity: 0.22 }}
       />
 
-      {/* engraved rosette behind everything */}
-      <svg
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        viewBox="0 0 100 140" preserveAspectRatio="none" aria-hidden="true"
-      >
-        <g stroke={FOIL} fill="none" strokeWidth="0.12" opacity="0.16">
-          {Array.from({ length: 18 }, (_, i) => (
-            <ellipse
-              key={i} cx="50" cy="70" rx={8 + i * 2.6} ry={6 + i * 3.4}
-              transform={`rotate(${i * 10} 50 70)`}
-            />
-          ))}
-        </g>
-      </svg>
+      {/* engine-turned rosette behind the emblem, in foil */}
+      <Guilloche seed={4} color={FOIL} opacity={0.4} />
 
       {!back ? (
         <div className="relative w-full h-full flex flex-col items-center justify-center gap-[0.8em] px-[1.4em] text-center">
@@ -354,6 +386,9 @@ const DataPage = () => {
               style={{
                 imageRendering: 'pixelated',
                 border: `0.08em solid ${INK_FAINT}`,
+                borderRadius: '0.35em',
+                // a thin highlight inside the rule reads as a bevelled lamination
+                boxShadow: 'inset 0 0 0 0.07em rgba(255,255,255,.45), 0 0.12em 0.3em rgba(0,0,0,.2)',
                 filter: 'grayscale(0.55) contrast(1.15) sepia(0.15)',
               }}
             />
@@ -365,11 +400,30 @@ const DataPage = () => {
             </div>
           </div>
 
-          <dl className="grid grid-cols-2 gap-x-[0.9em] gap-y-[0.62em] content-start flex-1">
+          <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-[0.9em] gap-y-[0.62em] content-start flex-1 min-w-0">
             {rows.map(([k, v]) => (
-              <div key={k}>
-                <dt style={{ fontSize: '0.64em', letterSpacing: '0.14em', color: INK_FAINT }}>{k}</dt>
-                <dd style={{ fontSize: '0.95em', fontWeight: 700, letterSpacing: '0.03em', lineHeight: 1.25 }}>{v}</dd>
+              <div key={k} className="min-w-0">
+                <dt
+                  style={{
+                    fontSize: '0.64em',
+                    letterSpacing: '0.1em',
+                    color: INK_FAINT,
+                    overflowWrap: 'anywhere',
+                  }}
+                >
+                  {k}
+                </dt>
+                <dd
+                  style={{
+                    fontSize: '0.95em',
+                    fontWeight: 700,
+                    letterSpacing: '0.03em',
+                    lineHeight: 1.25,
+                    overflowWrap: 'anywhere',
+                  }}
+                >
+                  {v}
+                </dd>
               </div>
             ))}
           </dl>
@@ -386,6 +440,7 @@ const DataPage = () => {
               width: '4em',
               imageRendering: 'pixelated',
               opacity: 0.22,
+              borderRadius: '50%',
               filter: 'grayscale(1) contrast(1.3)',
             }}
           />
