@@ -1,6 +1,6 @@
 /**
- * OffSec certification marks, lifted from the official Credly badge artwork:
- * the Kali dragon (OSCP), the spider (OSWE) and the chains (OSEP).
+ * OffSec certification marks, lifted from the official badge artwork: the Kali
+ * dragon (OSCP), the spider (OSWE), the chains (OSEP) and the wolf (OSAI).
  *
  * The glyphs are white line art on transparency, so they're painted as a CSS
  * mask over `currentColor` — that keeps each card's accent colour working the
@@ -40,3 +40,4 @@ const glyph = (src: string, label: string) => {
 export const KaliDragonIcon = glyph('/certs/oscp-glyph.png', 'Kali dragon');
 export const SpiderIcon = glyph('/certs/oswe-glyph.png', 'Spider');
 export const ChainsIcon = glyph('/certs/osep-glyph.png', 'Chains');
+export const WolfIcon = glyph('/certs/osai-glyph.svg', 'Howling wolf');
