@@ -3,7 +3,7 @@ import { ExternalLink, Lock } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import {
-  certifications, focusAreas, certsForDomains, holder,
+  certifications, holder,
   type Certification, type Domain,
 } from '@/data/certificationsData';
 
@@ -50,7 +50,7 @@ const SkillSheet = () => {
               Skills <span className="gradient-text">passport</span>
             </h1>
             <p className="text-muted-foreground mb-12 max-w-2xl">
-              The character sheet behind the CV — attributes, unlocked perks, and what's
+              The character sheet behind the CV — every perk unlocked so far, and what's
               still further up the tree.
             </p>
 
@@ -97,35 +97,8 @@ const SkillSheet = () => {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-              {/* ---- attributes ---- */}
-              <div className="lg:col-span-4 space-y-6">
-                <div className="card-surface p-5">
-                  <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground mb-5">
-                    Attributes
-                  </h2>
-                  <div className="space-y-5">
-                    {focusAreas.map((area) => (
-                      <div key={area.label}>
-                        <div className="flex items-baseline justify-between mb-2">
-                          <span className="text-sm font-medium">{area.label}</span>
-                          <span className="font-mono text-xs text-muted-foreground">{area.weight}</span>
-                        </div>
-                        <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
-                          <div
-                            className="h-full rounded-full bg-gradient-to-r from-cyber-cyan to-fuchsia-400"
-                            style={{ width: `${area.weight}%` }}
-                          />
-                        </div>
-                        <div className="mt-2 font-mono text-[10px] text-muted-foreground/60">
-                          {certsForDomains(area.domains).length > 0
-                            ? `backed by ${certsForDomains(area.domains).map((c) => c.title).join(', ')}`
-                            : 'no paper — earned in the field'}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
+              {/* ---- the tree carries the page; these sit beside it ---- */}
+              <div className="lg:col-span-4 lg:order-2 space-y-6">
                 {/* ---- locked ---- */}
                 <div className="card-surface p-5">
                   <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground mb-4">
@@ -149,7 +122,7 @@ const SkillSheet = () => {
               </div>
 
               {/* ---- skill tree ---- */}
-              <div className="lg:col-span-8">
+              <div className="lg:col-span-8 lg:order-1">
                 <div className="card-surface p-5 mb-6">
                   <h2 className="font-mono text-xs uppercase tracking-[0.25em] text-muted-foreground mb-5">
                     Unlocked
