@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ChevronLeft, ChevronRight, ExternalLink, Fingerprint, Maximize2, Minimize2, X } from 'lucide-react';
 import { certifications, holder, mrzLines, type Certification, type Domain } from '@/data/certificationsData';
 import { INK, PAPER, SHORT_ORG, StampMark, stampDate } from './stamps';
@@ -22,12 +23,22 @@ interface Placed {
 const gcd = (a: number, b: number): number => (b ? gcd(b, a % b) : a);
 
 /**
+ * Path cache. A rosette is a few hundred trig operations, and eight pages hold
+ * dozens of them, so they are computed once per parameter set and shared.
+ */
+const rosetteCache = new Map<string, string>();
+
+/**
  * One hypotrochoid — the curve a spirograph traces. A rosette closes after
  * r/gcd(R,r) turns and shows R/gcd(R,r) lobes, so the ratio picks the shape.
  */
 const rosette = (
   cx: number, cy: number, R: number, r: number, d: number, steps: number,
 ) => {
+  const key = `${cx},${cy},${R},${r},${d},${steps}`;
+  const hit = rosetteCache.get(key);
+  if (hit) return hit;
+
   const turns = r / gcd(R, r);
   const k = (R - r) / r;
   const pts: string[] = [];
@@ -37,62 +48,91 @@ const rosette = (
     const y = cy + (R - r) * Math.sin(t) - d * Math.sin(k * t);
     pts.push(`${x.toFixed(2)} ${y.toFixed(2)}`);
   }
-  return `M${pts.join(' L')}`;
+  const dAttr = `M${pts.join(' L')}`;
+  rosetteCache.set(key, dAttr);
+  return dAttr;
 };
+
+/** A family is one rosette drawn repeatedly with the pen offset stepped. */
+const family = (
+  cx: number, cy: number, lobes: number, r: number, d0: number, step: number,
+  passes: number, steps: number,
+) => Array.from({ length: passes }, (_, i) => rosette(cx, cy, lobes * r, r, d0 + i * step, steps));
+
+/**
+ * Satellite rosettes carrying the print out to the page edges. Coordinates are
+ * in the portrait 140x200 page space, not a landscape box.
+ */
+const SATELLITES = [
+  { cx: 22, cy: 30, lobes: 6, r: 2.6, d0: 6 },
+  { cx: 118, cy: 30, lobes: 7, r: 2.6, d0: 6 },
+  { cx: 22, cy: 170, lobes: 7, r: 2.6, d0: 6 },
+  { cx: 118, cy: 170, lobes: 6, r: 2.6, d0: 6 },
+  { cx: 70, cy: 16, lobes: 5, r: 2.2, d0: 5 },
+  { cx: 70, cy: 184, lobes: 5, r: 2.2, d0: 5 },
+  { cx: 12, cy: 100, lobes: 5, r: 2.2, d0: 5 },
+  { cx: 128, cy: 100, lobes: 5, r: 2.2, d0: 5 },
+  { cx: 70, cy: 56, lobes: 6, r: 2.2, d0: 5 },
+  { cx: 70, cy: 144, lobes: 6, r: 2.2, d0: 5 },
+];
 
 /**
  * The security print under each page. Real guilloche is a family of spirograph
  * curves laid over each other with the pen offset stepped a little each pass,
  * which is what braids them — so this draws nested rosette families rather
- * than loose ellipses.
+ * than loose ellipses, carried across the page by satellite rosettes.
+ *
+ * The viewBox is portrait to match the page it sits behind, and it slices
+ * rather than stretching: a rosette squashed to fit would stop being a rosette.
  */
 const Guilloche = ({
-  seed = 0, color = INK_TEXT, opacity = 0.26,
+  seed = 0, color = INK_TEXT, opacity = 0.3,
 }: { seed?: number; color?: string; opacity?: number }) => {
   const id = useId().replace(/:/g, '');
 
-  // seed only nudges the geometry, so every page is a variation on one motif
   const lobesA = 5 + (seed % 3);
-  const lobesB = 7 + ((seed + 1) % 4);
+  const lobesB = 8 + ((seed + 1) % 4);
   const spin = (seed * 13) % 360;
 
-  const familyA = Array.from({ length: 7 }, (_, i) =>
-    rosette(100, 70, lobesA * 9, 9, 15 + i * 2.6, 420));
-  const familyB = Array.from({ length: 5 }, (_, i) =>
-    rosette(100, 70, lobesB * 5, 5, 26 + i * 2.2, 420));
+  const centreA = family(70, 100, lobesA, 7, 10, 1.5, 12, 320);
+  const centreB = family(70, 100, lobesB, 4, 18, 1.2, 9, 300);
 
   return (
     <svg
       className="absolute inset-0 w-full h-full pointer-events-none"
-      viewBox="0 0 200 140"
-      preserveAspectRatio="none"
+      viewBox="0 0 140 200"
+      preserveAspectRatio="xMidYMid slice"
       aria-hidden="true"
     >
       <defs>
         <radialGradient id={`fade${id}`}>
-          <stop offset="0%" stopColor="#fff" stopOpacity="0.9" />
-          <stop offset="55%" stopColor="#fff" stopOpacity="0.45" />
-          <stop offset="100%" stopColor="#fff" stopOpacity="0" />
+          <stop offset="0%" stopColor="#fff" stopOpacity="0.95" />
+          <stop offset="70%" stopColor="#fff" stopOpacity="0.8" />
+          <stop offset="100%" stopColor="#fff" stopOpacity="0.45" />
         </radialGradient>
         <mask id={`m${id}`}>
-          <rect width="200" height="140" fill={`url(#fade${id})`} />
+          <rect width="140" height="200" fill={`url(#fade${id})`} />
         </mask>
       </defs>
 
       <g mask={`url(#m${id})`} stroke={color} fill="none" opacity={opacity}>
-        <g transform={`rotate(${spin} 100 70)`}>
-          {familyA.map((d, i) => (
-            <path key={`a${i}`} d={d} strokeWidth="0.22" />
-          ))}
+        <g transform={`rotate(${spin} 70 100)`}>
+          {centreA.map((d, i) => <path key={`a${i}`} d={d} strokeWidth="0.12" />)}
         </g>
-        <g transform={`rotate(${-spin / 2} 100 70)`}>
-          {familyB.map((d, i) => (
-            <path key={`b${i}`} d={d} strokeWidth="0.18" opacity="0.8" />
-          ))}
+        <g transform={`rotate(${-spin / 2} 70 100)`}>
+          {centreB.map((d, i) => <path key={`b${i}`} d={d} strokeWidth="0.1" opacity="0.85" />)}
         </g>
-        {/* fine lathe rings tying the families together */}
-        {[18, 30, 44].map((rr) => (
-          <circle key={rr} cx="100" cy="70" r={rr} strokeWidth="0.14" opacity="0.55" />
+
+        {SATELLITES.map((sat, i) => (
+          <g key={`s${i}`} transform={`rotate(${(spin + i * 37) % 360} ${sat.cx} ${sat.cy})`}>
+            {family(sat.cx, sat.cy, sat.lobes, sat.r, sat.d0, 0.8, 6, 190).map((d, j) => (
+              <path key={j} d={d} strokeWidth="0.09" opacity="0.7" />
+            ))}
+          </g>
+        ))}
+
+        {[14, 24, 36, 48].map((rr) => (
+          <circle key={rr} cx="70" cy="100" r={rr} strokeWidth="0.07" opacity="0.5" />
         ))}
       </g>
     </svg>
@@ -236,9 +276,6 @@ const CoverPage = ({ back = false }: { back?: boolean }) => {
         className="absolute inset-[0.7em] pointer-events-none"
         style={{ border: `0.04em solid ${FOIL}`, opacity: 0.22 }}
       />
-
-      {/* engine-turned rosette behind the emblem, in foil */}
-      <Guilloche seed={4} color={FOIL} opacity={0.4} />
 
       {!back ? (
         <div className="relative w-full h-full flex flex-col items-center justify-center gap-[0.8em] px-[1.4em] text-center">
@@ -678,11 +715,11 @@ const PassportBook = ({ compact = false }: { compact?: boolean } = {}) => {
 
   const small = compact && !expanded;
 
-  return (
+  const body = (
     <div
       className={
         expanded
-          ? 'fixed inset-0 z-50 flex flex-col items-center justify-center gap-2 p-4 md:p-8 bg-background/95 backdrop-blur-sm'
+          ? 'fixed inset-0 z-[70] flex flex-col items-center justify-center gap-2 p-4 md:p-8 bg-background backdrop-blur-sm'
           : 'w-full'
       }
       onClick={expanded ? (e) => { if (e.target === e.currentTarget) setExpanded(false); } : undefined}
@@ -806,6 +843,9 @@ const PassportBook = ({ compact = false }: { compact?: boolean } = {}) => {
       </p>
     </div>
   );
+
+  // portalled so the sticky aside it normally sits in cannot trap the overlay
+  return expanded ? createPortal(body, document.body) : body;
 };
 
 export default PassportBook;
