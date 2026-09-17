@@ -1,27 +1,4 @@
-import { Radar, Bug, ChefHat, ShieldCheck } from 'lucide-react';
-import { KaliDragonIcon, SpiderIcon, ChainsIcon, WolfIcon } from './offsecIcons';
-
-interface Certification {
-  title: string;
-  org: string;
-  description: string;
-  year: string;
-  icon: any;
-  color: string;
-  active: boolean;
-}
-
-const certifications: Certification[] = [
-  { title: 'OSCP',     org: 'Offensive Security',         description: 'Offensive Security Certified Professional', year: '2019',      icon: KaliDragonIcon, color: 'text-red-400',    active: true  },
-  { title: 'OSWE',     org: 'Offensive Security',         description: 'Offensive Security Web Expert',             year: '2020',      icon: SpiderIcon,     color: 'text-purple-400', active: true  },
-  { title: 'OSEP',     org: 'Offensive Security',         description: 'Offensive Security Experienced Penetration Tester', year: '2026', icon: ChainsIcon,  color: 'text-orange-400', active: true  },
-  { title: 'OSAI',     org: 'Offensive Security',         description: 'OffSec AI Red Teamer',                      year: '2026',      icon: WolfIcon,       color: 'text-rose-500',   active: true  },
-  { title: 'OSAI+',    org: 'Offensive Security',         description: 'OffSec AI Red Teamer, 3-year designation',  year: '2026–2029', icon: WolfIcon,       color: 'text-rose-500',   active: true  },
-  { title: 'CRTO',     org: 'Zero-Point Security',        description: 'Certified Red Team Operator',               year: '2021',      icon: Radar,          color: 'text-rose-400',   active: true  },
-  { title: 'CPSA',     org: 'CREST',                      description: 'Practitioner Security Analyst',             year: '2019–2022', icon: ShieldCheck, color: 'text-blue-400',   active: false },
-  { title: 'CRT',      org: 'CREST',                      description: 'Registered Penetration Tester',             year: '2019–2022', icon: Bug,         color: 'text-sky-400',    active: false },
-  { title: 'WSQ FSC L3', org: 'SkillsFuture Singapore',   description: 'Food Safety & Hygiene Officer',             year: '2024',      icon: ChefHat,     color: 'text-amber-400',  active: true  },
-];
+import { certifications } from '@/data/certificationsData';
 
 const CertificationsSection = () => {
   return (
@@ -41,10 +18,19 @@ const CertificationsSection = () => {
           {certifications.map((c) => {
             const Icon = c.icon;
             return (
-              <div key={c.title} className="card-surface p-6 group relative">
+              <div
+                key={c.title}
+                className={`card-surface p-6 group relative transition-opacity ${
+                  c.active ? '' : 'opacity-60 hover:opacity-100'
+                }`}
+              >
                 <div className="flex items-start justify-between mb-5">
-                  <div className={`w-11 h-11 rounded-lg bg-secondary border border-white/[0.06] flex items-center justify-center ${c.color}`}>
-                    <Icon className="w-5 h-5" />
+                  <div
+                    className={`w-11 h-11 rounded-lg bg-secondary border border-white/[0.06] flex items-center justify-center transition-[filter] ${c.color} ${
+                      c.active ? '' : 'grayscale group-hover:grayscale-0'
+                    }`}
+                  >
+                    <Icon size={26} />
                   </div>
                   <span className={`text-[10px] uppercase tracking-wider font-mono px-2 py-0.5 rounded-full border ${
                     c.active

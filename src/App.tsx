@@ -12,6 +12,8 @@ import BlogPost from "./pages/BlogPost";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import About from "./pages/About";
+import Passport from "./pages/Passport";
+import SkillSheet from "./pages/SkillSheet";
 import NotFound from "./pages/NotFound";
 
 // Standalone full-screen mount of the af.fluent planner (no portfolio chrome).
@@ -36,6 +38,9 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path="/about" element={<About />} />
+          {/* two candidate designs for the credentials page — pick one, drop the other */}
+          <Route path="/passport" element={<Passport />} />
+          <Route path="/character" element={<SkillSheet />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

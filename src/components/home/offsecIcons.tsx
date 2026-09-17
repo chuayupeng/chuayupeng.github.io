@@ -41,3 +41,17 @@ export const KaliDragonIcon = glyph('/certs/oscp-glyph.png', 'Kali dragon');
 export const SpiderIcon = glyph('/certs/oswe-glyph.png', 'Spider');
 export const ChainsIcon = glyph('/certs/osep-glyph.png', 'Chains');
 export const WolfIcon = glyph('/certs/osai-glyph.svg', 'Howling wolf');
+
+/**
+ * Lucide draws stroke-width 2 in a 24-unit box — roughly 8% of the icon's
+ * width, against about 2% for the OffSec badge line art. Measured as ink
+ * coverage at 64px, a default lucide mark lands near 35% against 11-16% for
+ * the glyphs, so it reads as glowing next to them. 0.75 brings it to ~13%.
+ */
+export const lineIcon = (Icon: any, label?: string) => {
+  const Wrapped = ({ size = 28, className }: GlyphProps) => (
+    <Icon size={size} strokeWidth={0.75} className={className} aria-hidden="true" />
+  );
+  Wrapped.displayName = label ?? 'LineIcon';
+  return Wrapped;
+};
