@@ -125,8 +125,10 @@ const Guilloche = ({
 
         {SATELLITES.map((sat, i) => (
           <g key={`s${i}`} transform={`rotate(${(spin + i * 37) % 360} ${sat.cx} ${sat.cy})`}>
-            {family(sat.cx, sat.cy, sat.lobes, sat.r, sat.d0, 0.8, 6, 190).map((d, j) => (
-              <path key={j} d={d} strokeWidth="0.09" opacity="0.7" />
+            {/* fewer passes and a lighter touch: the satellites are small, so a
+                dense family reads as a dark blot and pulls the eye off the text */}
+            {family(sat.cx, sat.cy, sat.lobes, sat.r, sat.d0, 0.9, 4, 190).map((d, j) => (
+              <path key={j} d={d} strokeWidth="0.07" opacity="0.38" />
             ))}
           </g>
         ))}
@@ -442,21 +444,23 @@ const DataPage = () => {
               <div key={k} className="min-w-0">
                 <dt
                   style={{
-                    fontSize: '0.64em',
-                    letterSpacing: '0.1em',
+                    fontSize: '0.6em',
+                    letterSpacing: '0.09em',
                     color: INK_FAINT,
-                    overflowWrap: 'anywhere',
+                    // break-word, not anywhere: only split a word that cannot
+                    // fit a line on its own, so nothing is cut mid-syllable
+                    overflowWrap: 'break-word',
                   }}
                 >
                   {k}
                 </dt>
                 <dd
                   style={{
-                    fontSize: '0.95em',
+                    fontSize: '0.85em',
                     fontWeight: 700,
-                    letterSpacing: '0.03em',
-                    lineHeight: 1.25,
-                    overflowWrap: 'anywhere',
+                    letterSpacing: '0.02em',
+                    lineHeight: 1.3,
+                    overflowWrap: 'break-word',
                   }}
                 >
                   {v}
