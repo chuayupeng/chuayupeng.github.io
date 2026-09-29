@@ -17,6 +17,9 @@ const TICKET_INK = '#1d2733';
 const TICKET_FAINT = '#63727f';
 const ACCENT = '#0e7f8c';
 
+/** Degree classification, flown as the cabin class. */
+const CLASS = 'SECOND UPPER';
+
 const pad = (s: string, n: number) => (s + '<'.repeat(n)).slice(0, n);
 
 /**
@@ -91,7 +94,7 @@ const BoardingPass = () => {
 
       <div className="flex flex-col sm:flex-row">
         {/* main coupon */}
-        <div className="flex-1 p-5">
+        <div className="flex-1 min-w-0 p-5">
           <div className="flex gap-4 flex-wrap sm:flex-nowrap">
             <img
               src="/mugshot.png"
@@ -105,7 +108,7 @@ const BoardingPass = () => {
             />
             <div className="grid grid-cols-2 gap-x-5 gap-y-3 flex-1 min-w-0">
               <Cell label="PASSENGER" value={`${holder.surname} / ${holder.givenNames}`} wide />
-              <Cell label="CLASS" value="FIRST" />
+              <Cell label="CLASS" value={CLASS} />
               <Cell label="SEQ" value={String(certifications.length).padStart(3, '0')} />
             </div>
           </div>
@@ -124,7 +127,7 @@ const BoardingPass = () => {
             <Mrz
               lines={[
                 pad(`M1${holder.surname}/${holder.givenNames.replace(/ /g, '<')}`, 44),
-                pad(`${holder.nationalityCode}${from}<${to}<FIRST<SEQ${String(certifications.length).padStart(3, '0')}`, 44),
+                pad(`${holder.nationalityCode}${from}<${to}<${CLASS.replace(/ /g, '<')}<SEQ${String(certifications.length).padStart(3, '0')}`, 44),
               ]}
             />
           </div>
@@ -144,7 +147,7 @@ const BoardingPass = () => {
           />
           <div className="flex flex-col gap-3">
             <Cell label="PASSENGER" value={holder.surname} />
-            <Cell label="CLASS" value="FIRST" />
+            <Cell label="CLASS" value={CLASS} />
             <Cell label="ORIGIN" value={holder.nationality.toUpperCase()} />
             <div className="overflow-x-auto">
               <Mrz size={10} lines={[pad(holder.surname, 14), pad(`${holder.nationalityCode}${from}`, 14)]} />
