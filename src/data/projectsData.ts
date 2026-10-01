@@ -1,4 +1,4 @@
-import { LineChart, Gamepad2, ShieldAlert, type LucideIcon } from 'lucide-react';
+import { LineChart, Gamepad2, Hammer, ShieldAlert, type LucideIcon } from 'lucide-react';
 
 export type ProjectStatus =
   | 'Live'
@@ -64,6 +64,30 @@ export const projectsData: ProjectType[] = [
       { label: 'Modules', value: '9 · one data model' },
       { label: 'Jurisdiction', value: 'Singapore · 2026' },
       { label: 'Output', value: 'Prescriptive plan' },
+    ],
+  },
+  {
+    slug: 'takumi',
+    title: 'Takumi',
+    tagline: 'A carpenter\u2019s site, rebuilt by hand.',
+    summary:
+      'A full rebuild of madebytakumi.com for a Singapore custom-carpentry firm \u2014 six pages of plain static HTML with no build step, no framework and no CMS, carrying the old site\u2019s search rankings across intact.',
+    description: [
+      'Takumi are a Singapore custom-carpentry outfit whose site ran on Hostinger\u2019s website builder \u2014 and whose source had been lost. This is a ground-up rebuild, reconstructed from the live site and redesigned around the craft it is selling: the work photography leads, and the sales machinery sits underneath it.',
+      'It is deliberately a plain static site. No build step, no framework, no CMS lock-in \u2014 six folders of HTML, one stylesheet carrying the whole design system, and three small scripts. That means it will still deploy to any static host years from now, and whoever inherits it can edit a price by changing one line.',
+      'Every URL slug matches the old site exactly, so a decade of Google rankings and backlinks carry over rather than being thrown away. Structured data covers the business, breadcrumbs and the calculator FAQ \u2014 though aggregate-rating markup is deliberately left out, since Google\u2019s guidelines disallow self-serving review stars pulled from Google itself.',
+      'The Google reviews are live rather than an embedded widget: they are fetched and rendered natively on each load, with no third-party branding, falling back to a stored snapshot if the endpoint ever goes away. The price calculator drives its quote, breakdown and WhatsApp hand-off from a single catalogue array, and the contact form opens WhatsApp pre-filled \u2014 no backend to run or pay for.',
+    ],
+    status: 'In development',
+    year: '2026',
+    stack: ['Static HTML', 'CSS design system', 'Vanilla JS', 'JSON-LD', 'WebP', 'Vercel'],
+    domains: ['Web', 'Small business', 'Singapore'],
+    accent: '#8B5E34',
+    icon: Hammer,
+    highlights: [
+      { label: 'Pages', value: '6, hand-built' },
+      { label: 'Build step', value: 'None' },
+      { label: 'URL slugs', value: 'Preserved from old site' },
     ],
   },
   {
