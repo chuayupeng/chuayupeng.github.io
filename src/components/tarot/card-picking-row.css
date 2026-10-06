@@ -1,0 +1,49 @@
+.card-picking-row { min-width: 0; max-width: 100%; margin: 0 24px 26px; border: 1px solid #92734d66; border-radius: 9px; background: #140e1b; }
+.card-picking-row__header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 22px 24px 10px; }
+.card-picking-row__eyebrow { display: block; font: 9px/1.6 ui-monospace, monospace; letter-spacing: 1.4px; text-transform: uppercase; color: #c7a779; }
+.card-picking-row__header h2 { margin: 5px 0 8px; color: #ecdcbc; font: 28px/1.2 Georgia, serif; }
+.card-picking-row__header p { margin: 0; font: 10px/1.7 ui-monospace, monospace; color: #ad98b8; }
+.card-picking-row__header p strong { font-weight: 400; color: #d9b87c; }
+.card-picking-row__header p > span:last-child { color: #ded0e1; }
+.card-picking-row__shuffle { display: inline-flex; justify-content: center; align-items: center; gap: 9px; min-height: 44px; padding: 10px 14px; border: 1px solid #92795180; border-radius: 5px; background: #302132; color: #ecd4a8; font: 10px/1.5 ui-monospace, monospace; }
+.card-picking-row__shuffle:hover:not(:disabled) { background: #473047; border-color: #cfac76; }
+.card-picking-row__shuffle:disabled { opacity: .6; cursor: default; }
+.card-picking-row__hint { margin: 0; padding: 0 24px 6px; color: #a48daf; font-size: 11px; line-height: 1.8; }
+.card-picking-row__table { position: relative; width: 100%; list-style: none; margin: 0; padding: 0; isolation: isolate; pointer-events: none; background: radial-gradient(ellipse at 50% 40%, #54322b33, transparent 70%); opacity: 1; transition: opacity 300ms ease; }
+.card-picking-row--fade-out .card-picking-row__table { opacity: 0; transition-duration: 200ms; }
+.card-picking-row__slot { --card-lift: 0px; position: absolute; width: 48px; height: 72px; z-index: var(--card-layer); transform: translate3d(var(--jitter-x), calc(var(--jitter-y) - var(--card-lift)), 0); pointer-events: none; }
+.card-picking-row__card { position: relative; display: block; width: 48px; height: 72px; padding: 0; border: 0; background: #1c1222; transform: rotate(var(--card-angle)); box-shadow: 0 0 10px #0009; pointer-events: auto; touch-action: pan-y pinch-zoom; user-select: none; -webkit-user-select: none; -webkit-user-drag: none; scroll-margin-block: 104px 24px; }
+.card-picking-row__card img { display: block; width: 100%; height: 100%; object-fit: contain; pointer-events: none; user-select: none; -webkit-user-drag: none; }
+.card-picking-row__slot:hover, .card-picking-row__slot:focus-within { --card-lift: 6px; z-index: 1000; }
+.card-picking-row__card:hover:not(:disabled), .card-picking-row__card:focus-visible { outline: 2px solid #f1ce8e; outline-offset: 3px; }
+.card-picking-row__card:disabled { cursor: wait; pointer-events: none; }
+.card-picking-row--mixing .card-picking-row__slot { --card-lift: 0px; }
+.card-picking-row button:focus-visible { outline: 2px solid #f1ce8e; outline-offset: 3px; }
+.card-picking-preview { width: min(420px, calc(100vw - 24px)); max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); margin: auto; padding: 22px; overflow-x: hidden; overflow-y: auto; border: 1px solid #bc965f; border-radius: 12px; color: #dbc9df; background: #1d1324; box-shadow: 0 24px 80px #000b; overscroll-behavior: contain; }
+.card-picking-preview::backdrop { background: #08050ee6; backdrop-filter: blur(6px); }
+.card-picking-preview h2 { margin: 7px 0 8px; color: #f0dcb7; font: 28px/1.15 Georgia, serif; }
+.card-picking-preview > p { margin: 0; color: #bca5c7; font-size: 12px; line-height: 1.65; }
+.card-picking-preview__stage { display: grid; place-items: center; height: clamp(184px, 31dvh, 248px); margin: 8px 0 22px; isolation: isolate; }
+.card-picking-preview__back { position: relative; width: clamp(90px, 19dvh, 128px); aspect-ratio: 2 / 3; transition: transform 360ms cubic-bezier(.2,.7,.2,1); box-shadow: 0 0 24px #0009; }
+.card-picking-preview__back img { display: block; width: 100%; height: 100%; object-fit: contain; user-select: none; -webkit-user-drag: none; }
+.card-picking-preview__actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.card-picking-preview__actions button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-width: 0; min-height: 44px; padding: 10px 8px; border: 1px solid #8f6c4b88; border-radius: 5px; color: #e2caa1; background: #342039; font: 11px/1.5 ui-monospace, monospace; }
+.card-picking-preview__actions button:hover { background: #4a2b4d; }
+.card-picking-preview__actions button.card-picking-preview__choose { background: #d6b47b; color: #27182b; border-color: #eac890; }
+.card-picking-preview__actions button.card-picking-preview__choose:hover { background: #efd099; }
+.card-picking-preview__actions button:last-child { grid-column: 1 / -1; color: #bca5ca; background: #211627; border-color: #70547a66; }
+.card-picking-preview button:focus-visible { outline: 2px solid #f1ce8e; outline-offset: 3px; }
+@media (max-width: 760px) {
+  .card-picking-row { margin-inline: 14px; }
+  .card-picking-row__header { padding: 19px 18px 11px; }
+  .card-picking-row__header h2 { font-size: 26px; }
+  .card-picking-row__hint { padding-inline: 18px; font-size: 10px; }
+}
+@media (max-width: 460px) {
+  .card-picking-row__shuffle { width: 100%; }
+  .card-picking-preview { padding: 18px; }
+  .card-picking-preview h2 { font-size: 25px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-picking-row *, .card-picking-row *::before, .card-picking-row *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

@@ -1,0 +1,252 @@
+.deck-preview-page {
+  max-width: 1184px;
+  margin: 0 auto;
+  padding: 110px 24px 56px;
+}
+
+.deck-preview-page__topline,
+.deck-preview-page__topline a,
+.deck-preview-character,
+.deck-preview-character__roles,
+.deck-preview-page__links {
+  display: flex;
+  align-items: center;
+}
+
+.deck-preview-page__topline {
+  justify-content: space-between;
+  gap: 16px;
+  font: 11px/1.5 ui-monospace, monospace;
+  color: #9b90b1;
+}
+
+.deck-preview-page__topline a { gap: 8px; }
+.deck-preview-page a:hover { color: #d8c7ff; }
+.deck-preview-page a:focus-visible { outline: 2px solid #c4a0ff; outline-offset: 5px; }
+.deck-preview-character { gap: 14px; padding: 26px 0 23px; }
+.deck-preview-character img { image-rendering: pixelated; border: 1px solid #8563b155; border-radius: 50%; }
+.deck-preview-character__name { font: 13px/1.5 ui-monospace, monospace; color: #ebe2f8; }
+.deck-preview-character__name span { color: #917da8; }
+.deck-preview-character p { margin: 3px 0 0; font-size: 12px; line-height: 1.5; color: #a69bb6; }
+.deck-preview-character__roles { gap: 12px; margin-left: auto; color: #b895e7; }
+.deck-preview-character__roles svg:last-child { color: #d0aa68; }
+.deck-preview-page__links { justify-content: flex-end; flex-wrap: wrap; gap: 22px; padding: 22px 2px 0; font: 11px/1.5 ui-monospace, monospace; color: #b5a9c6; }
+.deck-preview-page__links > span { margin-right: auto; color: #877b99; }
+
+.mixologist-deck {
+  --deck-gold: #d3b67b;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #71608466;
+  border-radius: 12px;
+  background: #15101f;
+  box-shadow: 0 16px 50px #0003;
+}
+
+.mixologist-deck__chrome {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 20px;
+  border-bottom: 1px solid #70608040;
+  background: #1a1328;
+  font: 10px/1.5 ui-monospace, monospace;
+  color: #ae9bc5;
+}
+
+.mixologist-deck__file { display: flex; align-items: center; gap: 10px; }
+.mixologist-deck__item-type { border: 1px solid #9276b64d; padding: 2px 8px; border-radius: 3px; font-size: 9px; white-space: nowrap; }
+.tarot-collection-selector { display: flex; flex-wrap: wrap; gap: 8px; padding: 16px 20px; border-bottom: 1px solid #70608035; background: #130e1b; }
+.tarot-collection-selector > button { display: inline-flex; align-items: center; justify-content: space-between; gap: 14px; flex: 1 1 125px; min-height: 44px; padding: 9px 12px; border: 1px solid #65527066; border-radius: 5px; background: #201728; color: #bcacc8; font: 10px/1.5 ui-monospace, monospace; }
+.tarot-collection-selector > button:hover { background: #32213c; border-color: #9f8261; }
+.tarot-collection-selector > button[aria-pressed='true'] { background: #38293a; border-color: #d3ad71; color: #f0d7a8; }
+.tarot-collection-selector > button > span[aria-hidden='true'] { min-width: 21px; padding: 2px 4px; border-radius: 3px; background: #0d091666; color: #ac93b8; text-align: center; font-size: 9px; }
+.tarot-collection-selector > button[aria-pressed='true'] > span[aria-hidden='true'] { color: #dfbf86; }
+.mixologist-deck__body { display: grid; grid-template-columns: minmax(270px, 0.8fr) minmax(0, 1.3fr); align-items: center; min-height: 448px; }
+.mixologist-deck__intro { position: relative; z-index: 1; padding: 32px 0 34px 36px; }
+.mixologist-deck__eyebrow { display: block; font: 9px/1.6 ui-monospace, monospace; text-transform: uppercase; letter-spacing: 1.8px; color: #c8aa76; }
+.mixologist-deck__intro h1 { margin: 18px 0; font: 42px/1.08 Georgia, 'Times New Roman', serif; letter-spacing: -1.4px; color: #f1e8d6; }
+.mixologist-deck__intro h1 em { font-weight: 400; color: #d9ba80; }
+.mixologist-deck__intro > p { margin: 0; max-width: 290px; font-size: 13px; line-height: 1.85; color: #bcb0c8; }
+.mixologist-deck__intro > p.mixologist-deck__aside { margin-top: 14px; color: #ddccb0; font-size: 12px; }
+.mixologist-deck__actions { display: flex; gap: 10px; margin-top: 27px; }
+.mixologist-deck__actions button { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; padding: 0 14px; border-radius: 4px; font: 11px/1.4 ui-monospace, monospace; transition: background 160ms, border-color 160ms; }
+.mixologist-deck__draw { border: 1px solid #d8b87a; background: #d2b37a; color: #241927; }
+.mixologist-deck__draw:hover { background: #e7ca96; }
+.mixologist-deck__shuffle { border: 1px solid #7e698755; color: #cbbcd5; background: #241c2e; }
+.mixologist-deck__shuffle:hover { background: #32233e; border-color: #bba083; }
+.mixologist-deck button:focus-visible { outline: 2px solid #f0dba8; outline-offset: 5px; }
+.mixologist-deck__count { display: block; margin-top: 14px; font: 9px/1.5 ui-monospace, monospace; color: #95859f; }
+.mixologist-deck__collection-link { display: inline-flex; align-items: center; gap: 8px; min-height: 40px; margin-top: 8px; color: #cbb485; font: 10px/1.6 ui-monospace, monospace; }
+.mixologist-deck__table { position: relative; min-width: 0; height: 448px; isolation: isolate; background: radial-gradient(ellipse at 52% 47%, #39312455, transparent 64%); }
+.mixologist-deck__table-orbit { position: absolute; width: 75%; height: 70%; top: 13%; left: 13%; border: 1px solid #b5976033; border-radius: 50%; transform: rotate(-12deg); }
+.mixologist-deck__table-orbit::after { content: ''; position: absolute; inset: 8px -12px; border: 1px solid #b597601a; border-radius: 50%; }
+.mixologist-deck__table-mark { position: absolute; top: 21px; right: 45px; color: #bc9b60; font: 30px/1 Georgia, serif; }
+.mixologist-deck__fan { position: absolute; inset: 0; }
+.mixologist-deck__card-button {
+  --card-rotation: 0deg;
+  --card-y: 0px;
+  position: absolute;
+  top: 61px;
+  left: 50%;
+  width: 180px;
+  padding: 0;
+  border-radius: 8px;
+  text-align: left;
+  transform: translate(-50%, var(--card-y)) rotate(var(--card-rotation));
+  transition: transform 250ms, filter 250ms;
+  animation: tarot-deal 450ms backwards;
+  filter: drop-shadow(0 15px 13px #0008);
+}
+.mixologist-deck__card-button--0 { left: 24%; --card-rotation: -12deg; --card-y: 25px; z-index: 1; }
+.mixologist-deck__card-button--1 { z-index: 2; animation-delay: 50ms; }
+.mixologist-deck__card-button--2 { left: 76%; --card-rotation: 12deg; --card-y: 25px; z-index: 3; animation-delay: 100ms; }
+.mixologist-deck__card-button:hover,
+.mixologist-deck__card-button:focus-visible { z-index: 4; transform: translate(-50%, calc(var(--card-y) - 18px)) rotate(0deg); filter: drop-shadow(0 17px 16px #000b); }
+.mixologist-deck__table-note { position: absolute; bottom: 25px; left: 0; width: 100%; display: flex; justify-content: center; align-items: center; gap: 17px; font: 9px/1.5 ui-monospace, monospace; letter-spacing: 1px; color: #aa956f; }
+.mixologist-deck__table-note > span { color: #d8b477; font-size: 11px; }
+
+.tarot-card { position: relative; margin: 0; }
+.tarot-card__image { aspect-ratio: 2 / 3; }
+.tarot-card__image img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.tarot-card__caption { margin-top: 10px; text-align: center; font: 9px/1.6 ui-monospace, monospace; color: #b5a081; }
+
+.tarot-collection { padding: 30px 28px 36px; border-top: 1px solid #70608040; background: #120d1a; scroll-margin-top: 96px; }
+.tarot-collection__heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 26px; }
+.tarot-collection__heading h2 { margin: 6px 0 8px; font: 30px/1.2 Georgia, 'Times New Roman', serif; color: #eeddbd; }
+.tarot-collection__heading p { margin: 0; font-size: 12px; line-height: 1.8; color: #a99ab5; }
+.tarot-collection__total { flex-shrink: 0; border: 1px solid #98784855; border-radius: 4px; padding: 6px 9px; color: #ccb082; font: 10px/1.5 ui-monospace, monospace; }
+.tarot-collection__grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); list-style: none; gap: 26px 18px; margin: 0; padding: 0; }
+.tarot-collection__grid > li { min-width: 0; }
+.tarot-collection__card { display: block; width: 100%; padding: 0; border-radius: 4px; text-align: left; }
+.tarot-collection__card .tarot-card { transition: transform 200ms, filter 200ms; }
+.tarot-collection__card:hover .tarot-card, .tarot-collection__card:focus-visible .tarot-card { transform: translateY(-5px); filter: drop-shadow(0 10px 14px #000a); }
+.tarot-collection__caption { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 7px; row-gap: 4px; margin-top: 12px; min-height: 43px; }
+.tarot-collection__numeral { padding-top: 2px; color: #aa8c59; font: 9px/1.5 ui-monospace, monospace; }
+.tarot-collection__name { color: #e4d6bb; font: 13px/1.3 Georgia, 'Times New Roman', serif; }
+.tarot-collection__cast { grid-column: 2; color: #a494b1; font: 8px/1.5 ui-monospace, monospace; }
+
+.mixologist-deck__suit-key { padding: 16px 26px 20px; border-top: 1px solid #70608035; background: #16101f; }
+.mixologist-deck__suit-key > p { margin: 0 0 12px; font: 9px/1.5 ui-monospace, monospace; color: #c5ab7d; }
+.mixologist-deck__suit-key > p > span { color: #94819e; }
+.mixologist-deck__suit-key dl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 0; }
+.mixologist-deck__suit-key dl > div { display: flex; flex-wrap: wrap; gap: 4px; align-items: baseline; font: 10px/1.6 ui-monospace, monospace; }
+.mixologist-deck__suit-key dt { color: #d8c99e; }
+.mixologist-deck__suit-key dd { margin: 0; color: #bca9c6; }
+.mixologist-deck__suit-key dd > small { display: block; font-size: 8px; color: #95849f; }
+
+.mixologist-deck__footer { display: flex; align-items: center; gap: 15px; padding: 17px 26px; background: #100c17; border-top: 1px solid #70608035; }
+.mixologist-deck__back { width: 26px; height: 39px; flex-shrink: 0; display: grid; place-items: center; border: 1px solid #a98a535f; border-radius: 3px; background: repeating-linear-gradient(45deg, #372639 0 1px, transparent 1px 5px), #181422; transform: rotate(-8deg); box-shadow: 3px 2px #332538; }
+.mixologist-deck__back span { font-size: 16px; color: #dfbd81; }
+.mixologist-deck__footer p { margin: 0; font-size: 11px; line-height: 1.8; color: #d1c4d5; }
+.mixologist-deck__footer p span { color: #897b98; font: 9px/1.5 ui-monospace, monospace; }
+.mixologist-deck__footer a { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; color: #cfb780; white-space: nowrap; font: 10px/1.6 ui-monospace, monospace; padding: 8px 0; }
+
+.tarot-dialog-overlay { position: fixed; z-index: 90; inset: 0; background: #08060edf; backdrop-filter: blur(8px); }
+.tarot-dialog { position: fixed; z-index: 91; top: 50%; left: 50%; transform: translate(-50%, -50%); display: grid; grid-template-columns: minmax(0, 350px) minmax(0, 1fr); gap: 36px; width: min(980px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow-y: auto; padding: 32px; border: 1px solid #988059; border-radius: 12px; background: #191220; box-shadow: 0 30px 100px #0009; color: #e8dec9; animation: tarot-dialog-in 180ms ease-out; }
+.tarot-dialog__art { align-self: center; justify-self: center; width: 100%; max-width: min(350px, calc((100dvh - 150px) * 0.6667)); }
+.tarot-dialog__copy { align-self: center; min-width: 0; padding: 14px 0; }
+.tarot-dialog__title { margin: 12px 0 16px; font: 32px/1.1 Georgia, 'Times New Roman', serif; color: #f0dfbe; }
+.tarot-dialog__theme { margin: -5px 0 18px; font: 10px/1.6 ui-monospace, monospace; color: #c2a77b; overflow-wrap: anywhere; }
+.tarot-dialog__description { font-size: 13px; line-height: 1.85; color: #cfc0d4; }
+.tarot-dialog__ingredients { display: flex; flex-wrap: wrap; list-style: none; margin: 21px 0; padding: 0; gap: 7px; }
+.tarot-dialog__ingredients li { max-width: 100%; padding: 4px 8px; border: 1px solid #967f5855; border-radius: 3px; font: 9px/1.5 ui-monospace, monospace; color: #d0b983; overflow-wrap: anywhere; }
+.tarot-dialog__connection { border-top: 1px solid #7a65544d; padding-top: 18px; }
+.tarot-dialog__label { font: 9px/1.5 ui-monospace, monospace; text-transform: uppercase; letter-spacing: 1px; color: #96869f; }
+.tarot-dialog__connection p { margin: 9px 0 12px; font-size: 12px; line-height: 1.8; color: #b8a9c0; }
+.tarot-dialog__connection a { display: inline-flex; align-items: center; gap: 9px; min-height: 44px; font: 10px/1.6 ui-monospace, monospace; color: #dbbe7e; }
+.tarot-dialog__connection a:hover { color: #fae8bd; }
+.tarot-dialog__navigation { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #7a65544d; }
+.tarot-dialog__navigation button { display: inline-flex; align-items: center; gap: 5px; min-height: 44px; padding: 0 7px; border: 1px solid #80674455; border-radius: 4px; color: #d8c193; font: 10px/1.5 ui-monospace, monospace; }
+.tarot-dialog__navigation button:hover { background: #342438; }
+.tarot-dialog__navigation > span { color: #a08caa; font: 9px/1.5 ui-monospace, monospace; }
+.tarot-dialog__close { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 5px; color: #d4c4d9; }
+.tarot-dialog__close:hover { background: #362a40; }
+.tarot-dialog :focus-visible { outline: 2px solid #e5c792; outline-offset: 3px; }
+
+@keyframes tarot-deal {
+  from { opacity: 0; transform: translate(-50%, 45px) rotate(0deg) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, var(--card-y)) rotate(var(--card-rotation)); }
+}
+@keyframes tarot-dialog-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (min-width: 1150px) {
+  .mixologist-deck__card-button { width: 195px; top: 48px; }
+  .mixologist-deck__intro h1 { font-size: 48px; }
+}
+
+@media (max-width: 900px) {
+  .tarot-collection__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .mixologist-deck__body { grid-template-columns: minmax(230px, 0.9fr) minmax(0, 1fr); }
+  .mixologist-deck__intro { padding-left: 24px; }
+  .mixologist-deck__intro h1 { font-size: 36px; }
+  .mixologist-deck__card-button { width: 155px; top: 80px; }
+  .mixologist-deck__card-button--0 { left: 23%; --card-rotation: -9deg; }
+  .mixologist-deck__card-button--2 { left: 77%; --card-rotation: 9deg; }
+}
+
+@media (max-width: 700px) {
+  .deck-preview-page { padding: 102px 16px 35px; }
+  .deck-preview-page__topline { font-size: 9px; }
+  .deck-preview-character { padding: 22px 0; gap: 10px; }
+  .deck-preview-character p { max-width: 285px; font-size: 11px; }
+  .deck-preview-character__roles { display: none; }
+  .mixologist-deck__chrome { padding: 12px 14px; font-size: 9px; }
+  .mixologist-deck__item-type { display: none; }
+  .tarot-collection-selector { padding: 12px 14px; }
+  .mixologist-deck__body { display: flex; flex-direction: column; min-height: 0; }
+  .mixologist-deck__intro { width: 100%; padding: 25px 24px 0; }
+  .mixologist-deck__intro h1 { font-size: 34px; margin: 10px 0 12px; }
+  .mixologist-deck__intro h1 br { display: none; }
+  .mixologist-deck__intro > p { max-width: 430px; font-size: 12px; }
+  .mixologist-deck__intro > p.mixologist-deck__aside { margin-top: 8px; }
+  .mixologist-deck__actions { margin-top: 18px; }
+  .mixologist-deck__count { margin-top: 10px; }
+  .mixologist-deck__collection-link { margin-top: 2px; }
+  .mixologist-deck__table { width: 100%; max-width: 520px; height: 358px; }
+  .mixologist-deck__card-button { width: 158px; top: 35px; }
+  .mixologist-deck__card-button--0 { left: 24%; }
+  .mixologist-deck__card-button--2 { left: 76%; }
+  .mixologist-deck__table-mark { top: 4px; right: 35px; font-size: 20px; }
+  .mixologist-deck__table-note { bottom: 18px; font-size: 8px; }
+  .mixologist-deck__suit-key { padding: 16px 18px; }
+  .mixologist-deck__suit-key dl { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .tarot-collection { padding: 25px 18px 28px; }
+  .tarot-collection__heading { align-items: flex-start; margin-bottom: 22px; gap: 12px; }
+  .tarot-collection__heading h2 { font-size: 27px; }
+  .tarot-collection__heading p { font-size: 11px; }
+  .tarot-collection__total { margin-top: 4px; padding: 4px 7px; font-size: 9px; }
+  .tarot-collection__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px 14px; }
+  .mixologist-deck__footer { padding: 15px 18px; flex-wrap: wrap; gap: 12px; }
+  .mixologist-deck__footer p { font-size: 10px; }
+  .mixologist-deck__footer p span { font-size: 8px; }
+  .mixologist-deck__footer a { flex-basis: 100%; margin: 0 0 0 38px; min-height: 36px; }
+  .deck-preview-page__links { gap: 18px; justify-content: flex-start; font-size: 10px; }
+  .deck-preview-page__links > span { width: 100%; }
+  .tarot-dialog { width: min(430px, calc(100vw - 24px)); grid-template-columns: 1fr; padding: 32px 24px 24px; gap: 20px; }
+  .tarot-dialog__art { width: min(260px, 100%); max-width: none; }
+  .tarot-dialog__copy { padding: 0; }
+  .tarot-dialog__title { font-size: 28px; }
+  .tarot-dialog__ingredients { margin: 16px 0; }
+}
+
+@media (max-width: 500px) {
+  .mixologist-deck__card-button--0 { left: 30%; }
+  .mixologist-deck__card-button--2 { left: 70%; }
+  .tarot-collection__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 380px) {
+  .mixologist-deck__intro { padding-inline: 18px; }
+  .mixologist-deck__intro h1 { font-size: 30px; }
+  .mixologist-deck__card-button { width: 139px; top: 33px; }
+  .mixologist-deck__table { height: 330px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mixologist-deck *, .tarot-dialog { animation: none !important; transition: none !important; }
+}

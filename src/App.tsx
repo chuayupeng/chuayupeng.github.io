@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import Index from "./pages/Index";
 import Timeline from "./pages/Timeline";
@@ -18,6 +18,12 @@ import NotFound from "./pages/NotFound";
 
 // Standalone full-screen mount of the af.fluent planner (no portfolio chrome).
 const AffluentApp = lazy(() => import("@/components/affluent/AffluentApp"));
+const Tarot = lazy(() => import("./pages/Tarot"));
+
+function LegacyDeckRedirect() {
+  const { search, hash } = useLocation();
+  return <Navigate to={{ pathname: "/tarot", search, hash }} replace />;
+}
 
 const queryClient = new QueryClient();
 
@@ -41,6 +47,10 @@ const App = () => (
           {/* two candidate designs for the credentials page — pick one, drop the other */}
           <Route path="/passport" element={<Passport />} />
           <Route path="/character" element={<SkillSheet />} />
+          <Route path="/tarot" element={
+            <Suspense fallback={<p role="status" className="pt-32 text-center text-muted-foreground">Laying out the deck…</p>}><Tarot /></Suspense>
+          } />
+          <Route path="/deck-preview" element={<LegacyDeckRedirect />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

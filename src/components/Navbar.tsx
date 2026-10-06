@@ -14,6 +14,7 @@ const Navbar = () => {
     { path: '/projects', label: 'Projects' },
     { path: '/passport', label: 'Credentials' },
     { path: '/blog', label: 'Writing' },
+    { path: '/tarot', label: 'Tarot' },
     { path: '/about', label: 'About' },
   ];
 
@@ -39,7 +40,7 @@ const Navbar = () => {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-1">
           {navItems.map((item) => {
             const active = location.pathname === item.path;
             return (
@@ -62,7 +63,7 @@ const Navbar = () => {
         </nav>
 
         <button
-          className="md:hidden text-foreground/80 hover:text-foreground"
+          className="lg:hidden text-foreground/80 hover:text-foreground"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
         >
@@ -73,7 +74,7 @@ const Navbar = () => {
     </header>
 
     {isOpen && (
-      <div className="md:hidden fixed left-0 right-0 top-20 bottom-0 z-[60] bg-cyber-blue overflow-y-auto">
+      <div className="lg:hidden fixed left-0 right-0 top-20 bottom-0 z-[60] bg-cyber-blue overflow-y-auto">
         <div className="flex flex-col p-6 gap-2">
           {navItems.map((item) => {
             const active = location.pathname === item.path;

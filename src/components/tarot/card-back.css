@@ -1,0 +1,3 @@
+.tarot-card-back { position: relative; display: block; width: 100%; height: 100%; aspect-ratio: 2 / 3; overflow: hidden; pointer-events: none; user-select: none; -webkit-user-select: none; }
+.tarot-card-back .tarot-card-back__half { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; clip-path: inset(0 0 50% 0); pointer-events: none; -webkit-user-drag: none; }
+.tarot-card-back .tarot-card-back__half--opposite { transform: rotate(180deg); }
