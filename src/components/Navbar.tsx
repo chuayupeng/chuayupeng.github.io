@@ -14,6 +14,7 @@ const Navbar = () => {
     { path: '/projects', label: 'Projects' },
     { path: '/passport', label: 'Credentials' },
     { path: '/blog', label: 'Writing' },
+    { path: '/bar', label: 'Bar' },
     { path: '/tarot', label: 'Tarot' },
     { path: '/about', label: 'About' },
   ];
@@ -24,7 +25,7 @@ const Navbar = () => {
       className="fixed top-0 inset-x-0 z-50 h-20 bg-cyber-blue/85 backdrop-blur-xl border-b border-cyber-cyan/25 shadow-[0_4px_24px_-6px_rgba(0,0,0,0.6)]"
     >
       <div className="container mx-auto px-4 h-full flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3 group" onClick={close}>
+        <Link to="/" className="flex shrink-0 items-center gap-3 group" onClick={close}>
           <div className="h-16 flex items-center transition-transform group-hover:scale-110">
             <img
               src="/usb.png"
@@ -40,14 +41,15 @@ const Navbar = () => {
           </span>
         </Link>
 
-        <nav className="hidden lg:flex items-center gap-1">
+        <nav className="hidden lg:flex items-center gap-0 xl:gap-1" aria-label="Main navigation">
           {navItems.map((item) => {
             const active = location.pathname === item.path;
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`relative px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+                aria-current={active ? 'page' : undefined}
+                className={`relative whitespace-nowrap px-3 xl:px-4 py-3 text-sm font-medium rounded-md transition-colors ${
                   active
                     ? 'text-cyber-cyan'
                     : 'text-muted-foreground hover:text-foreground'
@@ -63,9 +65,11 @@ const Navbar = () => {
         </nav>
 
         <button
-          className="lg:hidden text-foreground/80 hover:text-foreground"
+          className="lg:hidden flex h-11 w-11 items-center justify-center text-foreground/80 hover:text-foreground"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
+          aria-expanded={isOpen}
+          aria-controls="mobile-navigation"
         >
           {isOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -74,7 +78,7 @@ const Navbar = () => {
     </header>
 
     {isOpen && (
-      <div className="lg:hidden fixed left-0 right-0 top-20 bottom-0 z-[60] bg-cyber-blue overflow-y-auto">
+      <nav id="mobile-navigation" aria-label="Main navigation" className="lg:hidden fixed left-0 right-0 top-20 bottom-0 z-[60] bg-cyber-blue overflow-y-auto">
         <div className="flex flex-col p-6 gap-2">
           {navItems.map((item) => {
             const active = location.pathname === item.path;
@@ -83,6 +87,7 @@ const Navbar = () => {
                 key={item.path}
                 to={item.path}
                 onClick={close}
+                aria-current={active ? 'page' : undefined}
                 className={`px-4 py-3 rounded-lg text-base font-medium transition-colors ${
                   active
                     ? 'bg-cyber-cyan/10 text-cyber-cyan'
@@ -94,7 +99,7 @@ const Navbar = () => {
             );
           })}
         </div>
-      </div>
+      </nav>
     )}
     </>
   );

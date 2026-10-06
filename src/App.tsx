@@ -19,6 +19,7 @@ import NotFound from "./pages/NotFound";
 // Standalone full-screen mount of the af.fluent planner (no portfolio chrome).
 const AffluentApp = lazy(() => import("@/components/affluent/AffluentApp"));
 const Tarot = lazy(() => import("./pages/Tarot"));
+const HouseMenu = lazy(() => import("./pages/HouseMenu"));
 
 function LegacyDeckRedirect() {
   const { search, hash } = useLocation();
@@ -49,6 +50,9 @@ const App = () => (
           <Route path="/character" element={<SkillSheet />} />
           <Route path="/tarot" element={
             <Suspense fallback={<p role="status" className="pt-32 text-center text-muted-foreground">Laying out the deck…</p>}><Tarot /></Suspense>
+          } />
+          <Route path="/bar" element={
+            <Suspense fallback={<p role="status" className="pt-32 text-center text-muted-foreground">Opening the house menu…</p>}><HouseMenu /></Suspense>
           } />
           <Route path="/deck-preview" element={<LegacyDeckRedirect />} />
           <Route path="*" element={<NotFound />} />
