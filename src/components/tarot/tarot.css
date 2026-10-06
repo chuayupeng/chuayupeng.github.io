@@ -33,6 +33,24 @@
 .deck-preview-page__links { justify-content: flex-end; flex-wrap: wrap; gap: 22px; padding: 22px 2px 0; font: 11px/1.5 ui-monospace, monospace; color: #b5a9c6; }
 .deck-preview-page__links > span { margin-right: auto; color: #877b99; }
 
+.tarot-musings {
+  display: grid;
+  grid-template-columns: minmax(0, 0.65fr) minmax(0, 1.35fr);
+  gap: 32px;
+  margin-top: 32px;
+  padding: 32px;
+  border: 1px solid #71608455;
+  border-radius: 12px;
+  background: #15101f;
+  scroll-margin-top: 100px;
+}
+.tarot-musings h2 { margin: 10px 0 16px; font: 30px/1.2 Georgia, 'Times New Roman', serif; color: #f1e8d6; }
+.tarot-musings__status { font: 10px/1.6 ui-monospace, monospace; color: #ae9bc5; }
+.tarot-musings__copy { max-width: 70ch; font-size: 14px; line-height: 1.85; color: #bcb0c8; }
+.tarot-musings__copy p { margin: 0 0 16px; }
+.tarot-musings__copy p:last-child { margin-bottom: 0; }
+.tarot-musings__copy strong { color: #ddccb0; font-weight: 500; }
+
 .mixologist-deck {
   --deck-gold: #d3b67b;
   position: relative;
@@ -191,6 +209,8 @@
 
 @media (max-width: 700px) {
   .deck-preview-page { padding: 102px 16px 35px; }
+  .tarot-musings { grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 24px 20px; }
+  .tarot-musings h2 { font-size: 28px; margin-bottom: 10px; }
   .deck-preview-page__topline { font-size: 9px; }
   .deck-preview-character { padding: 22px 0; gap: 10px; }
   .deck-preview-character p { max-width: 285px; font-size: 11px; }
