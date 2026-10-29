@@ -13,6 +13,8 @@ export const INK: Record<string, string> = {
   OSCP: '#9b2c2c',
   OSWE: '#53307f',
   OSEP: '#96551c',
+  OSED: '#245b47',
+  OSCE3: '#765515',
   OSAI: '#a3123c',
   'OSAI+': '#a3123c',
   CRTO: '#8d2b4a',
@@ -100,7 +102,7 @@ const RoughFilter = ({ id }: { id: string }) => (
   </filter>
 );
 
-/** Round postmark — used for the OffSec sittings. */
+/** Round postmark — used for the OffSec credentials. */
 export const CircleStamp = ({ cert, ink }: { cert: Certification; ink: string }) => {
   const id = useId().replace(/:/g, '');
   const Icon = cert.icon;
@@ -219,7 +221,7 @@ export const RectStamp = ({ cert, ink }: { cert: Certification; ink: string }) =
   );
 };
 
-/** One struck stamp: round for OffSec sittings, boxed for everyone else. */
+/** One struck stamp: round for OffSec credentials, boxed for everyone else. */
 export const StampMark = ({ cert, scale = 1 }: { cert: Certification; scale?: number }) => {
   const ink = INK[cert.title] ?? '#7a2b2b';
   const round = cert.org === 'OffSec';

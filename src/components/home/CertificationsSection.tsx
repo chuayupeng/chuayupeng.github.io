@@ -1,4 +1,5 @@
 import { certifications } from '@/data/certificationsData';
+import { ExternalLink } from 'lucide-react';
 
 const CertificationsSection = () => {
   return (
@@ -47,6 +48,17 @@ const CertificationsSection = () => {
                 </div>
                 <p className="text-sm text-muted-foreground">{c.description}</p>
                 <p className="text-xs text-muted-foreground/70 mt-3 font-mono">{c.org}</p>
+                {c.verifyUrl && (
+                  <a
+                    href={c.verifyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Verify ${c.title} credential`}
+                    className="inline-flex min-h-11 items-center gap-1.5 mt-2 text-xs font-mono text-cyber-cyan hover:underline underline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
+                  >
+                    Verify credential <ExternalLink size={12} aria-hidden="true" />
+                  </a>
+                )}
               </div>
             );
           })}

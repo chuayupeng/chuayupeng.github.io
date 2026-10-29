@@ -1,5 +1,6 @@
+import type { ComponentType } from 'react';
 import { Radar, Bug, ChefHat, ShieldCheck } from 'lucide-react';
-import { KaliDragonIcon, SpiderIcon, ChainsIcon, WolfIcon, lineIcon } from '@/components/home/offsecIcons';
+import { KaliDragonIcon, SpiderIcon, ChainsIcon, ExploitDeveloperIcon, CertifiedExpertIcon, WolfIcon, lineIcon } from '@/components/home/offsecIcons';
 
 /** Broad discipline a credential evidences — used to group the skill areas. */
 export type Domain =
@@ -15,7 +16,7 @@ export interface Certification {
   description: string;
   /** Short form shown on the cards: a single year, or a range for time-boxed certs. */
   year: string;
-  icon: any;
+  icon: ComponentType<{ size?: number; className?: string }>;
   color: string;
   active: boolean;
   domain: Domain;
@@ -50,6 +51,22 @@ export const certifications: Certification[] = [
     domain: 'Offensive Security', code: 'PEN-300',
     issued: '2026', expires: 'Does not expire',
     exam: '48-hour practical exam',
+  },
+  {
+    title: 'OSED', org: 'OffSec', description: 'OffSec Exploit Developer',
+    year: '2026', icon: ExploitDeveloperIcon, color: 'text-emerald-400', active: true,
+    domain: 'Offensive Security', code: 'EXP-301',
+    issued: '28 October 2026', expires: 'Does not expire',
+    exam: '48-hour proctored practical exam',
+    verifyUrl: 'https://credentials.offsec.com/251a1dfa-6ba1-4da3-9e5b-eaf5889a76ab',
+  },
+  {
+    title: 'OSCE3', org: 'OffSec', description: 'OffSec Certified Expert 3',
+    year: '2026', icon: CertifiedExpertIcon, color: 'text-amber-400', active: true,
+    domain: 'Offensive Security',
+    issued: '28 October 2026', expires: 'Does not expire',
+    exam: 'Awarded for OSED, OSEP and OSWE; no additional exam',
+    verifyUrl: 'https://credentials.offsec.com/2f3f3bb8-6695-4af9-8485-d4ee5aa380d2',
   },
   {
     title: 'OSAI', org: 'OffSec', description: 'OffSec AI Red Teamer',

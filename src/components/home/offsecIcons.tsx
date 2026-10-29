@@ -1,6 +1,7 @@
 /**
  * OffSec certification marks, lifted from the official badge artwork: the Kali
- * dragon (OSCP), the spider (OSWE), the chains (OSEP) and the wolf (OSAI).
+ * dragon (OSCP), the spider (OSWE), the chains (OSEP), the OSED emblem,
+ * their combined OSCE3 mark and the wolf (OSAI).
  *
  * The glyphs are white line art on transparency, so they're painted as a CSS
  * mask over `currentColor` — that keeps each card's accent colour working the
@@ -13,14 +14,14 @@ interface GlyphProps {
   className?: string;
 }
 
-const glyph = (src: string, label: string) => {
+const glyph = (src: string, label: string, widthRatio = 1) => {
   const Glyph = ({ size = 28, className }: GlyphProps) => (
     <span
       role="img"
       aria-label={label}
       className={`inline-block bg-current ${className ?? ''}`}
       style={{
-        width: size,
+        width: size * widthRatio,
         height: size,
         maskImage: `url(${src})`,
         WebkitMaskImage: `url(${src})`,
@@ -40,6 +41,9 @@ const glyph = (src: string, label: string) => {
 export const KaliDragonIcon = glyph('/certs/oscp-glyph.png', 'Kali dragon');
 export const SpiderIcon = glyph('/certs/oswe-glyph.png', 'Spider');
 export const ChainsIcon = glyph('/certs/osep-glyph.png', 'Chains');
+export const ExploitDeveloperIcon = glyph('/certs/osed-glyph.svg', 'OSED emblem');
+// Three emblems share this badge, so give the combined mark a little more width.
+export const CertifiedExpertIcon = glyph('/certs/osce3-glyph.svg', 'OSCE3 emblems: OSED, OSEP and OSWE', 1.4);
 export const WolfIcon = glyph('/certs/osai-glyph.svg', 'Howling wolf');
 
 /**

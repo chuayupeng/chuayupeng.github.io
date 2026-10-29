@@ -342,8 +342,8 @@ const NotePage = () => (
       </div>
 
       <p style={{ lineHeight: 1.75, marginBottom: '0.8em' }}>
-        This passport records credentials earned through examination. Each stamp marks a
-        sitting: the authority that issued it, and the date it was granted.
+        This passport records professional credentials. Each stamp marks an
+        award: the authority that issued it, and the date it was granted.
       </p>
 
       <ol
@@ -649,13 +649,15 @@ const PAGE_A: Placed[] = [
   { cert: byTitle('OSWE'), x: 72, y: 74, rot: -5, scale: 0.97 },
 ];
 const PAGE_B: Placed[] = [
-  { cert: byTitle('CRTO'), x: 38, y: 40, rot: -12, scale: 1 },
-  { cert: byTitle('WSQ FSC L3'), x: 64, y: 70, rot: 8, scale: 0.88 },
+  { cert: byTitle('CRTO'), x: 35, y: 31, rot: -12, scale: 1 },
+  { cert: byTitle('WSQ FSC L3'), x: 66, y: 52, rot: 8, scale: 0.88 },
+  { cert: byTitle('OSEP'), x: 39, y: 76, rot: 6, scale: 0.98 },
 ];
 const PAGE_C: Placed[] = [
-  { cert: byTitle('OSEP'), x: 34, y: 36, rot: 6, scale: 0.98 },
-  { cert: byTitle('OSAI'), x: 68, y: 46, rot: -8, scale: 1.04 },
-  { cert: byTitle('OSAI+'), x: 46, y: 73, rot: 12, scale: 0.92 },
+  { cert: byTitle('OSAI'), x: 30, y: 31, rot: -8, scale: 1.02 },
+  { cert: byTitle('OSAI+'), x: 70, y: 37, rot: 12, scale: 0.92 },
+  { cert: byTitle('OSED'), x: 31, y: 70, rot: -11, scale: 0.98 },
+  { cert: byTitle('OSCE3'), x: 71, y: 74, rot: 7, scale: 1.04 },
 ];
 
 const PassportBook = ({ compact = false }: { compact?: boolean } = {}) => {
@@ -682,7 +684,7 @@ const PassportBook = ({ compact = false }: { compact?: boolean } = {}) => {
     },
     {
       front: (
-        <StampPage title="2021 — 2024" folio="3" side="right" seed={4}
+        <StampPage title="2021 — 2026" folio="3" side="right" seed={4}
           placed={PAGE_B} openTitle={openTitle} setOpenTitle={setOpenTitle} />
       ),
       back: (

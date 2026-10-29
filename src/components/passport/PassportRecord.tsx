@@ -246,10 +246,14 @@ const PLACEMENT = [
   { rot: -11, dx: -4, dy: 4 },
   { rot: 4, dx: -16, dy: 12 },
   { rot: -5, dx: -10, dy: -6 },
+  { rot: 7, dx: -6, dy: 8 },
+  { rot: -9, dx: -12, dy: -8 },
 ];
 
 const PassportRecord = () => {
-  const [selected, setSelected] = useState(3); // OSAI — the newest
+  const [selected, setSelected] = useState(() =>
+    Math.max(0, certifications.findIndex((c) => c.title === 'OSCE3')),
+  );
   const cert = certifications[selected];
   const Icon = cert.icon;
 
