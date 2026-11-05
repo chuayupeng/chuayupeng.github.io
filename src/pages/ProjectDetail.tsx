@@ -201,6 +201,7 @@ const ProjectDetail = () => {
                     <Link
                       key={l.href}
                       to={l.href}
+                      reloadDocument={l.href.startsWith('/mini/')}
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-white/10 bg-secondary/60 text-foreground font-medium text-sm hover:border-cyber-cyan/30 hover:bg-secondary transition-colors"
                     >
                       {l.label}

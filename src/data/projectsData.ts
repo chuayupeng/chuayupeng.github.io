@@ -1,4 +1,4 @@
-import { LineChart, Gamepad2, Hammer, ShieldAlert, type LucideIcon } from 'lucide-react';
+import { LineChart, Gamepad2, Hammer, ShieldAlert, Timer, type LucideIcon } from 'lucide-react';
 
 export type ProjectStatus =
   | 'Live'
@@ -37,6 +37,30 @@ export interface ProjectType {
 }
 
 export const projectsData: ProjectType[] = [
+  {
+    slug: 'waves',
+    title: 'Waves',
+    tagline: 'A calmer way to time contractions.',
+    summary:
+      'A private contraction timer that records duration and spacing, keeps a maternity number close, and gives an early prompt to call when a configured pattern appears.',
+    description: [
+      'Waves is a small, focused tool for timing contractions. One large button starts and stops each timing; the app shows the latest duration, start-to-start spacing, and a clear history. Timings continue through a locked phone or page reload, and you can correct entries or export them as CSV.',
+      'A care-plan panel keeps the maternity unit’s number and instructions close. The configurable pattern cue prompts a call to the care team; it does not decide whether it is safe to stay home or when to travel. Urgent signs stay visible so the timer never becomes a reason to wait for a pattern.',
+      'The full mini site runs independently at the link below. It works offline after the first load, and timings and care-plan details stay in this browser’s local storage. There is no account or server sync.',
+    ],
+    status: 'Live',
+    year: '2026',
+    stack: ['Static HTML', 'CSS', 'Vanilla JS', 'Offline support', 'Local storage'],
+    domains: ['Health', 'Personal utility', 'Mobile'],
+    accent: '#D97C65',
+    icon: Timer,
+    links: [{ label: 'Open the full timer', href: '/mini/contraction-timer/' }],
+    highlights: [
+      { label: 'Function', value: 'Timer + pattern history' },
+      { label: 'Care plan', value: 'Your own contact cue' },
+      { label: 'Your data', value: 'On this device' },
+    ],
+  },
   {
     slug: 'affluent',
     title: 'af.fluent',

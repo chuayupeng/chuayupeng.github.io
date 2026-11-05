@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f7f4f0" />
+    <meta name="description" content="A calm contraction timer that tracks duration and spacing, with a clear cue to contact your maternity unit." />
+    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="stylesheet" href="./styles.css?v=3" />
+    <title>Waves — Contraction Timer</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="brand" href="#top" aria-label="Waves, back to top">
+          <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 36 36" fill="none"><path d="M4 21c4.7 0 4.7-7 9.3-7s4.7 7 9.4 7 4.7-7 9.3-7" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M4 28c4.7 0 4.7-7 9.3-7s4.7 7 9.4 7 4.7-7 9.3-7" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".45"/></svg></span>
+          <span>Waves<span class="brand-period">.</span></span>
+        </a>
+        <nav class="header-actions" aria-label="Main navigation">
+          <span class="privacy-label"><span class="privacy-dot" aria-hidden="true"></span> Saved on this device</span>
+          <button class="text-button header-help" id="header-help" type="button">When to get help <span aria-hidden="true">↗</span></button>
+        </nav>
+      </header>
+
+      <main id="top">
+        <div class="intro">
+          <div>
+            <p class="eyebrow"><span class="eyebrow-line" aria-hidden="true"></span> ONE MOMENT AT A TIME</p>
+            <h1>Contraction timer<span class="heading-dot">.</span></h1>
+            <p class="intro-copy">Tap when a contraction starts, then again when it eases. We’ll keep track of the pattern for you.</p>
+          </div>
+          <div class="intro-flower" aria-hidden="true"><span></span><span></span><span></span><span></span><i></i></div>
+        </div>
+
+        <div class="dashboard">
+          <div class="primary-column">
+            <section class="safety-banner" aria-labelledby="safety-title">
+              <div class="safety-icon" aria-hidden="true">!</div>
+              <div>
+                <h2 id="safety-title">Some signs can’t wait for a pattern</h2>
+                <p>Waters leaking, bleeding, baby moving less, or labour signs before 37 weeks? Call your maternity unit or go in for assessment now.</p>
+              </div>
+              <button class="safety-link" id="safety-help" type="button">See urgent signs <span aria-hidden="true">→</span></button>
+            </section>
+
+            <section class="timer-card" id="timer-card" aria-labelledby="timer-title">
+              <div class="section-heading timer-heading">
+                <div>
+                  <p class="section-kicker">THE TIMER</p>
+                  <h2 id="timer-title">Time this contraction</h2>
+                </div>
+                <span class="timer-state" id="timer-state"><span class="timer-state-dot" aria-hidden="true"></span> Not timing</span>
+              </div>
+
+              <div class="timer-face" aria-live="off">
+                <div class="timer-orbit orbit-one" aria-hidden="true"></div>
+                <div class="timer-orbit orbit-two" aria-hidden="true"></div>
+                <div class="timer-center">
+                  <span class="timer-caption" id="timer-caption">READY TO BEGIN</span>
+                  <strong class="timer-readout" id="timer-readout" aria-label="Elapsed time, 0 minutes 0 seconds">00:00</strong>
+                  <span class="timer-hint" id="timer-hint">Take a breath. Tap start when it begins.</span>
+                </div>
+              </div>
+
+              <div class="timer-controls">
+                <button class="timer-button" id="timer-toggle" type="button"><span class="button-icon" aria-hidden="true">＋</span><span id="timer-button-label">Start contraction</span></button>
+                <button class="cancel-button is-hidden" id="timer-cancel" type="button">Cancel this timing</button>
+              </div>
+              <p class="timer-footnote">Your timer keeps running if you lock your phone or leave this page.</p>
+            </section>
+
+            <section class="status-card" id="status-card" aria-labelledby="status-title" role="status" aria-live="polite">
+              <div class="status-topline"><span class="status-symbol" id="status-symbol" aria-hidden="true">◌</span><span class="status-label">YOUR PATTERN</span></div>
+              <h2 id="status-title">Ready when you are</h2>
+              <p id="status-copy">Start timing whenever a contraction begins. If you think labour has started or you’re unsure, call your maternity unit.</p>
+              <div class="status-actions" id="status-actions">
+                <a class="call-button is-hidden" id="call-link" href="#">Call maternity unit <span aria-hidden="true">↗</span></a>
+                <button class="subtle-button" id="status-plan" type="button">Add your maternity number</button>
+              </div>
+            </section>
+
+            <section class="summary-section" aria-label="Contraction summary">
+              <div class="metric-card"><span class="metric-icon" aria-hidden="true">◷</span><span class="metric-label">LAST DURATION</span><strong id="last-duration">—</strong><small>start to end</small></div>
+              <div class="metric-card"><span class="metric-icon" aria-hidden="true">↔</span><span class="metric-label">LAST SPACING</span><strong id="last-spacing">—</strong><small>start to start</small></div>
+              <div class="metric-card"><span class="metric-icon" aria-hidden="true">≋</span><span class="metric-label">LAST HOUR</span><strong id="last-hour">0</strong><small>contractions</small></div>
+            </section>
+
+            <section class="history-section" aria-labelledby="history-title">
+              <div class="section-heading history-heading">
+                <div><p class="section-kicker">A CLEARER PICTURE</p><h2 id="history-title">Recent contractions</h2></div>
+                <button class="text-button" id="export-button" type="button" disabled>Export CSV <span aria-hidden="true">↗</span></button>
+              </div>
+              <p class="history-explainer">Spacing is measured from the start of one contraction to the start of the next.</p>
+              <div class="history-empty" id="history-empty"><span class="empty-waves" aria-hidden="true">〰</span><p>Your timed contractions will appear here.</p></div>
+              <div class="history-list-wrap is-hidden" id="history-list-wrap">
+                <div class="history-list-heading" aria-hidden="true"><span>STARTED</span><span>DURATION</span><span>SPACING</span><span></span></div>
+                <ol class="history-list" id="history-list"></ol>
+              </div>
+              <div class="history-footer is-hidden" id="history-footer"><button class="subtle-button" id="show-more" type="button">Show more</button><button class="subtle-button danger-text" id="clear-history" type="button">Clear history</button></div>
+            </section>
+          </div>
+
+          <aside class="side-column" aria-label="Your care plan and guidance">
+            <section class="plan-card" aria-labelledby="plan-title">
+              <div class="aside-icon" aria-hidden="true">✳</div>
+              <p class="section-kicker">KEEP IT CLOSE</p>
+              <h2 id="plan-title">Your care plan</h2>
+              <p class="plan-intro">Your maternity team’s instructions always come first. Keep their number and advice handy here.</p>
+              <div class="plan-detail"><span>MATERNITY UNIT</span><strong id="plan-hospital">Not added yet</strong><small class="plan-phone is-hidden" id="plan-phone"></small></div>
+              <div class="plan-detail"><span>CONTACT CUE</span><strong id="plan-cue">2 gaps of 15 min or less</strong></div>
+              <p class="plan-note is-hidden" id="plan-note"></p>
+              <button class="plan-button" id="edit-plan" type="button">Edit your plan <span aria-hidden="true">→</span></button>
+            </section>
+
+            <section class="guide-card" aria-labelledby="guide-title">
+              <p class="section-kicker">GOOD TO KNOW</p>
+              <h2 id="guide-title">When should we leave?</h2>
+              <p>The timer can show a pattern, but your maternity team can tell you when to come in. Call when contractions are regular, getting stronger, or you’re uncertain.</p>
+              <button class="guide-link" id="guide-help" type="button">Read the guidance <span aria-hidden="true">→</span></button>
+            </section>
+          </aside>
+        </div>
+      </main>
+
+      <footer class="site-footer"><span>Made for the moments that matter.</span><span>Private to this browser · <button id="footer-help" type="button">Important guidance</button></span></footer>
+    </div>
+
+    <dialog class="app-dialog" id="help-dialog" aria-labelledby="help-title">
+      <div class="dialog-content">
+        <div class="dialog-top"><span class="dialog-icon" aria-hidden="true">!</span><button class="close-button" data-close="help-dialog" type="button" aria-label="Close guidance">×</button></div>
+        <p class="section-kicker">WHEN TO GET HELP</p>
+        <h2 id="help-title">Don’t wait for the timer</h2>
+        <p>Go to your maternity unit for assessment if you think your waters have broken. Contact them immediately if you have bleeding, your baby moves less than usual, you think labour may be starting before 37 weeks, or something feels wrong. If you cannot reach them, seek care directly.</p>
+        <p>Seek urgent help for heavy bleeding, severe constant pain, or if birth feels imminent. In Singapore, call <a href="tel:995">995</a> for an emergency ambulance.</p>
+        <p>If you have a planned caesarean, a previous quick labour, a high-risk pregnancy, or a long journey to hospital, follow your own care team’s earlier advice.</p>
+        <div class="dialog-call-row"><a class="call-button is-hidden" id="help-call-link" href="#">Call maternity unit <span aria-hidden="true">↗</span></a><button class="subtle-button" id="help-add-number" type="button">Add maternity number</button></div>
+        <div class="source-box"><strong>Sources</strong><a href="https://www.healthhub.sg/well-being-and-lifestyle/pregnancy-and-infant-health/pregnancy-labour-and-delivery-what-to-expect" target="_blank" rel="noopener noreferrer">Singapore HealthHub: Labour and delivery ↗</a><a href="https://www.healthhub.sg/well-being-and-lifestyle/pregnancy-and-infant-health/when-to-sound-the-alarm-on-your-pregnancy" target="_blank" rel="noopener noreferrer">Singapore HealthHub: Warning signs ↗</a><a href="https://www.nuh.com.sg/care-at-nuh/services/obstetrics-and-gynaecology/obstetrics" target="_blank" rel="noopener noreferrer">NUH: Signs of labour ↗</a><a href="https://www.acog.org/womens-health/faqs/how-to-tell-when-labor-begins" target="_blank" rel="noopener noreferrer">ACOG: How to tell when labour begins ↗</a><a href="https://www.scdf.gov.sg/home/about-scdf/emergency-medical-services" target="_blank" rel="noopener noreferrer">SCDF: Emergency ambulance ↗</a></div>
+        <p class="dialog-disclaimer">This timer cannot confirm labour or decide whether it is safe to stay home. Your maternity team’s instructions take priority.</p>
+      </div>
+    </dialog>
+
+    <dialog class="app-dialog" id="plan-dialog" aria-labelledby="plan-dialog-title">
+      <form class="dialog-content" id="plan-form">
+        <div class="dialog-top"><span class="dialog-icon soft-icon" aria-hidden="true">✳</span><button class="close-button" data-close="plan-dialog" type="button" aria-label="Close plan">×</button></div>
+        <p class="section-kicker">YOUR PLAN</p><h2 id="plan-dialog-title">Keep your details handy</h2>
+        <p class="dialog-lead">Add the number and advice your own maternity team gave you.</p>
+        <label class="field-label" for="hospital-name">Maternity unit or hospital name</label><input id="hospital-name" name="hospitalName" type="text" maxlength="80" autocomplete="organization" placeholder="e.g. Delivery Suite" />
+        <label class="field-label" for="hospital-phone">Maternity unit phone number</label><input id="hospital-phone" name="hospitalPhone" type="tel" maxlength="40" autocomplete="tel" placeholder="e.g. +65 6123 4567" />
+        <label class="field-label" for="cue-minutes">Prompt me to call after 2 gaps of</label><div class="input-suffix"><input id="cue-minutes" name="cueMinutes" type="number" min="2" max="20" step="1" inputmode="numeric" required /><span>minutes or less</span></div>
+        <p class="field-help">The default 15-minute cue is an early reminder based on Singapore labour guidance. Call sooner whenever you are concerned or your care team advised it.</p>
+        <label class="field-label" for="plan-notes">Care team notes <span>(optional)</span></label><textarea id="plan-notes" name="planNotes" rows="3" maxlength="400" placeholder="e.g. Call earlier because our travel time is long"></textarea>
+        <button class="dialog-primary" type="submit">Save plan</button>
+      </form>
+    </dialog>
+
+    <dialog class="app-dialog" id="edit-dialog" aria-labelledby="edit-title">
+      <form class="dialog-content" id="edit-form">
+        <div class="dialog-top"><span class="dialog-icon soft-icon" aria-hidden="true">◷</span><button class="close-button" data-close="edit-dialog" type="button" aria-label="Close edit">×</button></div>
+        <p class="section-kicker">CORRECT A TIME</p><h2 id="edit-title">Edit contraction</h2>
+        <input id="edit-id" name="id" type="hidden" />
+        <label class="field-label" for="edit-start">Started</label><input id="edit-start" name="start" type="datetime-local" step="1" required />
+        <label class="field-label" for="edit-end">Ended</label><input id="edit-end" name="end" type="datetime-local" step="1" required />
+        <p class="form-error is-hidden" id="edit-error" role="alert">End time must be after the start time.</p>
+        <button class="dialog-primary" type="submit">Save changes</button>
+        <button class="dialog-danger" id="delete-contraction" type="button">Delete this contraction</button>
+      </form>
+    </dialog>
+
+    <dialog class="app-dialog confirm-dialog" id="confirm-dialog" aria-labelledby="confirm-title">
+      <div class="dialog-content"><div class="dialog-top"><span class="dialog-icon" aria-hidden="true">?</span><button class="close-button" data-close="confirm-dialog" type="button" aria-label="Close confirmation">×</button></div><h2 id="confirm-title">Are you sure?</h2><p id="confirm-copy"></p><div class="confirm-actions"><button class="subtle-button" id="confirm-no" type="button">Keep it</button><button class="dialog-primary danger-button" id="confirm-yes" type="button">Confirm</button></div></div>
+    </dialog>
+
+    <div class="toast is-hidden" id="toast" role="status" aria-live="polite"></div>
+    <script src="./app.js?v=3" defer></script>
+  </body>
+</html>
