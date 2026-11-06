@@ -71,7 +71,7 @@ export const projectsData: ProjectType[] = [
       'af.fluent is a complete personal-finance operating system for Singapore. Nine modules — dashboard, cashflow, investments, goals, retirement, tax, CPF, insurance and settings — share one data model, so the take-home in your budget, the CPF LIFE floor in your retirement plan, the SRS relief in your tax view, and the premiums in your protection checklist all agree.',
       "It doesn't just compute — it prescribes. It tells you the exact dollar amount to invest into ETFs each month, projects your nest egg and models the drawdown to your planned age (with CPF LIFE as the guaranteed floor), sizes every protection line against your DIME needs, prices your tax and the SRS/top-up moves that cut it, and ranks your next moves by impact via a financial-health score.",
       'The numbers are real and dated: 1 Jan 2026 CPF contribution and allocation tables, retirement sums, the Basic Healthcare Sum, MediShield Life premiums, IRAS resident tax brackets and MoneySense/LIA benchmarks — verified against official sources and refreshed each January. CPF is projected year by year through SA→RA at 55, the MediSave cap and CPF LIFE.',
-      'Everything is local-first: your data lives only in your browser, persists across visits, and exports to a file you own. Light and dark themes, a guided first-run, and full keyboard/mobile support. The demo below is the full product — change any input and every module recomputes live.',
+      'Everything is local-first: your data lives only in your browser, persists across visits, and exports to a file you own. Light and dark themes, a guided first-run, and full keyboard/mobile support. Explore the working planner below, or open it as a full-screen mini site from the link above.',
     ],
     status: 'Live',
     year: '2026',
@@ -84,6 +84,7 @@ export const projectsData: ProjectType[] = [
     demoNote: 'Your data stays in your browser.',
     demoCaption:
       'A working planner, not a mockup. Figures are computed from your inputs against verified 1 Jan 2026 Singapore methodology; investment returns and inflation are assumptions you control. Everything persists locally to this browser.',
+    links: [{ label: 'Open full planner', href: '/mini/affluent/' }],
     highlights: [
       { label: 'Modules', value: '9 · one data model' },
       { label: 'Jurisdiction', value: 'Singapore · 2026' },
