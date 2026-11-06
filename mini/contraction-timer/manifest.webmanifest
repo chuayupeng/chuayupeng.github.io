@@ -1,0 +1,13 @@
+{
+  "name": "Waves — Contraction Timer",
+  "short_name": "Waves",
+  "description": "Track contractions and know when to contact your maternity unit.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f4f0",
+  "theme_color": "#f7f4f0",
+  "icons": [
+    { "src": "./icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
